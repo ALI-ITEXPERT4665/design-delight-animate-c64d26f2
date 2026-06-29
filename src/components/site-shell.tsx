@@ -330,15 +330,18 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
 
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
-    <article className="group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 hover:-translate-y-1">
-      <div className="overflow-hidden">
-        <img src={project.image} alt={project.title} className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" loading="lazy" />
+    <article className="project-tile group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)]">
+      <div className="media-hover overflow-hidden">
+        <img src={project.image} alt={project.title} className="h-56 w-full object-cover" loading="lazy" />
       </div>
       <div className="space-y-3 p-5">
         <span className="inline-flex rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{project.category}</span>
         <div>
-          <h3 className="text-xl font-semibold">{project.title}</h3>
+          <h3 className="text-xl font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
           <p className="text-sm text-muted-foreground">{project.location}</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          View Project <ArrowRight className="tile-arrow h-3.5 w-3.5" />
         </div>
       </div>
     </article>
@@ -362,11 +365,11 @@ export function ServicesGrid() {
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {services.slice(0, 5).map((service) => (
-            <div key={service.title} className="group border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-transform duration-300 hover:-translate-y-1">
-              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary">
+            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
                 <Building2 className="h-5 w-5" />
               </div>
-              <h3 className="mb-3 text-lg font-semibold">{service.title}</h3>
+              <h3 className="mb-3 text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
               <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
             </div>
           ))}
