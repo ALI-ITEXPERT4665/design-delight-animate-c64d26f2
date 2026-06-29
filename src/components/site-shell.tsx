@@ -366,17 +366,21 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
           </div>
         ) : null}
         <div className="mb-8 flex flex-wrap gap-3">
-          {["All", "Residential", "Commercial", "Educational", "Hospitality"].map((item, index) => (
-            <div
-              key={item}
-              className={cn(
-                "rounded-full border px-5 py-2 text-sm transition-colors",
-                index === 0 ? "border-primary/30 bg-primary/8 text-primary" : "border-border text-muted-foreground",
-              )}
-            >
-              {item}
-            </div>
-          ))}
+          {["All", "Residential", "Commercial", "Educational", "Hospitality"].map((item, index) => {
+            const Icon = categoryIcon[item] ?? Grid3x3;
+            return (
+              <div
+                key={item}
+                className={cn(
+                  "group inline-flex cursor-pointer items-center gap-2 rounded-full border px-5 py-2 text-sm transition-all duration-300 hover:border-primary hover:text-primary",
+                  index === 0 ? "border-primary/40 bg-primary/8 text-primary" : "border-border text-muted-foreground",
+                )}
+              >
+                <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+                <span className="uppercase tracking-[0.14em] text-xs">{item}</span>
+              </div>
+            );
+          })}
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {projects.map((project) => (
@@ -391,18 +395,22 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
     <article className="project-tile group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)]">
-      <div className="media-hover overflow-hidden">
+      <div className="media-hover relative overflow-hidden">
         <img src={project.image} alt={project.title} className="h-56 w-full object-cover" loading="lazy" />
+        {project.featured ? (
+          <span className="absolute bottom-3 left-3 z-10 inline-flex items-center gap-1 bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground shadow-[var(--shadow-soft)]">
+            Featured
+          </span>
+        ) : null}
       </div>
       <div className="space-y-3 p-5">
-        <span className="inline-flex rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{project.category}</span>
         <div>
-          <h3 className="text-xl font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
+          <h3 className="text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
           <p className="text-sm text-muted-foreground">{project.location}</p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          View Project <ArrowRight className="tile-arrow h-3.5 w-3.5" />
-        </div>
+        <span className="inline-flex items-center gap-1.5 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+          {project.category}
+        </span>
       </div>
     </article>
   );
