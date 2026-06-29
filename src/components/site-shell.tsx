@@ -998,98 +998,327 @@ export function ServicesPageContent() {
         image={media.heroMain}
         videoSrc={pageVideos.services}
       />
-      <CenteredHeading title="End-to-End Architectural Services" subtitle="We combine innovative ideas with expertise and industry best practices to deliver solutions that are functional, sustainable, and timeless." />
-      <FullServicesGrid />
+      <ServicesIntro />
+      <ServicesFiveGrid />
       <WhyChooseUsBand />
-      <ProcessBand />
-      <ContactStrip />
+      <ServicesProcessTeaser />
+      <ServicesCTA />
     </>
   );
 }
 
-function CenteredHeading({ title, subtitle }: { title: string; subtitle: string }) {
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
+function MaskReveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   return (
-    <section className="border-b border-border/60 bg-background py-14">
-      <div className="mx-auto max-w-[860px] px-4 text-center md:px-6">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">What We Do</p>
-        <h2 className="text-3xl font-semibold leading-tight md:text-5xl">{title}</h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">{subtitle}</p>
+    <M.div
+      initial={{ y: 40, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.85, ease: easeOut, delay }}
+      className={className}
+    >
+      {children}
+    </M.div>
+  );
+}
+
+function ServicesIntro() {
+  return (
+    <section className="border-b border-border/60 bg-background py-20">
+      <div className="mx-auto max-w-[900px] px-4 text-center md:px-6">
+        <MaskReveal>
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">What We Do</p>
+        </MaskReveal>
+        <MaskReveal delay={0.08}>
+          <h2 className="text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">End-to-End Architectural Services</h2>
+        </MaskReveal>
+        <MaskReveal delay={0.16}>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-muted-foreground">
+            We combine innovative ideas with expertise and industry best practices to deliver solutions that are functional, sustainable, and timeless.
+          </p>
+        </MaskReveal>
+        <MaskReveal delay={0.24}>
+          <div className="mx-auto mt-8 h-px w-16 bg-primary/60" />
+        </MaskReveal>
       </div>
     </section>
   );
 }
 
-function FullServicesGrid() {
+const fiveServices = [
+  { title: "BIM Modelling", icon: Box },
+  { title: "3D Visualization", icon: Layers },
+  { title: "Planning Drawings", icon: FileText },
+  { title: "Structural Design", icon: Compass },
+  { title: "Construction Support", icon: HardHat },
+];
+
+function ServicesFiveGrid() {
   return (
-    <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-3">
-        {services.map((service) => {
-          const Icon = serviceIcon[service.icon] ?? Sparkles;
-          return (
-            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
-                <Icon className="h-5 w-5" />
+    <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-20">
+      <div className="mx-auto max-w-[1240px] px-4 md:px-6">
+        <M.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
+        >
+          {fiveServices.map(({ title, icon: Icon }) => (
+            <M.div
+              key={title}
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOut } } }}
+              className="group relative overflow-hidden border border-border/70 bg-background p-7 text-center transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl"
+            >
+              <div className="pointer-events-none absolute inset-x-0 -top-px h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-primary to-transparent transition-transform duration-700 ease-out group-hover:scale-x-100" />
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/5 text-primary transition-all duration-500 ease-out group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon className="h-6 w-6" />
               </div>
-              <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em] group-hover:text-primary transition-colors">{service.title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
-            </div>
-          );
-        })}
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground transition-colors duration-500 group-hover:text-primary">
+                {title}
+              </h3>
+              <div className="mx-auto mt-4 h-px w-6 bg-border transition-all duration-500 group-hover:w-12 group-hover:bg-primary" />
+            </M.div>
+          ))}
+        </M.div>
       </div>
     </section>
   );
 }
+
+const whyBullets = [
+  "Integrated design & delivery approach",
+  "Experienced architects & engineers",
+  "Advanced tools & technology",
+  "Timely delivery & transparent process",
+];
+
+const whyStats = [
+  { value: "250+", label: "Projects Completed" },
+  { value: "98%", label: "Client Satisfaction" },
+  { value: "15+", label: "Years of Experience" },
+];
+
+const whyImages = [
+  { src: media.project1, alt: "Modern commercial facade" },
+  { src: media.project2, alt: "Residential exterior" },
+  { src: media.collageC, alt: "Curved architectural detail" },
+];
 
 function WhyChooseUsBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
-        <div className="space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Choose Us</p>
-          <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Design Expertise You Can Rely On.</h2>
-          <ul className="grid gap-3 text-sm text-muted-foreground">
-            {[
-              "Integrated design & delivery approach",
-              "Experienced architects & engineers",
-              "Advanced tools & technology",
-              "Timely delivery & transparent process",
-              "Quality, safety & compliance assured",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3"><ChevronRight className="mt-0.5 h-4 w-4 text-primary" />{item}</li>
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto grid max-w-[1240px] gap-14 px-4 md:px-6 lg:grid-cols-2 lg:items-start">
+        <div className="space-y-7">
+          <MaskReveal>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Why Choose Us</p>
+          </MaskReveal>
+          <MaskReveal delay={0.08}>
+            <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
+              Design Expertise <span className="text-primary">You Can Rely On.</span>
+            </h2>
+          </MaskReveal>
+          <MaskReveal delay={0.16}>
+            <p className="max-w-md text-base leading-8 text-muted-foreground">
+              Every project is anchored in clarity, craft, and accountability — bringing together strategy, design, and delivery under one team.
+            </p>
+          </MaskReveal>
+          <M.ul
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}
+            className="space-y-3"
+          >
+            {whyBullets.map((item) => (
+              <M.li
+                key={item}
+                variants={{ hidden: { opacity: 0, x: -28 }, show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOut } } }}
+                className="group flex items-center gap-4 border-l-2 border-primary/30 bg-[color:var(--color-surface-soft)] px-5 py-3 transition-all duration-500 hover:-translate-y-0.5 hover:border-primary hover:shadow-md"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                <span className="text-sm font-medium text-foreground">{item}</span>
+              </M.li>
             ))}
-          </ul>
-          <Button asChild className="btn-sheen rounded-sm px-6">
-            <Link to="/about">Learn More About Us</Link>
-          </Button>
+          </M.ul>
+          <MaskReveal delay={0.3}>
+            <Button asChild className="btn-sheen group rounded-sm px-6">
+              <Link to="/about">
+                Learn More About Us
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </MaskReveal>
         </div>
-        <div className="grid gap-5 md:grid-cols-[1.1fr_0.9fr]">
-          <div className="grid gap-5">
-            <div className="grid grid-cols-3 gap-4 border border-border bg-card p-6 shadow-[var(--shadow-soft)] text-center">
-              <Metric value="250+" label="Projects Completed" icon={<Building2 className="h-5 w-5 text-primary" />} />
-              <Metric value="98%" label="Client Satisfaction" icon={<ShieldCheck className="h-5 w-5 text-primary" />} />
-              <Metric value="15+" label="Years Experience" icon={<Users className="h-5 w-5 text-primary" />} />
-            </div>
-            <img src={media.project4} alt="Commercial architecture" className="h-[260px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          </div>
-          <div className="grid gap-5">
-            <img src={media.project2} alt="Residential architecture" className="h-[180px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-            <img src={media.collageC} alt="Interior detailing" className="h-[250px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          </div>
+
+        <div className="space-y-6">
+          <M.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
+            className="grid grid-cols-3 gap-4"
+          >
+            {whyStats.map((s) => (
+              <M.div
+                key={s.label}
+                variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } } }}
+                className="group relative overflow-hidden border border-border/70 bg-background p-6 text-center transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl"
+              >
+                <div className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{s.value}</div>
+                <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{s.label}</div>
+              </M.div>
+            ))}
+          </M.div>
+
+          <M.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.14 } } }}
+            className="grid grid-cols-3 gap-4"
+          >
+            {whyImages.map((img) => (
+              <M.div
+                key={img.src}
+                variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeOut } } }}
+                className="group relative aspect-[3/4] overflow-hidden"
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+                <div className="absolute inset-x-0 bottom-0 translate-y-2 p-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className="h-px w-8 bg-primary" />
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">{img.alt}</p>
+                </div>
+              </M.div>
+            ))}
+          </M.div>
         </div>
       </div>
     </section>
   );
 }
 
-function Metric({ value, label, icon }: { value: string; label: string; icon: ReactNode }) {
+function ServicesProcessTeaser() {
+  const steps = [
+    { n: "01", t: "Concept" },
+    { n: "02", t: "Planning" },
+    { n: "03", t: "Visualization" },
+    { n: "04", t: "Documentation" },
+    { n: "05", t: "Construction" },
+  ];
   return (
-    <div className="space-y-2">
-      <div className="flex justify-center">{icon}</div>
-      <div className="text-3xl font-semibold">{value}</div>
-      <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</div>
-    </div>
+    <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
+      <div className="mx-auto max-w-[1240px] px-4 text-center md:px-6">
+        <MaskReveal>
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Our Process</p>
+        </MaskReveal>
+        <MaskReveal delay={0.08}>
+          <h2 className="mx-auto max-w-[18ch] text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
+            A Seamless Journey From Concept to Completion
+          </h2>
+        </MaskReveal>
+        <MaskReveal delay={0.16}>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+            A clear five-stage method built around collaboration, precision, and an uncompromising standard at every step.
+          </p>
+        </MaskReveal>
+
+        <div className="relative mt-16">
+          <div className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-border md:block" />
+          <M.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.6, ease: easeOut }}
+            className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px origin-left bg-primary md:block"
+          />
+          <M.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.18 } } }}
+            className="relative grid grid-cols-2 gap-y-10 md:grid-cols-5"
+          >
+            {steps.map((s) => (
+              <M.div
+                key={s.n}
+                variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } } }}
+                className="group flex flex-col items-center"
+              >
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/40 bg-background text-sm font-semibold text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-[0_0_0_8px_color-mix(in_oklab,var(--color-primary)_15%,transparent)]">
+                  {s.n}
+                </div>
+                <div className="mt-5 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground transition-colors duration-500 group-hover:text-primary">
+                  {s.t}
+                </div>
+              </M.div>
+            ))}
+          </M.div>
+        </div>
+      </div>
+    </section>
   );
 }
+
+function ServicesCTA() {
+  return (
+    <section className="relative overflow-hidden border-b border-border/60 bg-background py-24">
+      <div className="absolute inset-0 -z-10 opacity-[0.06] [background-image:radial-gradient(var(--color-foreground)_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="mx-auto max-w-[1100px] px-4 text-center md:px-6">
+        <MaskReveal>
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Ready to start your project?</p>
+        </MaskReveal>
+        <MaskReveal delay={0.08}>
+          <h2 className="mx-auto max-w-[18ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+            Let’s Build Something <span className="italic text-primary">Extraordinary</span> Together.
+          </h2>
+        </MaskReveal>
+        <MaskReveal delay={0.16}>
+          <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-muted-foreground">
+            Share a few details and our team will reach out within one business day to start the conversation.
+          </p>
+        </MaskReveal>
+
+        <MaskReveal delay={0.24}>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mx-auto mt-10 flex max-w-xl flex-col items-stretch gap-3 sm:flex-row"
+          >
+            <input
+              type="email"
+              required
+              placeholder="Enter your email"
+              className="h-12 flex-1 rounded-sm border border-border bg-background px-4 text-sm outline-none transition-all duration-300 placeholder:text-muted-foreground/70 focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_15%,transparent)]"
+            />
+            <Button type="submit" className="btn-sheen group h-12 rounded-sm px-6">
+              Start the Conversation
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+          </form>
+        </MaskReveal>
+
+        <MaskReveal delay={0.32}>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" /> Free initial consultation</span>
+            <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" /> Response within 24 hours</span>
+            <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" /> NDA on request</span>
+          </div>
+        </MaskReveal>
+      </div>
+    </section>
+  );
+}
+
 
 export function ProjectsPageContent() {
   return (
