@@ -1215,7 +1215,7 @@ function ProjectHighlightsBand() {
   );
 }
 
-function RelatedProjectsBand({ related }: { related: (typeof projects)[] }) {
+function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
   return (
     <section className="border-b border-border/60 bg-background py-18">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
