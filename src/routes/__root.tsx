@@ -139,7 +139,7 @@ function RootComponent() {
       <div className="min-h-screen bg-background text-foreground">
         <SiteHeader wordmark={wordmark} />
         <Outlet />
-        <SiteFooter wordmark={wordmark} variant={footerVariant} videoFooter={pathname === "/"} />
+        <SiteFooter wordmark={wordmark} variant={footerVariant} />
 
       </div>
     </QueryClientProvider>
