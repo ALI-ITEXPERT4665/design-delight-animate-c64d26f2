@@ -17,6 +17,7 @@ import {
   CirclePlay,
   ClipboardList,
   Clock3,
+  Facebook,
   FileText,
   Grid3x3,
   HardHat,
