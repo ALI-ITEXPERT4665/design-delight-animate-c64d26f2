@@ -59,8 +59,6 @@ export function ChatWidget() {
     return () => { clearTimeout(t); clearTimeout(t2); };
   }, []);
 
-  if (!mounted) return null;
-
   const isLoading = status === "submitted" || status === "streaming";
 
   useEffect(() => {
@@ -70,6 +68,10 @@ export function ChatWidget() {
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 200);
   }, [open]);
+
+  if (!mounted) return null;
+
+
 
   async function submit(text: string) {
     const value = text.trim();
