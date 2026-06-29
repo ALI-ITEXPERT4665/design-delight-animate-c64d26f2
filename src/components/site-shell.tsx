@@ -1235,7 +1235,7 @@ function ProcessMarquee() {
       <div className="group relative overflow-hidden border-y border-border/60 bg-neutral-50 py-6">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-neutral-50 to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-neutral-50 to-transparent" />
-        <div className="flex w-max animate-[marquee_38s_linear_infinite] gap-12 pr-12 group-hover:[animation-play-state:paused]">
+        <div className="flex w-max animate-[marquee-x_38s_linear_infinite] gap-12 pr-12 group-hover:[animation-play-state:paused]">
           {[...tools, ...tools].map((t, i) => (
             <span key={i} className="text-2xl font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-300 hover:text-primary md:text-3xl">
               {t} <span className="ml-12 text-primary">●</span>
