@@ -1,4 +1,4 @@
-import heroVideo from "@/assets/hero-video.mp4.asset.json";
+import heroVideo from "@/assets/hero-cranes.mp4.asset.json";
 import vidHome from "@/assets/videos/home.mp4.asset.json";
 import vidAbout from "@/assets/videos/about.mp4.asset.json";
 import vidProjects from "@/assets/videos/projects.mp4.asset.json";
