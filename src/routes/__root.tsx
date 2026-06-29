@@ -145,16 +145,15 @@ function RootComponent() {
   const decorPaths = new Set(["/projects", "/services", "/project-detail"]);
   const wordmark: "Design" | "Decor" = decorPaths.has(pathname) ? "Decor" : "Design";
   const footerVariant: "default" | "minimal" = pathname === "/" ? "default" : "minimal";
+  const isAdminArea = pathname === "/auth" || pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background text-foreground">
-        <SiteHeader wordmark={wordmark} />
+        {!isAdminArea && <SiteHeader wordmark={wordmark} />}
         <Outlet />
-        <SiteFooter wordmark={wordmark} variant={footerVariant} />
-        <ChatWidget />
-
-
+        {!isAdminArea && <SiteFooter wordmark={wordmark} variant={footerVariant} />}
+        {!isAdminArea && <ChatWidget />}
       </div>
     </QueryClientProvider>
   );
