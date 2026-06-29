@@ -1,6 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { BackgroundVideo } from "@/components/background-video";
 import {
   ArrowRight,
   Award,
@@ -62,7 +63,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button asChild className="hidden h-11 rounded-sm px-5 md:inline-flex">
+          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 md:inline-flex">
             <Link to="/contact">Get a Quote</Link>
           </Button>
           <button
@@ -148,7 +149,7 @@ export function HeroSection({
   secondaryLabel,
   secondaryTo,
   image = media.heroMain,
-  showVideo = false,
+  showVideo = true,
   darkPlay = false,
 }: {
   eyebrow: string;
@@ -166,7 +167,7 @@ export function HeroSection({
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_top_left,var(--color-surface-soft),transparent_38%)]">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 pb-12 pt-12 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pt-16">
-        <div className="relative z-10 max-w-xl space-y-6">
+        <div className="relative z-10 max-w-xl space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
           <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl">
             {title}
@@ -174,35 +175,26 @@ export function HeroSection({
           </h1>
           <p className="max-w-md text-base leading-8 text-muted-foreground md:text-lg">{description}</p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="rounded-sm px-6">
+            <Button asChild size="lg" className="btn-sheen rounded-sm px-6">
               <Link to={primaryTo}>{primaryLabel}</Link>
             </Button>
             {secondaryLabel && secondaryTo ? (
-              <Button asChild size="lg" variant="outline" className="rounded-sm px-6">
+              <Button asChild size="lg" variant="outline" className="btn-sheen rounded-sm px-6">
                 <Link to={secondaryTo}>{secondaryLabel}</Link>
               </Button>
             ) : null}
           </div>
         </div>
-        <div className="relative min-h-[360px] overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] lg:min-h-[520px]">
+        <div className="group relative min-h-[360px] overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover lg:min-h-[520px]">
           {showVideo ? (
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={image}
-            >
-              <source src={media.video} type="video/mp4" />
-            </video>
+            <BackgroundVideo src={media.video} poster={image} alt={title} />
           ) : (
-            <img src={image} alt={title} className="h-full w-full object-cover" loading="eager" />
+            <img src={image} alt={title} className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" loading="eager" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/55" />
-          <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)]">
-            <CirclePlay className={cn("h-5 w-5", darkPlay ? "text-foreground" : "text-primary")} />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/55" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)] transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-background">
+            <CirclePlay className={cn("h-5 w-5 transition-transform duration-500 group-hover:scale-110", darkPlay ? "text-foreground" : "text-primary")} />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Play Showreel</span>
           </div>
         </div>
@@ -239,7 +231,7 @@ export function IntroSplit() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             At Uppal Design, we believe architecture is more than buildings — it is about creating meaningful spaces that enhance the way people live, work, and connect.
           </p>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/about">More About Us</Link>
           </Button>
         </div>
@@ -289,7 +281,7 @@ export function ProcessBand() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <Button asChild variant="outline" className="rounded-sm px-6">
+          <Button asChild variant="outline" className="btn-sheen rounded-sm px-6">
             <Link to="/process">View Our Process</Link>
           </Button>
         </div>
@@ -308,7 +300,7 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Featured Projects</p>
               <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Discover Our Work</h2>
             </div>
-            <Button asChild className="rounded-sm px-6">
+            <Button asChild className="btn-sheen rounded-sm px-6">
               <Link to="/projects">View All Projects</Link>
             </Button>
           </div>
@@ -338,15 +330,18 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
 
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
-    <article className="group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 hover:-translate-y-1">
-      <div className="overflow-hidden">
-        <img src={project.image} alt={project.title} className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" loading="lazy" />
+    <article className="project-tile group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)]">
+      <div className="media-hover overflow-hidden">
+        <img src={project.image} alt={project.title} className="h-56 w-full object-cover" loading="lazy" />
       </div>
       <div className="space-y-3 p-5">
         <span className="inline-flex rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{project.category}</span>
         <div>
-          <h3 className="text-xl font-semibold">{project.title}</h3>
+          <h3 className="text-xl font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
           <p className="text-sm text-muted-foreground">{project.location}</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          View Project <ArrowRight className="tile-arrow h-3.5 w-3.5" />
         </div>
       </div>
     </article>
@@ -363,18 +358,18 @@ export function ServicesGrid() {
             <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Comprehensive Architectural Solutions</h2>
           </div>
           <div className="flex justify-end">
-            <Button asChild className="rounded-sm px-6">
+            <Button asChild className="btn-sheen rounded-sm px-6">
               <Link to="/services">View All Services</Link>
             </Button>
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {services.slice(0, 5).map((service) => (
-            <div key={service.title} className="group border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-transform duration-300 hover:-translate-y-1">
-              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary">
+            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
                 <Building2 className="h-5 w-5" />
               </div>
-              <h3 className="mb-3 text-lg font-semibold">{service.title}</h3>
+              <h3 className="mb-3 text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
               <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
             </div>
           ))}
@@ -427,7 +422,7 @@ export function BlogAndQuoteBand() {
               <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
             </div>
             <textarea className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
-            <Button className="w-fit rounded-sm px-6">Send Request</Button>
+            <Button className="btn-sheen w-fit rounded-sm px-6">Send Request</Button>
           </form>
         </div>
       </div>
@@ -445,7 +440,7 @@ export function ContactStrip() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             We would love to hear your ideas and help turn them into intelligent, inspiring spaces.
           </p>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/contact">Get in Touch</Link>
           </Button>
         </div>
@@ -605,7 +600,7 @@ function WhyChooseUsBand() {
               <li key={item} className="flex items-start gap-3"><ChevronRight className="mt-0.5 h-4 w-4 text-primary" />{item}</li>
             ))}
           </ul>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/about">Learn More About Us</Link>
           </Button>
         </div>
@@ -681,7 +676,7 @@ function FeaturedProjectsSplit() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             A curated selection of our most impactful projects, harmonizing design excellence and attention to detail.
           </p>
-          <Button asChild className="rounded-sm px-6"><Link to="/projects">View All Projects</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/projects">View All Projects</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {projects.slice(1, 4).map((project) => (
@@ -752,7 +747,7 @@ function ValueStrip() {
         <div className="space-y-4 xl:col-span-2">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Work With Us</p>
           <h2 className="max-w-[11ch] text-3xl font-semibold leading-tight">Designed Around You. Delivered with Excellence.</h2>
-          <Button asChild className="rounded-sm px-6"><Link to="/contact">Let’s Build Together</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Let’s Build Together</Link></Button>
         </div>
         {[
           ["Collaborative Approach", Users],
@@ -796,7 +791,7 @@ function FaqBand() {
             <p className="mb-5 text-base leading-8 text-muted-foreground">
               We are here to help. Reach out to our team and let’s discuss your project in detail.
             </p>
-            <Button asChild className="rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
+            <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
           </div>
         </div>
       </div>
@@ -838,7 +833,7 @@ function FeaturedArticleBand() {
             <span>{featured.category}</span>
           </div>
           <p className="max-w-xl text-base leading-8 text-muted-foreground">{featured.excerpt}</p>
-          <Button className="w-fit rounded-sm px-6">Read Full Article</Button>
+          <Button className="btn-sheen w-fit rounded-sm px-6">Read Full Article</Button>
         </div>
       </div>
     </section>
@@ -907,7 +902,7 @@ function NewsletterBand() {
         </div>
         <div className="grid gap-4 md:grid-cols-[1fr_auto]">
           <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
-          <Button className="h-12 rounded-sm px-6">Subscribe</Button>
+          <Button className="btn-sheen h-12 rounded-sm px-6">Subscribe</Button>
         </div>
       </div>
     </section>
@@ -961,7 +956,7 @@ function ContactDetailsBand() {
               <input key={field} className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder={field} />
             ))}
             <textarea className="md:col-span-2 min-h-[140px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
-            <Button className="md:col-span-2 w-fit rounded-sm px-6">Send Message</Button>
+            <Button className="btn-sheen md:col-span-2 w-fit rounded-sm px-6">Send Message</Button>
           </form>
         </div>
       </div>
@@ -1032,7 +1027,7 @@ function LeadershipBand() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             Our leadership combines professionalism with creativity, insight, and experience to drive our studio’s growth, ensure client satisfaction, and create success.
           </p>
-          <Button asChild className="rounded-sm px-6"><Link to="/contact">Meet Leadership</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Meet Leadership</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-4">
           {teamLeads.map((member) => (
@@ -1135,7 +1130,7 @@ function ProjectOverviewBand() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             Luxury Villa Haven is a private residence designed to offer serenity, functionality, and refined living. The villa blends soft forms with natural materials to create a calm retreat.
           </p>
-          <Button className="rounded-sm px-6">Download Case Study</Button>
+          <Button className="btn-sheen rounded-sm px-6">Download Case Study</Button>
         </div>
         <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
           <img src={media.heroMain} alt="Luxury villa exterior" className="h-full min-h-[380px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
