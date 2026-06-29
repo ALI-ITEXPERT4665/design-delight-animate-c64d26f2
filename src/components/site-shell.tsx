@@ -423,11 +423,12 @@ export function HeroSection({
           </div>
         </div>
         <div className={cn(
-          "group relative overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover",
+          "group relative overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)]",
+          !useVideo && "media-hover",
           compact ? "min-h-[320px] lg:min-h-[420px]" : "min-h-[360px] lg:min-h-[520px]",
         )}>
           {useVideo ? (
-            <BackgroundVideo src={src} poster={image} alt={title} drift parallax />
+            <BackgroundVideo src={src} poster={image} alt={title} />
           ) : (
             <img src={image} alt={title} className="hero-drift h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.08]" loading="eager" />
           )}

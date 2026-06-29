@@ -215,9 +215,21 @@
   animation: none;
 }
 .bg-video-zoom {
-  animation: bg-video-zoom 28s ease-in-out infinite;
-  will-change: transform;
+  animation: none !important;
+  will-change: auto;
   transform-origin: center center;
+}
+
+[data-steady-video="true"],
+[data-steady-video="true"] img,
+[data-steady-video="true"] video,
+.media-hover [data-steady-video="true"],
+.media-hover:hover [data-steady-video="true"],
+.media-hover:hover [data-steady-video="true"] video {
+  animation: none !important;
+  transform: none !important;
+  transition: opacity 300ms ease, filter 300ms ease !important;
+  will-change: auto !important;
 }
 
 
@@ -234,6 +246,11 @@
   &:hover video {
     transform: scale(1.06);
     filter: saturate(1.08) contrast(1.02);
+  }
+  &:hover [data-steady-video="true"],
+  &:hover [data-steady-video="true"] img,
+  &:hover [data-steady-video="true"] video {
+    transform: none !important;
   }
   &::after {
     content: "";
