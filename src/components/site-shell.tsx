@@ -45,7 +45,8 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { motion as M } from "framer-motion";
-import { type ComponentType, type ReactNode, useEffect, useState } from "react";
+import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
+import { useScroll, useTransform, useMotionValue, useSpring, motion } from "framer-motion";
 import {
   blogPosts,
   faqItems,
