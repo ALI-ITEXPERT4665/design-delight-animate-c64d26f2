@@ -27,7 +27,7 @@ import vidFooter from "@/assets/videos/footer.mp4.asset.json";
 import vidDetail from "@/assets/videos/detail.mp4.asset.json";
 
 export const pageVideos = {
-  home: vidHome.url,
+  home: heroVideo.url,
   about: vidAbout.url,
   projects: vidProjects.url,
   services: vidServices.url,
