@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  ClientOnly,
   HeadContent,
   Link,
   Outlet,
@@ -9,15 +8,12 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { lazy, useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
+import { ChatWidget } from "@/components/chat-widget";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import appCss from "../styles.css?url";
-
-const ChatWidget = lazy(() =>
-  import("@/components/chat-widget").then((m) => ({ default: m.ChatWidget })),
-);
 
 function NotFoundComponent() {
   return (
@@ -152,9 +148,7 @@ function RootComponent() {
         <SiteHeader wordmark={wordmark} />
         <Outlet />
         <SiteFooter wordmark={wordmark} variant={footerVariant} />
-        <ClientOnly fallback={null}>
-          <ChatWidget />
-        </ClientOnly>
+        <ChatWidget />
       </div>
     </QueryClientProvider>
   );
