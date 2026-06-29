@@ -114,9 +114,10 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              className="story-link text-sm font-medium uppercase tracking-[0.14em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
+              className="story-link inline-flex items-center gap-1 text-sm font-medium uppercase tracking-[0.14em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
             >
               {item.label}
+              {item.label === "Services" ? <ChevronDown className="h-3 w-3 opacity-70" /> : null}
             </Link>
           ))}
         </nav>
@@ -138,7 +139,39 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
   );
 }
 
-export function SiteFooter({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
+export function SiteFooter({
+  wordmark = "Design",
+  variant = "default",
+}: {
+  wordmark?: "Design" | "Decor";
+  variant?: "default" | "minimal";
+} = {}) {
+  if (variant === "minimal") {
+    return (
+      <footer className="border-t border-border/60 bg-background">
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-4 py-6 text-sm text-muted-foreground md:flex-row md:px-6">
+          <p>© 2024 Uppal {wordmark}. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <span className="cursor-pointer transition-colors hover:text-foreground">Privacy Policy</span>
+            <span className="cursor-pointer transition-colors hover:text-foreground">Terms &amp; Conditions</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs uppercase tracking-[0.18em] text-foreground/80">Follow Us</span>
+            {[Instagram, Linkedin, Twitter, Mail].map((Icon, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label="social"
+                className="grid h-8 w-8 place-items-center rounded-full border border-border bg-card text-primary transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                <Icon className="h-3.5 w-3.5" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </footer>
+    );
+  }
   return (
     <footer className="border-t border-border/60 bg-card/60">
       <div className="mx-auto grid max-w-[1200px] gap-12 px-4 py-14 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
@@ -171,7 +204,7 @@ export function SiteFooter({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
           <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
           <div className="flex gap-6">
             <span className="hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-foreground transition-colors cursor-pointer">Terms & Conditions</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Terms &amp; Conditions</span>
           </div>
         </div>
       </div>
