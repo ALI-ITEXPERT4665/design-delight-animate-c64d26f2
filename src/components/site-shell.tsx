@@ -303,8 +303,12 @@ export function SiteFooter({
   }
   return (
     <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
-      <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+      {videoFooter && (
+        <>
+          <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+        </>
+      )}
       <div className="relative mx-auto grid max-w-[1200px] gap-12 px-4 py-16 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
         <div className="space-y-5">
           <div>
