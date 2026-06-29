@@ -359,6 +359,24 @@ function FooterList({ title, items }: { title: string; items: { label: string; t
 export function PageFrame({ children }: { children: ReactNode }) {
   return <div className="bg-background text-foreground">{children}</div>;
 }
+function HeroWordReveal({ text, offset = 0 }: { text: string; offset?: number }) {
+  const words = text.split(/\s+/);
+  return (
+    <>
+      {words.map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden align-baseline pr-[0.22em]">
+          <span
+            className="inline-block hero-word-rise will-change-transform"
+            style={{ animationDelay: `${(offset + i) * 90}ms` }}
+          >
+            {w}
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
 
 export function HeroSection({
   eyebrow,
