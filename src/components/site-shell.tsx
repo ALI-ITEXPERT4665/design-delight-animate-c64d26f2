@@ -2074,8 +2074,11 @@ export function ProjectDetailContent() {
   const related = projects.slice(1, 5);
   return (
     <>
+      <DetailScrollProgress />
       <ProjectDetailHero />
+      <DetailMarquee />
       <ProjectOverviewBand />
+      <ParallaxQuoteBand />
       <ProjectHighlightsBand />
       <ChallengeSolutionBand />
       <RelatedProjectsBand related={related} />
@@ -2083,6 +2086,60 @@ export function ProjectDetailContent() {
     </>
   );
 }
+
+function DetailScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 24, mass: 0.3 });
+  return (
+    <M.div
+      style={{ scaleX }}
+      className="fixed left-0 right-0 top-0 z-[60] h-[2px] origin-left bg-primary"
+    />
+  );
+}
+
+function DetailMarquee() {
+  const items = ["Residential", "Surrey · UK", "Completed 2023", "6200 sq ft", "Private Client", "Award Shortlist"];
+  const row = [...items, ...items, ...items];
+  return (
+    <div className="overflow-hidden border-y border-border/60 bg-foreground py-5">
+      <M.div
+        animate={{ x: ["0%", "-33.333%"] }}
+        transition={{ duration: 28, ease: "linear", repeat: Infinity }}
+        className="flex w-max items-center gap-12 whitespace-nowrap"
+      >
+        {row.map((t, i) => (
+          <span key={i} className="flex items-center gap-12 text-[13px] font-semibold uppercase tracking-[0.32em] text-background/90">
+            {t}
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          </span>
+        ))}
+      </M.div>
+    </div>
+  );
+}
+
+function ParallaxQuoteBand() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  return (
+    <section ref={ref} className="relative isolate overflow-hidden border-b border-border/60 bg-black">
+      <M.div style={{ y }} className="absolute inset-0 -z-10 will-change-transform">
+        <img src={media.project2} alt="" className="h-[130%] w-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-black/60" />
+      </M.div>
+      <div className="mx-auto max-w-[1000px] px-4 py-28 text-center md:px-6 md:py-36">
+        <h3 className="text-2xl font-medium leading-[1.25] tracking-tight text-white md:text-4xl">
+          <WordMaskReveal text="“A home where every line, light and material works in quiet conversation.”" />
+        </h3>
+        <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.36em] text-white/70">Lead Architect — Uppal Design</p>
+      </div>
+    </section>
+  );
+}
+
+
 
 const detailEase = [0.22, 1, 0.36, 1] as const;
 
@@ -2189,6 +2246,68 @@ function MagneticButton({ children, className }: { children: ReactNode; classNam
     </motion.button>
   );
 }
+function GalleryImage({ src, alt, className, delay = 0 }: { src: string; alt: string; className?: string; delay?: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [hover, setHover] = useState(false);
+  const cx = useMotionValue(0);
+  const cy = useMotionValue(0);
+  const sx = useSpring(cx, { stiffness: 240, damping: 22 });
+  const sy = useSpring(cy, { stiffness: 240, damping: 22 });
+  return (
+    <M.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30, clipPath: "inset(0 0 100% 0)" }}
+      whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 1, ease: detailEase, delay }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        cx.set(e.clientX - r.left);
+        cy.set(e.clientY - r.top);
+      }}
+      className={cn("group relative cursor-none overflow-hidden rounded-sm", className)}
+    >
+      <img src={src} alt={alt} className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <M.div
+        style={{ x: sx, y: sy, opacity: hover ? 1 : 0 }}
+        className="pointer-events-none absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-5 py-5 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground shadow-xl"
+      >
+        View
+      </M.div>
+    </M.div>
+  );
+}
+
+function Tilt3DCard({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 180, damping: 16 });
+  const sry = useSpring(ry, { stiffness: 180, damping: 16 });
+  return (
+    <M.div
+      ref={ref}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        ry.set(px * 10);
+        rx.set(-py * 10);
+      }}
+      onMouseLeave={() => { rx.set(0); ry.set(0); }}
+      className={className}
+    >
+      {children}
+    </M.div>
+  );
+}
+
 
 function ProjectOverviewBand() {
   return (
@@ -2208,28 +2327,9 @@ function ProjectOverviewBand() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase }}
-            className="group relative row-span-2 overflow-hidden rounded-sm"
-          >
-            <img src={media.heroMain} alt="Villa exterior" className="h-full min-h-[480px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/15" />
-          </M.div>
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase, delay: 0.12 }}
-            className="group relative overflow-hidden rounded-sm"
-          >
-            <img src={media.collageC} alt="Villa lounge" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-          </M.div>
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase, delay: 0.2 }}
-            className="group relative overflow-hidden rounded-sm"
-          >
-            <img src={media.project2} alt="Villa bedroom" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-          </M.div>
+          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[480px]" />
+          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[232px]" delay={0.12} />
+          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[232px]" delay={0.2} />
         </div>
       </div>
     </section>
