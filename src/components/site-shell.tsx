@@ -2500,7 +2500,7 @@ function ProjectDetailHero() {
           Featured Project — Residential
         </M.p>
         <h1 className="max-w-[18ch] text-4xl font-semibold leading-[1.02] tracking-tight text-white md:text-7xl">
-          <WordMaskReveal text="LUXURY VILLA HAVEN" />
+          <KineticTitle text="LUXURY VILLA HAVEN" />
         </h1>
         <div className="mt-6 max-w-2xl overflow-hidden">
           <M.p
