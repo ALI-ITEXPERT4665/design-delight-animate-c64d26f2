@@ -10,6 +10,8 @@ import {
   Box,
   Building,
   Building2,
+  Check,
+  Compass,
   ChevronDown,
   ChevronRight,
   CirclePlay,
