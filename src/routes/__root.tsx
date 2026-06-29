@@ -123,6 +123,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
+  loader: ({ context }) => {
+    // Prime the site content cache so pages can read editable copy via useContent.
+    void context.queryClient.prefetchQuery({
+      queryKey: ["site", "content"],
+      queryFn: async () => {
+        const { getAllSiteContent } = await import("@/lib/admin/content.functions");
+        return getAllSiteContent();
+      },
+      staleTime: 30_000,
+    });
+  },
 });
 
 function RootShell({ children }: { children: ReactNode }) {
