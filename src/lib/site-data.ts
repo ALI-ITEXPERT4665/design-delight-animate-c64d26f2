@@ -23,6 +23,9 @@ import projReadingOffice from "@/assets/proj-reading-office.jpg.asset.json";
 import projPrivateVilla from "@/assets/proj-private-villa.jpg.asset.json";
 import projMixedUse from "@/assets/proj-mixed-use.jpg.asset.json";
 
+import vidFooter from "@/assets/videos/footer.mp4.asset.json";
+import vidDetail from "@/assets/videos/detail.mp4.asset.json";
+
 export const pageVideos = {
   home: vidHome.url,
   about: vidAbout.url,
@@ -32,8 +35,9 @@ export const pageVideos = {
   blog: vidBlog.url,
   contact: vidCta.url,
   team: vidAbout.url,
-  detail: vidProjects.url,
+  detail: vidDetail.url,
   cta: vidCta.url,
+  footer: vidFooter.url,
 };
 
 export const navItems = [

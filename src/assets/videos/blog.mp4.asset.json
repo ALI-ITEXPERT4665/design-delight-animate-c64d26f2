@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "48f01c0f-e2ff-4c00-9c34-ca1c3f863e14",
+  "asset_id": "d9363141-1cf6-4eaa-ab25-23d28d9169dc",
   "project_id": "b85053cd-9b7d-4316-97f0-6be2ef8e8104",
-  "url": "/__l5e/assets-v1/48f01c0f-e2ff-4c00-9c34-ca1c3f863e14/hero-blog.mp4",
-  "r2_key": "a/v1/b85053cd-9b7d-4316-97f0-6be2ef8e8104/48f01c0f-e2ff-4c00-9c34-ca1c3f863e14/hero-blog.mp4",
-  "original_filename": "hero-blog.mp4",
-  "size": 6765043,
+  "url": "/__l5e/assets-v1/d9363141-1cf6-4eaa-ab25-23d28d9169dc/blog.mp4",
+  "r2_key": "a/v1/b85053cd-9b7d-4316-97f0-6be2ef8e8104/d9363141-1cf6-4eaa-ab25-23d28d9169dc/blog.mp4",
+  "original_filename": "blog.mp4",
+  "size": 1332968,
   "content_type": "video/mp4",
-  "created_at": "2026-06-29T08:47:42Z"
+  "created_at": "2026-06-29T08:58:37Z"
 }
