@@ -733,10 +733,23 @@ export function ProjectsPageContent() {
 function CategoryBand() {
   return (
     <section className="border-b border-border/60 bg-background py-6">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap gap-4 px-4 md:px-6">
-        {["All Projects", "Residential", "Commercial", "Educational", "Hospitality", "Mixed-use"].map((item, index) => (
-          <div key={item} className={cn("rounded-full border px-5 py-3 text-sm", index === 0 ? "border-primary/30 bg-primary/8 text-primary" : "border-border text-muted-foreground")}>{item}</div>
-        ))}
+      <div className="mx-auto flex max-w-[1200px] flex-wrap gap-3 px-4 md:px-6">
+        {["All Projects", "Residential", "Commercial", "Educational", "Hospitality", "Mixed-use"].map((item, index) => {
+          const key = item === "All Projects" ? "All" : item;
+          const Icon = categoryIcon[key] ?? Grid3x3;
+          return (
+            <div
+              key={item}
+              className={cn(
+                "group inline-flex cursor-pointer items-center gap-2 rounded-full border px-5 py-3 text-sm transition-all duration-300 hover:border-primary hover:text-primary",
+                index === 0 ? "border-primary/40 bg-primary/8 text-primary" : "border-border text-muted-foreground",
+              )}
+            >
+              <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <span className="uppercase tracking-[0.14em] text-xs">{item}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
