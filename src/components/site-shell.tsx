@@ -269,21 +269,23 @@ export function SiteFooter({
 } = {}) {
   if (variant === "minimal") {
     return (
-      <footer className="border-t border-border/60 bg-background">
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-4 py-6 text-sm text-muted-foreground md:flex-row md:px-6">
+      <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
+        <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-neutral-300 md:flex-row md:px-6">
           <p>© 2024 Uppal {wordmark}. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <span className="cursor-pointer transition-colors hover:text-foreground">Privacy Policy</span>
-            <span className="cursor-pointer transition-colors hover:text-foreground">Terms &amp; Conditions</span>
+            <span className="cursor-pointer transition-colors hover:text-primary">Privacy Policy</span>
+            <span className="cursor-pointer transition-colors hover:text-primary">Terms &amp; Conditions</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.18em] text-foreground/80">Follow Us</span>
+            <span className="text-xs uppercase tracking-[0.18em] text-neutral-100">Follow Us</span>
             {[Instagram, Linkedin, Twitter, Mail].map((Icon, i) => (
               <button
                 key={i}
                 type="button"
                 aria-label="social"
-                className="grid h-8 w-8 place-items-center rounded-full border border-border bg-card text-primary transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+                className="grid h-8 w-8 place-items-center rounded-full border border-white/30 bg-white/10 text-primary backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
               >
                 <Icon className="h-3.5 w-3.5" />
               </button>
