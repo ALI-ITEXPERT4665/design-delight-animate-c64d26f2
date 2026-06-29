@@ -80,9 +80,30 @@ export function ChatWidget() {
 
   return (
     <>
+      {/* Promo bubble */}
+      <AnimatePresence>
+        {showPromo && !open && (
+          <motion.button
+            initial={{ opacity: 0, y: 10, x: 10 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            onClick={() => { setOpen(true); setShowPromo(false); }}
+            className="fixed bottom-24 right-6 z-[60] max-w-[260px] rounded-2xl border border-white/10 bg-neutral-900 px-4 py-3 text-left text-xs text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+          >
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-primary">
+              <Sparkles className="h-3 w-3" /> Uppal Concierge
+            </div>
+            <div className="mt-1 leading-snug text-neutral-200">
+              Get an instant UK project estimate or ask about our services →
+            </div>
+            <span className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 bg-neutral-900" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* Floating launcher */}
       <motion.button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { setOpen((o) => !o); setShowPromo(false); }}
         aria-label="Open Uppal Concierge"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
