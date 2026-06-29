@@ -132,13 +132,15 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const decorPaths = new Set(["/projects", "/services", "/project-detail"]);
   const wordmark: "Design" | "Decor" = decorPaths.has(pathname) ? "Decor" : "Design";
+  const footerVariant: "default" | "minimal" = pathname === "/" ? "default" : "minimal";
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background text-foreground">
         <SiteHeader wordmark={wordmark} />
         <Outlet />
-        <SiteFooter wordmark={wordmark} />
+        <SiteFooter wordmark={wordmark} variant={footerVariant} />
+
       </div>
     </QueryClientProvider>
   );
