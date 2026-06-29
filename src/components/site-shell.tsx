@@ -598,7 +598,7 @@ export function AboutPageContent() {
         primaryLabel="Explore Our Work"
         primaryTo="/projects"
         image={media.heroAlt}
-        showVideo={false}
+        videoSrc={pageVideos.about}
         showPlay={false}
         compact
       />
