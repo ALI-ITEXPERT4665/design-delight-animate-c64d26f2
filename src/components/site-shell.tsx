@@ -1173,13 +1173,153 @@ export function ProcessPageContent() {
         videoSrc={pageVideos.process}
       />
       <ProcessTimeline />
+      <ProcessPrinciples />
       <DetailedProcessAlternating />
+      <ProcessMarquee />
       <ValueGrid4 />
+      <ProcessTestimonial />
       <ProcessFaq />
+      <ProcessCTA />
       <ContactStrip />
     </>
   );
 }
+
+function ProcessPrinciples() {
+  const items = [
+    { k: "01", t: "Listen First", d: "Every great project begins with deep understanding of the people who will live and work within it." },
+    { k: "02", t: "Design With Intent", d: "Each detail is deliberate — proportion, material, light, and flow tuned to the brief." },
+    { k: "03", t: "Build To Last", d: "Specification choices that respect time, weather, and the way real life is lived." },
+  ];
+  return (
+    <section className="relative isolate overflow-hidden border-b border-border/60 bg-neutral-950 py-24 text-neutral-100">
+      <BackgroundVideo src={pageVideos.process} poster={media.heroMain} />
+      <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/85 via-black/75 to-black/90" />
+      <div className="relative mx-auto max-w-[1200px] px-4 md:px-6">
+        <div className="mb-14 max-w-2xl">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Guiding Principles</p>
+          <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Three Beliefs That Shape Every Brief.</h2>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {items.map((it, i) => (
+            <M.div
+              key={it.k}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 0.7, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8 }}
+              className="group relative overflow-hidden rounded-sm border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-colors duration-500 hover:border-primary/60"
+            >
+              <span className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-700 group-hover:scale-x-100" />
+              <div className="mb-6 font-serif text-5xl text-primary/80 transition-transform duration-500 group-hover:-translate-y-1 group-hover:text-primary">{it.k}</div>
+              <h3 className="mb-3 text-xl font-semibold">{it.t}</h3>
+              <p className="text-sm leading-7 text-neutral-300">{it.d}</p>
+              <span className="absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-primary/10 blur-3xl transition-all duration-700 group-hover:scale-150 group-hover:bg-primary/30" />
+            </M.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessMarquee() {
+  const tools = ["Revit", "AutoCAD", "SketchUp", "Rhino", "Enscape", "Lumion", "V-Ray", "Twinmotion", "Photoshop", "InDesign", "ArchiCAD", "BIM 360"];
+  return (
+    <section className="border-b border-border/60 bg-background py-16">
+      <div className="mx-auto mb-8 max-w-[1200px] px-4 md:px-6">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Tools We Master</p>
+        <h2 className="text-2xl font-semibold md:text-3xl">A toolkit refined over fifteen years.</h2>
+      </div>
+      <div className="group relative overflow-hidden border-y border-border/60 bg-neutral-50 py-6">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-neutral-50 to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-neutral-50 to-transparent" />
+        <div className="flex w-max animate-[marquee_38s_linear_infinite] gap-12 pr-12 group-hover:[animation-play-state:paused]">
+          {[...tools, ...tools].map((t, i) => (
+            <span key={i} className="text-2xl font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-300 hover:text-primary md:text-3xl">
+              {t} <span className="ml-12 text-primary">●</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessTestimonial() {
+  const quotes = [
+    { q: "Uppal turned a complicated brief into a calm, beautiful home. The process felt effortless from the first sketch.", a: "Priya & Rohan", r: "Residential client, Surrey" },
+    { q: "Communication was world class. Every milestone arrived on time and nothing was lost in translation on site.", a: "Mark Halloway", r: "Developer, London" },
+    { q: "The visualisations gave us full confidence before a single brick was laid. Truly intelligent design.", a: "Aisha Khan", r: "Hospitality client, Manchester" },
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((v) => (v + 1) % quotes.length), 6000);
+    return () => clearInterval(id);
+  }, [quotes.length]);
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto max-w-[1100px] px-4 md:px-6">
+        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.24em] text-primary">Client Voices</p>
+        <h2 className="mb-12 text-center text-3xl font-semibold md:text-5xl">A Process Clients Trust.</h2>
+        <div className="relative mx-auto max-w-3xl text-center">
+          <span className="absolute -top-8 left-1/2 -translate-x-1/2 font-serif text-9xl leading-none text-primary/15">“</span>
+          {quotes.map((qt, idx) => (
+            <M.blockquote
+              key={idx}
+              initial={false}
+              animate={{ opacity: i === idx ? 1 : 0, y: i === idx ? 0 : 20, position: i === idx ? "relative" : "absolute" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="inset-x-0 px-6 text-xl font-light leading-9 text-foreground md:text-2xl"
+            >
+              “{qt.q}”
+              <footer className="mt-6 text-sm uppercase tracking-[0.22em] text-muted-foreground">
+                <span className="text-primary">{qt.a}</span> — {qt.r}
+              </footer>
+            </M.blockquote>
+          ))}
+          <div className="mt-10 flex justify-center gap-2">
+            {quotes.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setI(idx)}
+                aria-label={`Quote ${idx + 1}`}
+                className={cn("h-[3px] rounded-full transition-all duration-500", i === idx ? "w-10 bg-primary" : "w-5 bg-border hover:bg-primary/50")}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessCTA() {
+  return (
+    <section className="relative isolate overflow-hidden py-24 text-neutral-100">
+      <BackgroundVideo src={pageVideos.cta} poster={media.heroMain} />
+      <div className="absolute inset-0 -z-0 bg-gradient-to-br from-black/85 via-black/70 to-black/85" />
+      <div className="relative mx-auto max-w-[1100px] px-4 text-center md:px-6">
+        <M.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Ready When You Are</p>
+          <h2 className="mb-6 text-4xl font-semibold leading-tight md:text-6xl">Let’s begin step one — together.</h2>
+          <p className="mx-auto mb-10 max-w-2xl text-base leading-8 text-neutral-300">
+            Book a discovery call and walk through your brief with our principal architect. No obligation, just clarity.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild className="btn-sheen rounded-sm px-8 py-6 text-base"><Link to="/contact">Start Your Project</Link></Button>
+            <Button asChild variant="outline" className="rounded-sm border-white/40 bg-transparent px-8 py-6 text-base text-white hover:bg-white hover:text-black"><Link to="/projects">See Our Work</Link></Button>
+          </div>
+        </M.div>
+      </div>
+    </section>
+  );
 
 function ProcessTimeline() {
   const MotionAny = M.div;
@@ -1285,7 +1425,8 @@ function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; ind
           style={{ transformStyle: "preserve-3d" }}
           className="relative"
         >
-          <img src={step.image} alt={step.title} className="h-[420px] w-full object-cover transition-transform duration-[1200ms] ease-out hover:scale-[1.06]" loading="lazy" />
+          <img src={step.image} alt={step.title} className="h-[420px] w-full object-cover" loading="lazy" />
+          <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--mx,50%)_var(--my,50%),rgba(255,255,255,0.18),transparent_55%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           <div className="absolute left-6 top-6 flex items-center gap-3 text-white">
             <span className="grid h-12 w-12 place-items-center rounded-full border border-white/40 bg-white/10 backdrop-blur text-lg font-semibold">{step.number}</span>
