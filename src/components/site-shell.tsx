@@ -2265,28 +2265,9 @@ function ProjectOverviewBand() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase }}
-            className="group relative row-span-2 overflow-hidden rounded-sm"
-          >
-            <img src={media.heroMain} alt="Villa exterior" className="h-full min-h-[480px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/15" />
-          </M.div>
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase, delay: 0.12 }}
-            className="group relative overflow-hidden rounded-sm"
-          >
-            <img src={media.collageC} alt="Villa lounge" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-          </M.div>
-          <M.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: detailEase, delay: 0.2 }}
-            className="group relative overflow-hidden rounded-sm"
-          >
-            <img src={media.project2} alt="Villa bedroom" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
-          </M.div>
+          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[480px]" />
+          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[232px]" delay={0.12} />
+          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[232px]" delay={0.2} />
         </div>
       </div>
     </section>
