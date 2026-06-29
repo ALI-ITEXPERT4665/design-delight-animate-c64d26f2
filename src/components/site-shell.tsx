@@ -38,6 +38,7 @@ import {
   Target,
   Trophy,
   Twitter,
+  X,
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
