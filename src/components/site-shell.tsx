@@ -5,21 +5,35 @@ import { BackgroundVideo } from "@/components/background-video";
 import {
   ArrowRight,
   Award,
+  BedDouble,
+  Book,
+  Box,
+  Building,
   Building2,
   ChevronRight,
   CirclePlay,
+  ClipboardList,
   Clock3,
+  FileText,
+  Grid3x3,
+  HardHat,
+  HeartHandshake,
+  Home as HomeIcon,
+  Layers,
   Leaf,
+  Lightbulb,
   Mail,
   MapPin,
   Menu,
   Phone,
+  Puzzle,
   ShieldCheck,
   Sparkles,
+  Trophy,
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import {
   blogPosts,
   faqItems,
@@ -35,17 +49,54 @@ import {
   values,
 } from "@/lib/site-data";
 
-export function SiteHeader() {
+type IconCmp = ComponentType<{ className?: string }>;
+
+const statIcon: Record<string, IconCmp> = {
+  building: Building2,
+  badge: Award,
+  heart: HeartHandshake,
+  trophy: Trophy,
+  users: Users,
+};
+
+const processIcon: Record<string, IconCmp> = {
+  lightbulb: Lightbulb,
+  file: FileText,
+  cube: Box,
+  clipboard: ClipboardList,
+  helmet: HardHat,
+};
+
+const serviceIcon: Record<string, IconCmp> = {
+  box: Box,
+  cube: Layers,
+  file: FileText,
+  puzzle: Puzzle,
+  helmet: HardHat,
+  leaf: Leaf,
+};
+
+const categoryIcon: Record<string, IconCmp> = {
+  All: Grid3x3,
+  "All Projects": Grid3x3,
+  Residential: HomeIcon,
+  Commercial: Building,
+  Educational: Book,
+  Hospitality: BedDouble,
+  "Mixed-use": Building2,
+};
+
+export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-4 py-4 md:px-6">
         <Link to="/" className="group flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-sm border border-border bg-background transition-transform duration-300 group-hover:-translate-y-0.5">
-            <Building2 className="h-5 w-5 text-primary" />
+            <HomeIcon className="h-5 w-5 text-primary" strokeWidth={1.5} />
           </div>
           <div>
             <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">Design</div>
+            <div className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">{wordmark}</div>
           </div>
         </Link>
 
@@ -55,7 +106,7 @@ export function SiteHeader() {
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              className="story-link text-sm font-medium text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
+              className="story-link text-sm font-medium uppercase tracking-[0.14em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
             >
               {item.label}
             </Link>
@@ -63,7 +114,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 md:inline-flex">
+          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 uppercase tracking-[0.16em] text-xs md:inline-flex">
             <Link to="/contact">Get a Quote</Link>
           </Button>
           <button
@@ -79,14 +130,14 @@ export function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
   return (
     <footer className="border-t border-border/60 bg-card/60">
       <div className="mx-auto grid max-w-[1200px] gap-12 px-4 py-14 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
         <div className="space-y-5">
           <div>
             <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-xs uppercase tracking-[0.34em] text-muted-foreground">Decor</div>
+            <div className="text-xs uppercase tracking-[0.34em] text-muted-foreground">{wordmark}</div>
           </div>
           <p className="max-w-sm text-sm leading-7 text-muted-foreground">
             We create spaces that inspire, endure, and elevate the art of living.
@@ -109,10 +160,10 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-4 py-5 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
-          <p>© 2024 Uppal Decor. All Rights Reserved.</p>
+          <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
           <div className="flex gap-6">
-            <span>Privacy Policy</span>
-            <span>Terms & Conditions</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Terms & Conditions</span>
           </div>
         </div>
       </div>
@@ -206,16 +257,19 @@ export function HeroSection({
 export function StatsBand() {
   return (
     <section className="border-b border-border/60 bg-background">
-      <div className="mx-auto grid max-w-[1200px] gap-4 px-4 py-6 md:grid-cols-5 md:px-6">
-        {stats.map((stat) => (
-          <div key={stat.label} className="flex items-center gap-4 border-r border-border/50 py-3 last:border-r-0">
-            <Award className="h-6 w-6 text-primary" />
-            <div>
-              <div className="text-2xl font-semibold">{stat.value}</div>
-              <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{stat.label}</div>
+      <div className="mx-auto grid max-w-[1200px] gap-4 px-4 py-8 md:grid-cols-5 md:px-6">
+        {stats.map((stat) => {
+          const Icon = statIcon[stat.icon] ?? Award;
+          return (
+            <div key={stat.label} className="group flex items-center gap-4 border-r border-border/50 py-3 last:border-r-0 transition-colors hover:bg-primary/5 rounded-sm pl-2">
+              <Icon className="h-7 w-7 text-primary transition-transform duration-500 group-hover:rotate-[8deg] group-hover:scale-110" />
+              <div>
+                <div className="text-2xl font-semibold">{stat.value}</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{stat.label}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -225,27 +279,29 @@ export function IntroSplit() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-        <div className="space-y-6">
+        <div className="space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">About Us</p>
           <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Designing Spaces, Elevating Lives.</h2>
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             At Uppal Design, we believe architecture is more than buildings — it is about creating meaningful spaces that enhance the way people live, work, and connect.
           </p>
-          <Button asChild className="btn-sheen rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
             <Link to="/about">More About Us</Link>
           </Button>
         </div>
-        <div className="grid grid-cols-[1.1fr_0.9fr] gap-4">
-          <img src={media.collageA} alt="Architectural city composition" className="h-full min-h-[260px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          <div className="grid gap-4">
-            <img src={media.project3} alt="Modern facade detail" className="h-[170px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-            <div className="relative">
-              <img src={media.heroAlt} alt="Curved modern architecture" className="h-[220px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-              <div className="absolute -right-4 top-8 border border-primary/30 bg-background px-5 py-6 shadow-[var(--shadow-soft)]">
-                <div className="text-4xl font-semibold text-primary">15+</div>
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Years of Experience</div>
-              </div>
-            </div>
+        <div className="relative h-[460px]">
+          <div className="media-hover absolute left-0 top-4 h-[300px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)]">
+            <img src={media.collageA} alt="London skyline" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="media-hover absolute left-[28%] top-0 h-[220px] w-[42%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.collageB} alt="Glass tower" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="media-hover absolute right-0 bottom-12 h-[260px] w-[55%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.collageC} alt="Curved modern architecture" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="absolute right-4 top-8 z-10 border border-primary/30 bg-background px-6 py-5 shadow-[var(--shadow-soft)] text-center">
+            <div className="text-4xl font-semibold text-primary">15+</div>
+            <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Years of<br/>Experience</div>
           </div>
         </div>
       </div>

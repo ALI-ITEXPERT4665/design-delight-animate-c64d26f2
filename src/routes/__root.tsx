@@ -6,6 +6,7 @@ import {
   Scripts,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -128,13 +129,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const decorPaths = new Set(["/projects", "/services", "/project-detail"]);
+  const wordmark: "Design" | "Decor" = decorPaths.has(pathname) ? "Decor" : "Design";
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
+        <SiteHeader wordmark={wordmark} />
         <Outlet />
-        <SiteFooter />
+        <SiteFooter wordmark={wordmark} />
       </div>
     </QueryClientProvider>
   );
