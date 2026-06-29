@@ -231,7 +231,7 @@ export function StatsBand() {
 
 export function IntroSplit() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">About Us</p>
@@ -263,7 +263,7 @@ export function IntroSplit() {
 
 export function ProcessBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
@@ -277,7 +277,7 @@ export function ProcessBand() {
         <div className="grid gap-6 md:grid-cols-5">
           {processSteps.map((step) => (
             <div key={step.number} className="group relative space-y-4 text-center">
-              <div className="mx-auto grid h-18 w-18 place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 group-hover:-translate-y-1">
+              <div className="mx-auto grid h-[4.5rem] w-[4.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 group-hover:-translate-y-1">
                 <Sparkles className="h-6 w-6 text-primary" />
               </div>
               <div className="space-y-1">
@@ -300,7 +300,7 @@ export function ProcessBand() {
 
 export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         {intro ? (
           <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -355,7 +355,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 
 export function ServicesGrid() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
           <div>
@@ -386,7 +386,7 @@ export function ServicesGrid() {
 
 export function BlogAndQuoteBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.56fr_0.44fr]">
         <div className="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
           <div className="space-y-5">
@@ -437,7 +437,7 @@ export function BlogAndQuoteBand() {
 
 export function ContactStrip() {
   return (
-    <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_bottom_right,var(--color-surface-soft),transparent_42%)] py-18">
+    <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_bottom_right,var(--color-surface-soft),transparent_42%)] py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Let’s Build Something Extraordinary</p>
@@ -482,7 +482,7 @@ export function AboutPageContent() {
 
 function MissionBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 lg:grid-cols-[0.78fr_1.22fr]">
         <div className="space-y-5">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Story</p>
@@ -516,7 +516,7 @@ function MissionBand() {
 
 function FounderBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
         <img src={media.collageA} alt="Founder portrait setting" className="h-[420px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
         <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:p-10">
@@ -589,7 +589,7 @@ function FullServicesGrid() {
 
 function WhyChooseUsBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Choose Us</p>
@@ -673,7 +673,7 @@ function CategoryBand() {
 
 function FeaturedProjectsSplit() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Featured Projects</p>
@@ -717,7 +717,7 @@ export function ProcessPageContent() {
 
 function DetailedProcessGrid() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">The Process, in Detail</p>
@@ -729,7 +729,7 @@ function DetailedProcessGrid() {
               <div className="mb-4 text-xl font-semibold text-primary">{step.number}</div>
               <h3 className="text-lg font-semibold">{step.title}</h3>
               <p className="mb-4 text-sm uppercase tracking-[0.15em] text-muted-foreground">{step.subtitle}</p>
-              <img src={step.image} alt={step.title} className="mb-4 h-34 w-full object-cover" loading="lazy" />
+              <img src={step.image} alt={step.title} className="mb-4 h-[8.5rem] w-full object-cover" loading="lazy" />
               <p className="text-sm leading-7 text-muted-foreground">{step.description}</p>
               <div className="mt-5 space-y-2">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Deliverables</div>
@@ -775,7 +775,7 @@ function ValueStrip() {
 
 function FaqBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Frequently Asked Questions</p>
@@ -847,7 +847,7 @@ function FeaturedArticleBand() {
 
 function BlogGrid() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 flex items-center justify-between gap-6">
           <h2 className="text-3xl font-semibold md:text-5xl">Latest Articles</h2>
@@ -933,7 +933,7 @@ export function ContactPageContent() {
 
 function ContactDetailsBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Offices</p>
@@ -981,7 +981,7 @@ function OfficeCard({ title, address }: { title: string; address: string }) {
 
 function FaqCardsBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">How Can We Help?</p>
@@ -1024,7 +1024,7 @@ export function TeamPageContent() {
 
 function LeadershipBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Leadership</p>
@@ -1053,7 +1053,7 @@ function LeadershipBand() {
 function TeamBand({ compact = false }: { compact?: boolean }) {
   const members = compact ? teamLeads : teamMembers;
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 grid gap-6 lg:grid-cols-[0.74fr_1.26fr]">
           <div>
@@ -1081,7 +1081,7 @@ function TeamBand({ compact = false }: { compact?: boolean }) {
 
 function CultureBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
@@ -1127,7 +1127,7 @@ export function ProjectDetailContent() {
 
 function ProjectOverviewBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.66fr_1.34fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Project Overview</p>
@@ -1166,7 +1166,7 @@ function ProjectOverviewBand() {
 
 function ProjectHighlightsBand() {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
           <div>
@@ -1217,7 +1217,7 @@ function ProjectHighlightsBand() {
 
 function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
   return (
-    <section className="border-b border-border/60 bg-background py-18">
+    <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
