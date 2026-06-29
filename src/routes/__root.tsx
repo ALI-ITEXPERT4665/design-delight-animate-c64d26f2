@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { ChatWidget } from "@/components/chat-widget";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import appCss from "../styles.css?url";
@@ -147,7 +148,7 @@ function RootComponent() {
         <SiteHeader wordmark={wordmark} />
         <Outlet />
         <SiteFooter wordmark={wordmark} variant={footerVariant} />
-
+        <ChatWidget />
       </div>
     </QueryClientProvider>
   );
