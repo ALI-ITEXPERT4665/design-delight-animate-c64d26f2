@@ -2648,8 +2648,8 @@ function Tilt3DCard({ children, className }: { children: ReactNode; className?: 
 function ProjectOverviewBand() {
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div className="space-y-7">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div className="lg:sticky lg:top-32 lg:self-start space-y-7">
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Project Overview</p>
           <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Crafting Spaces That Inspire and Endure." />
@@ -2663,9 +2663,9 @@ function ProjectOverviewBand() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[480px]" />
-          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[232px]" delay={0.12} />
-          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[232px]" delay={0.2} />
+          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[560px]" />
+          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[272px]" delay={0.12} />
+          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[272px]" delay={0.2} />
         </div>
       </div>
     </section>
