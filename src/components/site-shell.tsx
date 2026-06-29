@@ -41,7 +41,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import type { ComponentType, ReactNode } from "react";
+import { type ComponentType, type ReactNode, useEffect, useState } from "react";
 import {
   blogPosts,
   faqItems,
@@ -96,49 +96,168 @@ const categoryIcon: Record<string, IconCmp> = {
 };
 
 export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
-  return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-4 py-4 md:px-6">
-        <Link to="/" className="group flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-sm border border-border bg-background transition-transform duration-300 group-hover:-translate-y-0.5">
-            <HomeIcon className="h-5 w-5 text-primary" strokeWidth={1.5} />
-          </div>
-          <div>
-            <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">{wordmark}</div>
-          </div>
-        </Link>
+  const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-        <nav className="hidden items-center gap-7 lg:flex">
-          {navItems.map((item) => (
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (drawerOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [drawerOpen]);
+
+  return (
+    <>
+      <header
+        className={cn(
+          "sticky top-0 z-50 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
+          scrolled
+            ? "border-b border-border/60 bg-background/85 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]"
+            : "border-b border-transparent bg-background/40 backdrop-blur-md",
+        )}
+      >
+        <div
+          className={cn(
+            "mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-4 transition-all duration-500 md:px-6",
+            scrolled ? "py-2.5" : "py-4",
+          )}
+        >
+          <Link to="/" className="group flex items-center gap-3">
+            <div className={cn(
+              "grid place-items-center rounded-sm border border-border bg-background/90 backdrop-blur-sm transition-all duration-500 group-hover:-translate-y-0.5 group-hover:border-primary/50",
+              scrolled ? "h-9 w-9" : "h-11 w-11",
+            )}>
+              <HomeIcon className="h-5 w-5 text-primary transition-transform duration-500 group-hover:rotate-[-6deg]" strokeWidth={1.5} />
+            </div>
+            <div className="leading-none">
+              <div className={cn("font-semibold tracking-[0.22em] text-foreground transition-all duration-500", scrolled ? "text-base" : "text-lg")}>UPPAL</div>
+              <div className="mt-1 text-[10px] uppercase tracking-[0.42em] text-muted-foreground">{wordmark}</div>
+            </div>
+          </Link>
+
+          <nav className="hidden items-center gap-1 lg:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                activeOptions={{ exact: item.to === "/" }}
+                className="nav-link group relative inline-flex items-center gap-1 px-3 py-2 text-[12px] font-medium uppercase tracking-[0.18em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-foreground"
+              >
+                <span className="relative">
+                  {item.label}
+                  <span className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-primary transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-data-[status=active]:scale-x-100" />
+                </span>
+                {item.label === "Services" ? <ChevronDown className="h-3 w-3 opacity-70 transition-transform duration-300 group-hover:translate-y-0.5" /> : null}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Button asChild className="btn-sheen hidden h-10 rounded-sm px-5 uppercase tracking-[0.16em] text-[11px] md:inline-flex">
+              <Link to="/contact">Get a Quote</Link>
+            </Button>
+            <button
+              type="button"
+              aria-label="Open menu"
+              onClick={() => setDrawerOpen(true)}
+              className="group relative grid h-11 w-11 place-items-center overflow-hidden rounded-full border border-border bg-card text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary"
+            >
+              <span className="absolute inset-0 -z-10 translate-y-full bg-primary/10 transition-transform duration-500 group-hover:translate-y-0" />
+              <Menu className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <MegaDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+    </>
+  );
+}
+
+function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  return (
+    <div
+      className={cn(
+        "fixed inset-0 z-[60] transition-opacity duration-500",
+        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+      )}
+      aria-hidden={!open}
+    >
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={onClose}
+        className="absolute inset-0 bg-foreground/45 backdrop-blur-sm"
+      />
+      <aside
+        className={cn(
+          "absolute right-0 top-0 flex h-full w-full max-w-[520px] flex-col overflow-y-auto border-l border-border bg-background shadow-[var(--shadow-strong)] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]",
+          open ? "translate-x-0" : "translate-x-full",
+        )}
+      >
+        <div className="flex items-center justify-between border-b border-border px-6 py-5">
+          <div>
+            <div className="text-xs uppercase tracking-[0.32em] text-muted-foreground">Menu</div>
+            <div className="text-lg font-semibold tracking-[0.18em]">UPPAL DESIGN</div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground transition hover:border-primary hover:text-primary"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <nav className="flex flex-col px-2 py-4">
+          {navItems.map((item, i) => (
             <Link
               key={item.to}
               to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              className="story-link inline-flex items-center gap-1 text-sm font-medium uppercase tracking-[0.14em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
+              onClick={onClose}
+              className="group flex items-center justify-between border-b border-border/60 px-5 py-5 text-2xl font-semibold uppercase tracking-[0.06em] text-foreground transition-colors hover:text-primary"
+              style={{ transitionDelay: open ? `${120 + i * 50}ms` : "0ms" }}
             >
-              {item.label}
-              {item.label === "Services" ? <ChevronDown className="h-3 w-3 opacity-70" /> : null}
+              <span className="relative overflow-hidden">
+                <span className="block transition-transform duration-500 group-hover:-translate-y-full">{item.label}</span>
+                <span className="absolute inset-0 block translate-y-full text-primary transition-transform duration-500 group-hover:translate-y-0">{item.label}</span>
+              </span>
+              <ArrowRight className="h-5 w-5 -translate-x-2 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 uppercase tracking-[0.16em] text-xs md:inline-flex">
-            <Link to="/contact">Get a Quote</Link>
-          </Button>
-          <button
-            type="button"
-            aria-label="Menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground transition-transform duration-300 hover:-translate-y-0.5"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+        <div className="mt-auto grid grid-cols-3 gap-2 border-t border-border p-4">
+          {[media.project1, media.project2, media.project3].map((src, i) => (
+            <Link
+              key={i}
+              to="/projects"
+              onClick={onClose}
+              className="group relative aspect-[4/5] overflow-hidden bg-muted"
+            >
+              <img src={src} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent opacity-80 transition-opacity group-hover:opacity-100" />
+              <span className="absolute bottom-2 left-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-background">Project 0{i + 1}</span>
+            </Link>
+          ))}
         </div>
-      </div>
-    </header>
+
+        <div className="border-t border-border px-6 py-5 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {siteSettings.phone}</div>
+          <div className="mt-2 flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {siteSettings.email}</div>
+        </div>
+      </aside>
+    </div>
   );
 }
+
 
 export function SiteFooter({
   wordmark = "Design",
