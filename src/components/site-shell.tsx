@@ -243,6 +243,8 @@ export function HeroSection({
   image = media.heroMain,
   showVideo = true,
   darkPlay = false,
+  showPlay = true,
+  compact = false,
 }: {
   eyebrow: string;
   title: string;
@@ -255,40 +257,56 @@ export function HeroSection({
   image?: string;
   showVideo?: boolean;
   darkPlay?: boolean;
+  showPlay?: boolean;
+  compact?: boolean;
 }) {
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_top_left,var(--color-surface-soft),transparent_38%)]">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 pb-12 pt-12 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pt-16">
+      <div className={cn(
+        "mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center",
+        compact ? "pb-10 pt-10 lg:pt-12" : "pb-12 pt-12 lg:pt-16",
+      )}>
         <div className="relative z-10 max-w-xl space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
           <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl">
             {title}
-            {highlight ? <span className="block text-primary">{highlight}</span> : null}
+            {highlight ? <span className="block">{highlight}</span> : null}
           </h1>
           <p className="max-w-md text-base leading-8 text-muted-foreground md:text-lg">{description}</p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="btn-sheen rounded-sm px-6">
-              <Link to={primaryTo}>{primaryLabel}</Link>
+            <Button asChild size="lg" className="btn-sheen group rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
+              <Link to={primaryTo}>
+                {primaryLabel}
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
             </Button>
             {secondaryLabel && secondaryTo ? (
-              <Button asChild size="lg" variant="outline" className="btn-sheen rounded-sm px-6">
-                <Link to={secondaryTo}>{secondaryLabel}</Link>
+              <Button asChild size="lg" variant="outline" className="btn-sheen group rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
+                <Link to={secondaryTo}>
+                  {secondaryLabel}
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
               </Button>
             ) : null}
           </div>
         </div>
-        <div className="group relative min-h-[360px] overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover lg:min-h-[520px]">
+        <div className={cn(
+          "group relative overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover",
+          compact ? "min-h-[320px] lg:min-h-[420px]" : "min-h-[360px] lg:min-h-[520px]",
+        )}>
           {showVideo ? (
             <BackgroundVideo src={media.video} poster={image} alt={title} />
           ) : (
             <img src={image} alt={title} className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" loading="eager" />
           )}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/55" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/45" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)] transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-background">
-            <CirclePlay className={cn("h-5 w-5 transition-transform duration-500 group-hover:scale-110", darkPlay ? "text-foreground" : "text-primary")} />
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Play Showreel</span>
-          </div>
+          {showPlay ? (
+            <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)] transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-background">
+              <CirclePlay className={cn("h-5 w-5 transition-transform duration-500 group-hover:scale-110", darkPlay ? "text-foreground" : "text-primary")} />
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Play Showreel</span>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
