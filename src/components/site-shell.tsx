@@ -1780,11 +1780,54 @@ export function BlogPageContent() {
         image={media.heroAlt}
         videoSrc={pageVideos.blog}
       />
+      <BlogTopicMarquee />
       <FeaturedArticleBand />
       <BlogGrid />
+      <ExploreByTopic />
       <NewsletterBand />
       <ContactStrip />
     </>
+  );
+}
+
+function BlogTopicMarquee() {
+  const tags = [
+    "Architecture", "Sustainability", "Interior Design", "Material Innovation",
+    "Biophilic Design", "Heritage", "Urban Living", "Smart Homes",
+    "Awards", "Project Stories", "Design Trends", "News & Updates",
+  ];
+  return (
+    <div className="overflow-hidden border-b border-border/60 bg-background py-5">
+      <M.div
+        className="flex w-max gap-12 whitespace-nowrap"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+      >
+        {[...tags, ...tags].map((tag, i) => (
+          <span key={i} className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground">
+            <Sparkle className="size-3 text-primary" />
+            {tag}
+          </span>
+        ))}
+      </M.div>
+    </div>
+  );
+}
+
+function LiquidImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={cn("relative overflow-hidden", className)}>
+      <M.img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-full w-full object-cover"
+        initial={{ clipPath: "inset(100% 0 0 0)", scale: 1.15 }}
+        whileInView={{ clipPath: "inset(0% 0 0 0)", scale: 1 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
+      />
+    </div>
   );
 }
 
@@ -1792,74 +1835,198 @@ function FeaturedArticleBand() {
   const featured = blogPosts[0];
   return (
     <section className="border-b border-border/60 bg-background py-14">
-      <div className="mx-auto grid max-w-[1200px] gap-8 border border-border bg-card px-5 py-5 shadow-[var(--shadow-soft)] md:px-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <img src={featured.image} alt={featured.title} className="h-full min-h-[320px] w-full object-cover" loading="lazy" />
-        <div className="flex flex-col justify-center space-y-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Featured Article</p>
-          <h2 className="max-w-[14ch] text-3xl font-semibold leading-tight md:text-5xl">{featured.title}</h2>
-          <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">
-            <span>{featured.date}</span>
-            <span>{featured.readTime}</span>
-            <span>{featured.category}</span>
+      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+        <MaskReveal>
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.32em] text-primary">— Featured Article</p>
+        </MaskReveal>
+        <div className="group grid gap-8 overflow-hidden border border-border bg-card p-5 shadow-[var(--shadow-soft)] md:p-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <LiquidImage src={featured.image} alt={featured.title} className="h-full min-h-[360px]" />
+          <div className="flex flex-col justify-center space-y-5">
+            <MaskReveal>
+              <h2 className="max-w-[14ch] text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
+                {featured.title}
+              </h2>
+            </MaskReveal>
+            <MaskReveal delay={0.1}>
+              <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">
+                <span>{featured.date}</span>
+                <span aria-hidden>·</span>
+                <span>{featured.readTime}</span>
+                <span aria-hidden>·</span>
+                <span className="uppercase tracking-[0.18em] text-primary">{featured.category}</span>
+              </div>
+            </MaskReveal>
+            <MaskReveal delay={0.18}>
+              <p className="max-w-xl text-base leading-8 text-muted-foreground">{featured.excerpt}</p>
+            </MaskReveal>
+            <MaskReveal delay={0.26}>
+              <Button className="btn-sheen group/btn w-fit rounded-sm px-7 py-6">
+                Read Full Article
+                <ArrowRight className="ml-2 size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+              </Button>
+            </MaskReveal>
           </div>
-          <p className="max-w-xl text-base leading-8 text-muted-foreground">{featured.excerpt}</p>
-          <Button className="btn-sheen w-fit rounded-sm px-6">Read Full Article</Button>
         </div>
       </div>
     </section>
   );
 }
 
+function ArticleCard({ post, index }: { post: typeof blogPosts[number]; index: number }) {
+  return (
+    <M.article
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, ease: easeOut, delay: index * 0.08 }}
+      className="group relative flex h-full flex-col overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)]"
+    >
+      <div className="relative h-52 overflow-hidden">
+        <img
+          src={post.image}
+          alt={post.title}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+        />
+        <div className="absolute left-4 top-4 inline-flex items-center gap-2 bg-background/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary backdrop-blur-md">
+          {post.category}
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col space-y-3 p-5">
+        <h3 className="text-xl font-semibold leading-tight transition-colors duration-300 group-hover:text-primary">
+          {post.title}
+        </h3>
+        <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{post.date} · {post.readTime}</div>
+        <p className="text-sm leading-7 text-muted-foreground">{post.excerpt}</p>
+        <div className="mt-auto inline-flex items-center gap-2 pt-3 text-sm font-semibold text-foreground">
+          <span className="relative">
+            Read More
+            <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all duration-500 group-hover:w-full" />
+          </span>
+          <ArrowRight className="size-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-primary" />
+        </div>
+      </div>
+    </M.article>
+  );
+}
+
 function BlogGrid() {
+  const [active, setActive] = useState("All");
+  const filters = ["All", "Architecture", "Interior Design", "Sustainability", "News"];
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
-        <div className="mb-8 flex items-center justify-between gap-6">
-          <h2 className="text-3xl font-semibold md:text-5xl">Latest Articles</h2>
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            {[
-              "All",
-              "Architecture",
-              "Interior Design",
-              "Sustainability",
-              "News",
-            ].map((item, index) => (
-              <span key={item} className={cn(index === 0 ? "text-primary" : "", "uppercase tracking-[0.15em]")}>{item}</span>
+        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <MaskReveal>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-primary">— Latest Articles</p>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">Fresh Perspectives, Weekly.</h2>
+            </div>
+          </MaskReveal>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {filters.map((item) => (
+              <button
+                key={item}
+                onClick={() => setActive(item)}
+                className={cn(
+                  "relative rounded-full border px-4 py-2 uppercase tracking-[0.18em] transition-all duration-300",
+                  active === item
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border text-muted-foreground hover:border-primary/60 hover:text-foreground"
+                )}
+              >
+                {item}
+              </button>
             ))}
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {blogPosts.slice(1, 5).map((post) => (
-            <article key={post.title} className="border border-border bg-card shadow-[var(--shadow-soft)]">
-              <img src={post.image} alt={post.title} className="h-52 w-full object-cover" loading="lazy" />
-              <div className="space-y-4 p-5">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{post.category}</div>
-                <h3 className="text-xl font-semibold leading-tight">{post.title}</h3>
-                <div className="text-sm text-muted-foreground">{post.date} · {post.readTime}</div>
-                <p className="text-sm leading-7 text-muted-foreground">{post.excerpt}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-3 xl:grid-cols-6">
-          {[
-            ["Architectural", "24 Articles"],
-            ["Interior Design", "18 Articles"],
-            ["Sustainability", "16 Articles"],
-            ["Design Trends", "14 Articles"],
-            ["News & Updates", "12 Articles"],
-            ["Project Stories", "20 Articles"],
-          ].map(([name, count]) => (
-            <div key={name as string} className="border border-border bg-card p-5 text-center shadow-[var(--shadow-soft)]">
-              <h3 className="text-base font-semibold">{name as string}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{count as string}</p>
-            </div>
+          {blogPosts.slice(1, 5).map((post, i) => (
+            <ArticleCard key={post.title} post={post} index={i} />
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+const topicIcon: Record<string, IconCmp> = {
+  Architecture: Building2,
+  "Interior Design": HomeIcon,
+  Sustainability: Leaf,
+  "Design Trends": Sparkles,
+  "News & Updates": FileText,
+  "Project Stories": Layers,
+};
+
+function MagneticTopicCard({ name, count, index }: { name: string; count: string; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 14, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 180, damping: 14, mass: 0.4 });
+  const Icon = topicIcon[name] ?? Sparkles;
+
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    x.set(((e.clientX - r.left) / r.width - 0.5) * 18);
+    y.set(((e.clientY - r.top) / r.height - 0.5) * 18);
+  }
+  function onLeave() { x.set(0); y.set(0); }
+
+  return (
+    <M.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ x: sx, y: sy }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: easeOut, delay: index * 0.06 }}
+      className="group relative flex flex-col items-center gap-3 overflow-hidden border border-border bg-card p-6 text-center shadow-[var(--shadow-soft)] transition-colors duration-500 hover:border-primary/60"
+    >
+      <div className="absolute inset-0 -z-0 translate-y-full bg-gradient-to-b from-primary/5 to-transparent transition-transform duration-700 group-hover:translate-y-0" />
+      <div className="relative z-10 inline-flex size-12 items-center justify-center rounded-full border border-border bg-background text-primary transition-all duration-500 group-hover:-translate-y-1 group-hover:border-primary group-hover:shadow-[0_10px_24px_-10px_var(--color-primary)]">
+        <Icon className="size-5" />
+      </div>
+      <h3 className="relative z-10 text-sm font-semibold uppercase tracking-[0.14em] transition-colors duration-300 group-hover:text-primary">{name}</h3>
+      <p className="relative z-10 text-xs text-muted-foreground">{count}</p>
+    </M.div>
+  );
+}
+
+function ExploreByTopic() {
+  const topics: Array<[string, string]> = [
+    ["Architecture", "24 Articles"],
+    ["Interior Design", "18 Articles"],
+    ["Sustainability", "16 Articles"],
+    ["Design Trends", "14 Articles"],
+    ["News & Updates", "12 Articles"],
+    ["Project Stories", "20 Articles"],
+  ];
+  return (
+    <section className="border-b border-border/60 bg-background py-20">
+      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+        <div className="mb-10 flex flex-col items-start gap-3">
+          <MaskReveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">— Explore By Topic</p>
+          </MaskReveal>
+          <MaskReveal delay={0.08}>
+            <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">Find Stories That Move You.</h2>
+          </MaskReveal>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+          {topics.map(([name, count], i) => (
+            <MagneticTopicCard key={name} name={name} count={count} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function NewsletterBand() {
   return (
