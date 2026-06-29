@@ -2383,17 +2383,20 @@ function ProjectHighlightsBand() {
           initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}
           className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
         >
-          {highlights.map(({ title, text, icon: Icon }) => (
+          {highlights.map(({ title, text, icon: Icon }, i) => (
             <M.div
               key={title}
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.7, ease: detailEase }}
-              className="group relative overflow-hidden rounded-sm border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+              variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.75, ease: detailEase }}
             >
-              <Icon className="mb-5 h-6 w-6 text-primary transition-transform duration-500 group-hover:scale-110" />
-              <h3 className="mb-3 text-lg font-semibold">{title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{text}</p>
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
+              <Tilt3DCard className="group relative h-full overflow-hidden rounded-sm border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                <span className="mb-5 inline-block text-[10px] font-semibold uppercase tracking-[0.32em] text-primary/80">0{i + 1}</span>
+                <Icon className="mb-5 h-7 w-7 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
+                <h3 className="mb-3 text-lg font-semibold">{title}</h3>
+                <p className="text-sm leading-7 text-muted-foreground">{text}</p>
+                <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-700 group-hover:scale-x-100" />
+                <span className="pointer-events-none absolute -inset-px rounded-sm bg-[radial-gradient(circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--primary)_18%,transparent),transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              </Tilt3DCard>
             </M.div>
           ))}
         </M.div>
