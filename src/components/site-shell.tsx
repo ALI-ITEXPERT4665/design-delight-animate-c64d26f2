@@ -156,7 +156,7 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
               >
                 <span className="relative">
                   {item.label}
-                  <span className="pointer-events-none absolute -bottom-1 left-1/2 h-[2px] w-full origin-center -translate-x-1/2 scale-x-0 bg-primary transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-data-[status=active]:scale-x-100" />
+                  <span className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-primary transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-data-[status=active]:scale-x-100" />
                 </span>
                 {item.label === "Services" ? <ChevronDown className="h-3 w-3 opacity-70 transition-transform duration-300 group-hover:translate-y-0.5" /> : null}
               </Link>
@@ -359,24 +359,6 @@ function FooterList({ title, items }: { title: string; items: { label: string; t
 export function PageFrame({ children }: { children: ReactNode }) {
   return <div className="bg-background text-foreground">{children}</div>;
 }
-function HeroWordReveal({ text, offset = 0 }: { text: string; offset?: number }) {
-  const words = text.split(/\s+/);
-  return (
-    <>
-      {words.map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden align-baseline pr-[0.22em]">
-          <span
-            className="inline-block hero-word-rise will-change-transform"
-            style={{ animationDelay: `${(offset + i) * 90}ms` }}
-          >
-            {w}
-          </span>
-        </span>
-      ))}
-    </>
-  );
-}
-
 
 export function HeroSection({
   eyebrow,
@@ -419,9 +401,9 @@ export function HeroSection({
       )}>
         <div className="relative z-10 max-w-xl space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
-          <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl">
-            <HeroWordReveal text={title} />
-            {highlight ? <span className="block"><HeroWordReveal text={highlight} offset={title.split(/\s+/).length} /></span> : null}
+          <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl word-reveal">
+            {title}
+            {highlight ? <span className="block">{highlight}</span> : null}
           </h1>
           <p className="max-w-md text-base leading-8 text-muted-foreground md:text-lg">{description}</p>
           <div className="flex flex-wrap items-center gap-3">
@@ -447,11 +429,9 @@ export function HeroSection({
           compact ? "min-h-[320px] lg:min-h-[420px]" : "min-h-[360px] lg:min-h-[520px]",
         )}>
           {useVideo ? (
-            <div className="hero-zoom-in h-full w-full">
-              <BackgroundVideo src={src} poster={image} alt={title} />
-            </div>
+            <BackgroundVideo src={src} poster={image} alt={title} />
           ) : (
-            <img src={image} alt={title} className="hero-zoom-in h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.1]" loading="eager" />
+            <img src={image} alt={title} className="hero-drift h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.08]" loading="eager" />
           )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/45" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />

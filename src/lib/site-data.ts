@@ -1,4 +1,4 @@
-import heroVideo from "@/assets/hero-cranes.mp4.asset.json";
+import heroVideo from "@/assets/hero-video.mp4.asset.json";
 import vidHome from "@/assets/videos/home.mp4.asset.json";
 import vidAbout from "@/assets/videos/about.mp4.asset.json";
 import vidProjects from "@/assets/videos/projects.mp4.asset.json";
@@ -27,7 +27,7 @@ import vidFooter from "@/assets/videos/footer.mp4.asset.json";
 import vidDetail from "@/assets/videos/detail.mp4.asset.json";
 
 export const pageVideos = {
-  home: heroVideo.url,
+  home: vidHome.url,
   about: vidAbout.url,
   projects: vidProjects.url,
   services: vidServices.url,

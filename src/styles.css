@@ -202,32 +202,6 @@
   100% { transform: scale(1) translate3d(0, 0, 0); }
 }
 
-@keyframes hero-word-rise-kf {
-  0%   { transform: translateY(110%); opacity: 0; }
-  60%  { opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.hero-word-rise {
-  display: inline-block;
-  transform: translateY(110%);
-  opacity: 0;
-  animation: hero-word-rise-kf 900ms cubic-bezier(.22,1,.36,1) forwards;
-}
-
-@keyframes hero-zoom-in-kf {
-  0%   { transform: scale(1.12); }
-  100% { transform: scale(1); }
-}
-.hero-zoom-in {
-  animation: hero-zoom-in-kf 2400ms cubic-bezier(.22,1,.36,1) both;
-  transform-origin: center center;
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-word-rise, .hero-zoom-in { animation: none !important; transform: none !important; opacity: 1 !important; }
-}
-
 .hero-drift {
   animation: hero-drift 22s ease-in-out infinite;
   will-change: transform;
