@@ -869,6 +869,7 @@ export function ServicesPageContent() {
         secondaryLabel="View Our Work"
         secondaryTo="/projects"
         image={media.heroMain}
+        videoSrc={pageVideos.services}
       />
       <CenteredHeading title="End-to-End Architectural Services" subtitle="We combine innovative ideas with expertise and industry best practices to deliver solutions that are functional, sustainable, and timeless." />
       <FullServicesGrid />
@@ -975,6 +976,7 @@ export function ProjectsPageContent() {
         secondaryLabel="View Our Process"
         secondaryTo="/process"
         image={media.heroMain}
+        videoSrc={pageVideos.projects}
       />
       <CategoryBand />
       <FeaturedProjectsSplit />
@@ -1043,6 +1045,7 @@ export function ProcessPageContent() {
         secondaryLabel="View Our Projects"
         secondaryTo="/projects"
         image={media.heroAlt}
+        videoSrc={pageVideos.process}
       />
       <ProcessBand />
       <DetailedProcessGrid />
@@ -1152,6 +1155,7 @@ export function BlogPageContent() {
         description="Explore expert perspectives, design inspirations, and the latest in architecture and interior design."
         primaryLabel="Explore Articles"
         image={media.heroAlt}
+        videoSrc={pageVideos.blog}
       />
       <FeaturedArticleBand />
       <BlogGrid />
@@ -1261,6 +1265,7 @@ export function ContactPageContent() {
         highlight="Extraordinary Together"
         description="We are here to answer your questions, discuss your ideas, and bring your vision to life with intelligence, purpose, and elegance."
         image={media.heroAlt}
+        videoSrc={pageVideos.contact}
       />
       <ContactDetailsBand />
       <FaqCardsBand />
@@ -1351,6 +1356,7 @@ export function TeamPageContent() {
         description="A passionate team of architects, designers, and dreamers dedicated to bringing your vision to life."
         primaryLabel="Meet the Team"
         image={media.heroMain}
+        videoSrc={pageVideos.team}
       />
       <LeadershipBand />
       <TeamBand />
@@ -1454,6 +1460,7 @@ export function ProjectDetailContent() {
         secondaryLabel="Discuss Project"
         secondaryTo="/contact"
         image={media.heroMain}
+        videoSrc={pageVideos.detail}
       />
       <ProjectOverviewBand />
       <ProjectHighlightsBand />
@@ -1586,7 +1593,7 @@ export function HomePageContent() {
         secondaryLabel="Our Services"
         secondaryTo="/services"
         image={media.heroMain}
-        showVideo
+        videoSrc={pageVideos.home}
       />
       <StatsBand />
       <IntroSplit />
