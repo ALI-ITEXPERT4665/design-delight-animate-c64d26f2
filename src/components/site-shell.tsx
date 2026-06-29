@@ -17,6 +17,7 @@ import {
   CirclePlay,
   ClipboardList,
   Clock3,
+  Facebook,
   FileText,
   Grid3x3,
   HardHat,
@@ -280,18 +281,20 @@ export function SiteFooter({
 } = {}) {
   const quickLinks = navItems;
   const serviceLinks = [
-    { label: "BIM Modelling", to: "/services" },
+    { label: "BIM Modeller", to: "/services" },
     { label: "3D Visualization", to: "/services" },
-    { label: "Planning & Drawings", to: "/services" },
-    { label: "Structural Design", to: "/services" },
-    { label: "Construction Support", to: "/services" },
+    { label: "Planning Drawings", to: "/services" },
+    { label: "Building Regulations", to: "/services" },
+    { label: "Structural Calculations", to: "/services" },
+    { label: "Project Management", to: "/services" },
   ];
   const socials = [
-    { Icon: Linkedin, label: "LinkedIn" },
-    { Icon: Instagram, label: "Instagram" },
-    { Icon: Twitter, label: "Twitter" },
-    { Icon: PinterestIcon, label: "Pinterest" },
+    { Icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/uppaldb" },
+    { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/uppaldb" },
+    { Icon: Facebook, label: "Facebook", href: "https://www.facebook.com/uppaldb" },
+    { Icon: PinterestIcon, label: "Pinterest", href: "https://www.pinterest.com/uppaldb" },
   ];
+
 
   return (
     <footer className="relative isolate overflow-hidden bg-neutral-950 text-neutral-200">
@@ -317,10 +320,12 @@ export function SiteFooter({
               Intelligent design. Lasting impact. Spaces that inspire, built with purpose.
             </p>
             <div className="flex items-center gap-3 pt-2">
-              {socials.map(({ Icon, label }) => (
+              {socials.map(({ Icon, label, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="group grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_24px_rgba(212,160,80,0.35)]"
                 >
@@ -342,17 +347,22 @@ export function SiteFooter({
             <ul className="space-y-4 text-sm text-neutral-300">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>Churchill House, 1 London Rd, Slough SL3 7RL, UK</span>
+                <span>Unit 2f2 Packet Boat Lane, Uxbridge, England, UB8 2JP</span>
+              </li>
+              <li className="flex gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>74-c Sherborne Street, M8 8HP Manchester</span>
               </li>
               <li className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="mailto:hello@uppaldesign.co.uk" className="transition-colors hover:text-primary">hello@uppaldesign.co.uk</a>
+                <a href="mailto:info@uppaldb.co.uk" className="transition-colors hover:text-primary">info@uppaldb.co.uk</a>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="tel:+447911123456" className="transition-colors hover:text-primary">+44 7911 123456</a>
+                <a href="tel:+447547487675" className="transition-colors hover:text-primary">+44 7547 487675</a>
               </li>
             </ul>
+
             <div className="pt-3">
               <p className="mb-3 text-xs leading-relaxed text-neutral-400">
                 Stay updated with our latest projects and design insights.
