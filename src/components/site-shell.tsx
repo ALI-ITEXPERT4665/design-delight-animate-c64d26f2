@@ -2198,22 +2198,43 @@ function ProjectDetailHero() {
         </div>
       </div>
       <M.div
-        initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: detailEase, delay: 0.5 }}
+        initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        transition={{ duration: 0.9, ease: detailEase, delay: 0.5 }}
         className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-[1200px] px-4 md:px-6"
       >
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-white/20 bg-white/15 backdrop-blur-xl md:grid-cols-3">
+        <M.div
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
+          initial="hidden" whileInView="show" viewport={{ once: true }}
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-white/20 bg-white/15 backdrop-blur-xl md:grid-cols-3"
+        >
           {[
             ["Location", "Surrey, UK"],
             ["Total Completion", "2023"],
             ["Client", "Private"],
           ].map(([label, value]) => (
-            <div key={label} className="bg-white/5 px-6 py-5 text-white">
+            <M.div
+              key={label}
+              variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.7, ease: detailEase }}
+              className="group relative overflow-hidden bg-white/5 px-6 py-5 text-white transition-colors duration-500 hover:bg-white/10"
+            >
+              <span className="pointer-events-none absolute inset-x-0 -top-px h-px origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
               <div className="text-[11px] uppercase tracking-[0.28em] text-white/70">{label}</div>
-              <div className="mt-2 text-lg font-semibold">{value}</div>
-            </div>
+              <div className="mt-2 text-lg font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-1">{value}</div>
+            </M.div>
           ))}
-        </div>
+        </M.div>
+      </M.div>
+      <M.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4, duration: 0.6 }}
+        className="absolute right-6 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-3 text-white/80 md:flex"
+      >
+        <span className="text-[10px] uppercase tracking-[0.36em]">Scroll</span>
+        <M.span
+          animate={{ y: [0, 14, 0], opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="block h-12 w-px bg-white/80"
+        />
       </M.div>
     </section>
   );
