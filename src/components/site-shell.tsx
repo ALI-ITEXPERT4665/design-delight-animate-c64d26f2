@@ -264,94 +264,151 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 
+function PinterestIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.09 2.46 7.6 5.97 9.14-.08-.78-.15-1.97.03-2.82.17-.77 1.1-4.92 1.1-4.92s-.28-.56-.28-1.39c0-1.31.76-2.29 1.7-2.29.8 0 1.19.6 1.19 1.32 0 .81-.51 2.02-.78 3.14-.22.94.47 1.71 1.4 1.71 1.68 0 2.97-1.77 2.97-4.32 0-2.26-1.62-3.84-3.94-3.84-2.68 0-4.25 2.01-4.25 4.09 0 .81.31 1.68.7 2.15.08.09.09.18.07.27-.07.31-.25 1-.28 1.14-.04.18-.15.22-.34.13-1.25-.58-2.03-2.4-2.03-3.87 0-3.15 2.29-6.04 6.6-6.04 3.46 0 6.16 2.47 6.16 5.77 0 3.45-2.17 6.22-5.19 6.22-1.01 0-1.97-.53-2.29-1.15l-.62 2.38c-.23.87-.83 1.96-1.24 2.62.93.29 1.92.45 2.95.45 5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
+    </svg>
+  );
+}
+
 export function SiteFooter({
   wordmark = "Design",
-  variant = "default",
 }: {
   wordmark?: "Design" | "Decor";
   variant?: "default" | "minimal";
 } = {}) {
-  if (variant === "minimal") {
-    return (
-      <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
-        <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
-        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-neutral-300 md:flex-row md:px-6">
-          <p>© 2024 Uppal {wordmark}. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <span className="cursor-pointer transition-colors hover:text-primary">Privacy Policy</span>
-            <span className="cursor-pointer transition-colors hover:text-primary">Terms &amp; Conditions</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.18em] text-neutral-100">Follow Us</span>
-            {[Instagram, Linkedin, Twitter, Mail].map((Icon, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label="social"
-                className="grid h-8 w-8 place-items-center rounded-full border border-white/30 bg-white/10 text-primary backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                <Icon className="h-3.5 w-3.5" />
-              </button>
-            ))}
-          </div>
-        </div>
-      </footer>
-    );
-  }
+  const quickLinks = navItems;
+  const serviceLinks = [
+    { label: "BIM Modelling", to: "/services" },
+    { label: "3D Visualization", to: "/services" },
+    { label: "Planning & Drawings", to: "/services" },
+    { label: "Structural Design", to: "/services" },
+    { label: "Construction Support", to: "/services" },
+  ];
+  const socials = [
+    { Icon: Linkedin, label: "LinkedIn" },
+    { Icon: Instagram, label: "Instagram" },
+    { Icon: Twitter, label: "Twitter" },
+    { Icon: PinterestIcon, label: "Pinterest" },
+  ];
+
   return (
-    <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
+    <footer className="relative isolate overflow-hidden bg-neutral-950 text-neutral-200">
       <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
-      <div className="relative mx-auto grid max-w-[1200px] gap-12 px-4 py-16 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
-        <div className="space-y-5">
-          <div>
-            <div className="text-lg font-semibold tracking-[0.22em] text-white">UPPAL</div>
-            <div className="text-xs uppercase tracking-[0.34em] text-neutral-300">{wordmark}</div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/80 to-black/90" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,80,0.10),transparent_60%)]" />
+
+      <M.div
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        className="relative"
+      >
+        <div className="mx-auto grid max-w-[1280px] gap-12 px-6 py-20 md:grid-cols-2 lg:grid-cols-[1.3fr_0.9fr_0.9fr_1.1fr] lg:px-8">
+          {/* Brand */}
+          <div className="space-y-6">
+            <div>
+              <div className="text-2xl font-semibold tracking-[0.28em] text-white">UPPAL</div>
+              <div className="mt-1 text-xs uppercase tracking-[0.4em] text-primary">{wordmark}</div>
+            </div>
+            <p className="max-w-sm text-sm leading-7 text-neutral-300">
+              Intelligent design. Lasting impact. Spaces that inspire, built with purpose.
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              {socials.map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="group grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_24px_rgba(212,160,80,0.35)]"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
           </div>
-          <p className="max-w-sm text-sm leading-7 text-neutral-300">
-            We create spaces that inspire, endure, and elevate the art of living.
-          </p>
-        </div>
-        <FooterList
-          title="Quick Links"
-          items={navItems.map((item) => ({ label: item.label, to: item.to }))}
-        />
-        <FooterList
-          title="Our Services"
-          items={services.slice(0, 5).map((service) => ({ label: service.title, to: "/services" }))}
-        />
-        <div className="space-y-4 text-sm text-neutral-300">
-          <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">Contact Us</h3>
-          <p>{siteSettings.phone}</p>
-          <p>{siteSettings.email}</p>
-          <p>{siteSettings.address}</p>
-        </div>
-      </div>
-      <div className="relative border-t border-white/15">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-4 py-5 text-sm text-neutral-300 md:flex-row md:items-center md:justify-between md:px-6">
-          <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
-          <div className="flex gap-6">
-            <span className="hover:text-primary transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-primary transition-colors cursor-pointer">Terms &amp; Conditions</span>
+
+          {/* Quick Links */}
+          <FooterColumn title="Quick Links" links={quickLinks.map((i) => ({ label: i.label, to: i.to }))} />
+
+          {/* Services */}
+          <FooterColumn title="Services" links={serviceLinks} />
+
+          {/* Connect + Newsletter */}
+          <div className="space-y-5">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">Let&apos;s Connect</h3>
+            <ul className="space-y-4 text-sm text-neutral-300">
+              <li className="flex gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Churchill House, 1 London Rd, Slough SL3 7RL, UK</span>
+              </li>
+              <li className="flex gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <a href="mailto:hello@uppaldesign.co.uk" className="transition-colors hover:text-primary">hello@uppaldesign.co.uk</a>
+              </li>
+              <li className="flex gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <a href="tel:+447911123456" className="transition-colors hover:text-primary">+44 7911 123456</a>
+              </li>
+            </ul>
+            <div className="pt-3">
+              <p className="mb-3 text-xs leading-relaxed text-neutral-400">
+                Stay updated with our latest projects and design insights.
+              </p>
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                className="group relative flex items-center border-b border-white/20 transition-colors focus-within:border-primary"
+              >
+                <input
+                  type="email"
+                  placeholder="Your email..."
+                  className="w-full bg-transparent py-3 pr-10 text-sm text-white placeholder:text-neutral-500 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  aria-label="Subscribe"
+                  className="absolute right-0 grid h-9 w-9 place-items-center text-primary transition-all duration-300 hover:translate-x-1"
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* Bottom bar */}
+        <div className="relative border-t border-white/10">
+          <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-neutral-400 md:flex-row lg:px-8">
+            <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
+            <div className="flex items-center gap-6">
+              <a href="#" className="transition-colors hover:text-primary">Privacy Policy</a>
+              <a href="#" className="transition-colors hover:text-primary">Terms &amp; Conditions</a>
+            </div>
+          </div>
+        </div>
+      </M.div>
     </footer>
   );
 }
 
-function FooterList({ title, items }: { title: string; items: { label: string; to: string }[] }) {
+function FooterColumn({ title, links }: { title: string; links: { label: string; to: string }[] }) {
   return (
-    <div className="space-y-4 text-sm text-neutral-300">
-      <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">{title}</h3>
-      <div className="grid gap-3">
-        {items.map((item) => (
-          <Link key={`${title}-${item.label}`} to={item.to} className="transition-colors hover:text-primary">
-            {item.label}
-          </Link>
+    <div className="space-y-5">
+      <h3 className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{title}</h3>
+      <ul className="space-y-3 text-sm">
+        {links.map((item) => (
+          <li key={`${title}-${item.label}`}>
+            <Link
+              to={item.to}
+              className="inline-flex items-center text-neutral-300 transition-all duration-300 hover:translate-x-1 hover:text-primary"
+            >
+              {item.label}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
