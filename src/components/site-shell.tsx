@@ -584,7 +584,9 @@ function FounderBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-        <img src={media.collageA} alt="Founder portrait setting" className="h-[420px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
+        <div className="media-hover h-[420px] overflow-hidden shadow-[var(--shadow-soft)]">
+          <img src={media.founder} alt="Founder portrait" className="h-full w-full object-cover" loading="lazy" />
+        </div>
         <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:p-10">
           <p className="mb-5 text-5xl leading-none text-primary">“</p>
           <h3 className="max-w-[16ch] text-3xl font-semibold leading-tight">Architecture is a responsibility — and a privilege.</h3>
