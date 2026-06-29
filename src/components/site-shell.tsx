@@ -1171,38 +1171,81 @@ export function ProcessPageContent() {
         image={media.heroAlt}
         videoSrc={pageVideos.process}
       />
-      <ProcessBand />
-      <DetailedProcessGrid />
-      <ValueStrip />
-      <FaqBand />
+      <ProcessTimeline />
+      <DetailedProcessAlternating />
+      <ValueGrid4 />
+      <ProcessFaq />
       <ContactStrip />
     </>
   );
 }
 
-function DetailedProcessGrid() {
+function ProcessTimeline() {
+  const MotionAny = MotionDiv;
   return (
-    <section className="border-b border-border/60 bg-background py-20">
+    <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
-        <div className="mb-8">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">The Process, in Detail</p>
-          <h2 className="text-3xl font-semibold md:text-5xl">How We Bring Your Vision to Life</h2>
+        <div className="mb-16 text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Design Process</p>
+          <h2 className="mx-auto max-w-[22ch] text-3xl font-semibold leading-tight md:text-5xl">
+            From Concept to Creation. <span className="text-primary">Excellence at Every Step.</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+            A seamless, five-stage journey designed to take your vision from the first idea to a finished build with clarity at every milestone.
+          </p>
         </div>
-        <div className="grid gap-5 xl:grid-cols-5">
-          {processSteps.map((step) => (
-            <div key={step.number} className="border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
-              <div className="mb-4 text-xl font-semibold text-primary">{step.number}</div>
-              <h3 className="text-lg font-semibold">{step.title}</h3>
-              <p className="mb-4 text-sm uppercase tracking-[0.15em] text-muted-foreground">{step.subtitle}</p>
-              <img src={step.image} alt={step.title} className="mb-4 h-[8.5rem] w-full object-cover" loading="lazy" />
-              <p className="text-sm leading-7 text-muted-foreground">{step.description}</p>
-              <div className="mt-5 space-y-2">
-                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Deliverables</div>
-                {step.deliverables.map((item) => (
-                  <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground"><ChevronRight className="mt-0.5 h-4 w-4 text-primary" />{item}</div>
-                ))}
-              </div>
-            </div>
+        <div className="relative">
+          <MotionAny
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, margin: "-15%" }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: "left" }}
+            className="absolute left-[6%] right-[6%] top-[2.75rem] hidden h-[2px] bg-gradient-to-r from-primary/10 via-primary to-primary/10 md:block"
+            aria-hidden
+          />
+          <div className="grid gap-10 md:grid-cols-5 md:gap-4">
+            {processSteps.map((step, i) => {
+              const Icon = processIcon[step.icon] ?? Sparkles;
+              return (
+                <MotionAny
+                  key={step.number}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ duration: 0.7, delay: 0.15 + i * 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6 }}
+                  className="group relative flex flex-col items-center text-center"
+                >
+                  <div className="relative mx-auto grid h-[5.5rem] w-[5.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 group-hover:border-primary group-hover:bg-primary">
+                    <span className="text-lg font-semibold text-primary transition-colors duration-500 group-hover:text-primary-foreground">{step.number}</span>
+                    <span className="absolute -bottom-2 -right-2 grid h-8 w-8 place-items-center rounded-full border border-border bg-background text-primary shadow-[var(--shadow-soft)]">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                  </div>
+                  <h3 className="mt-5 text-sm font-semibold uppercase tracking-[0.18em]">{step.title}</h3>
+                  <p className="mt-1 text-xs uppercase tracking-[0.12em] text-muted-foreground">{step.subtitle}</p>
+                </MotionAny>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DetailedProcessAlternating() {
+  return (
+    <section className="border-b border-border/60 bg-neutral-50 py-24">
+      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+        <div className="mb-14">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">The Process, in Detail</p>
+          <h2 className="max-w-[20ch] text-3xl font-semibold leading-tight md:text-5xl">How We Bring Your Vision to Life</h2>
+        </div>
+        <div className="space-y-16">
+          {processSteps.map((step, i) => (
+            <StepCardAlt key={step.number} step={step} index={i} />
           ))}
         </div>
       </div>
@@ -1210,60 +1253,139 @@ function DetailedProcessGrid() {
   );
 }
 
-function ValueStrip() {
+function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; index: number }) {
+  const Icon = processIcon[step.icon] ?? Sparkles;
+  const reversed = index % 2 === 1;
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    setTilt({ x: -py * 8, y: px * 8 });
+  };
+  const reset = () => setTilt({ x: 0, y: 0 });
   return (
-    <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-6">
-        <div className="space-y-4 xl:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Work With Us</p>
-          <h2 className="max-w-[11ch] text-3xl font-semibold leading-tight">Designed Around You. Delivered with Excellence.</h2>
-          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Let’s Build Together</Link></Button>
+    <MotionDiv
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-12%" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={cn("grid items-center gap-10 lg:grid-cols-2 lg:gap-16", reversed && "lg:[&>div:first-child]:order-2")}
+    >
+      <div
+        onMouseMove={onMove}
+        onMouseLeave={reset}
+        className="relative overflow-hidden rounded-sm border border-border bg-card shadow-[var(--shadow-soft)]"
+        style={{ perspective: 1200 }}
+      >
+        <MotionDiv
+          animate={{ rotateX: tilt.x, rotateY: tilt.y }}
+          transition={{ type: "spring", stiffness: 120, damping: 14 }}
+          style={{ transformStyle: "preserve-3d" }}
+          className="relative"
+        >
+          <img src={step.image} alt={step.title} className="h-[420px] w-full object-cover transition-transform duration-[1200ms] ease-out hover:scale-[1.06]" loading="lazy" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          <div className="absolute left-6 top-6 flex items-center gap-3 text-white">
+            <span className="grid h-12 w-12 place-items-center rounded-full border border-white/40 bg-white/10 backdrop-blur text-lg font-semibold">{step.number}</span>
+            <span className="text-[11px] uppercase tracking-[0.24em]">{step.subtitle}</span>
+          </div>
+        </MotionDiv>
+      </div>
+      <div>
+        <div className="mb-4 flex items-center gap-3">
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-primary/10 text-primary"><Icon className="h-5 w-5" /></span>
+          <span className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Step {step.number}</span>
         </div>
-        {[
-          ["Collaborative Approach", Users],
-          ["Transparent Process", Clock3],
-          ["Design Excellence", Sparkles],
-          ["On-Time Delivery", Award],
-        ].map(([label, Icon]) => {
-          const Lucide = Icon as typeof Users;
-          return (
-            <div key={label as string} className="border border-border bg-card p-5 text-center shadow-[var(--shadow-soft)]">
-              <Lucide className="mx-auto mb-4 h-6 w-6 text-primary" />
-              <h3 className="text-base font-semibold">{label as string}</h3>
-            </div>
-          );
-        })}
+        <h3 className="mb-4 text-3xl font-semibold leading-tight md:text-4xl">{step.title}</h3>
+        <p className="mb-6 text-base leading-8 text-muted-foreground">{step.description}</p>
+        <div className="rounded-sm border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Deliverables</div>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {step.deliverables.map((d) => (
+              <li key={d} className="flex items-start gap-2 text-sm text-foreground/90">
+                <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>{d}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </MotionDiv>
+  );
+}
+
+function ValueGrid4() {
+  const items: Array<[string, string, ComponentType<{ className?: string }>]> = [
+    ["Collaborative Approach", "We work alongside you at every stage so the design always reflects your vision.", Users],
+    ["Transparent Process", "Clear timelines, honest updates, and zero surprises from first sketch to handover.", Clock3],
+    ["Design Excellence", "Considered detailing and material thinking that elevates every space we deliver.", Sparkles],
+    ["On-Time Delivery", "Disciplined coordination keeps your project on schedule without compromising quality.", Award],
+  ];
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+        <div className="mb-14 text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Work With Us</p>
+          <h2 className="mx-auto max-w-[22ch] text-3xl font-semibold leading-tight md:text-5xl">
+            Designed Around You. <span className="text-primary">Delivered with Excellence.</span>
+          </h2>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map(([label, copy, Icon], i) => (
+            <MotionDiv
+              key={label}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6 }}
+              className="group relative overflow-hidden rounded-sm border border-border bg-card p-8 text-center shadow-[var(--shadow-soft)] transition-colors duration-500 hover:border-primary"
+            >
+              <span className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
+              <span className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-full bg-primary/10 text-primary transition-colors duration-500 group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon className="h-6 w-6" />
+              </span>
+              <h3 className="mb-2 text-base font-semibold">{label}</h3>
+              <p className="text-sm leading-7 text-muted-foreground">{copy}</p>
+            </MotionDiv>
+          ))}
+        </div>
+        <div className="mt-12 flex justify-center">
+          <Button asChild className="btn-sheen rounded-sm px-7"><Link to="/contact">Let’s Build Together</Link></Button>
+        </div>
       </div>
     </section>
   );
 }
 
-function FaqBand() {
+function ProcessFaq() {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 lg:grid-cols-[1.1fr_0.9fr]">
+    <section className="border-b border-border/60 bg-neutral-50 py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Frequently Asked Questions</p>
-          <h2 className="mb-6 text-3xl font-semibold md:text-5xl">Everything You Need to Know</h2>
-          <Accordion type="single" collapsible className="border border-border bg-card px-5 shadow-[var(--shadow-soft)]">
-            {faqItems.map((faq) => (
-              <AccordionItem key={faq.question} value={faq.question}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-sm leading-7 text-muted-foreground">{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-        <div className="grid gap-5">
-          <img src={media.heroMain} alt="FAQ architecture visual" className="h-[320px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-            <h3 className="mb-4 text-2xl font-semibold">Have More Questions?</h3>
-            <p className="mb-5 text-base leading-8 text-muted-foreground">
-              We are here to help. Reach out to our team and let’s discuss your project in detail.
-            </p>
-            <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">FAQ</p>
+          <h2 className="mb-5 text-3xl font-semibold leading-tight md:text-5xl">Everything You Need to Know</h2>
+          <p className="mb-8 max-w-md text-base leading-8 text-muted-foreground">
+            Answers to the questions we hear most often. Still curious? Reach out and we will gladly walk you through it.
+          </p>
+          <div className="overflow-hidden rounded-sm border border-border bg-card shadow-[var(--shadow-soft)]">
+            <img src={media.heroMain} alt="Studio" className="h-[260px] w-full object-cover transition-transform duration-[1200ms] ease-out hover:scale-[1.05]" loading="lazy" />
+            <div className="p-6">
+              <h3 className="mb-2 text-lg font-semibold">Have More Questions?</h3>
+              <p className="mb-4 text-sm leading-7 text-muted-foreground">Reach out and we will discuss your project in detail.</p>
+              <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
+            </div>
           </div>
         </div>
+        <Accordion type="single" collapsible className="self-start rounded-sm border border-border bg-card px-6 shadow-[var(--shadow-soft)]">
+          {faqItems.map((faq) => (
+            <AccordionItem key={faq.question} value={faq.question}>
+              <AccordionTrigger className="text-left text-base font-semibold">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-sm leading-7 text-muted-foreground">{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   );
