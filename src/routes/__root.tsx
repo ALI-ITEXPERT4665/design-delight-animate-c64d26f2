@@ -152,7 +152,9 @@ function RootComponent() {
         <SiteHeader wordmark={wordmark} />
         <Outlet />
         <SiteFooter wordmark={wordmark} variant={footerVariant} />
-        <ChatWidget />
+        <ClientOnly fallback={null}>
+          <ChatWidget />
+        </ClientOnly>
       </div>
     </QueryClientProvider>
   );
