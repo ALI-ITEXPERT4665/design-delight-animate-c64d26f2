@@ -149,7 +149,7 @@ export function HeroSection({
   secondaryLabel,
   secondaryTo,
   image = media.heroMain,
-  showVideo = false,
+  showVideo = true,
   darkPlay = false,
 }: {
   eyebrow: string;
