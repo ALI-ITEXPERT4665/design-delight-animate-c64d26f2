@@ -63,7 +63,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button asChild className="hidden h-11 rounded-sm px-5 md:inline-flex">
+          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 md:inline-flex">
             <Link to="/contact">Get a Quote</Link>
           </Button>
           <button
@@ -231,7 +231,7 @@ export function IntroSplit() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             At Uppal Design, we believe architecture is more than buildings — it is about creating meaningful spaces that enhance the way people live, work, and connect.
           </p>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/about">More About Us</Link>
           </Button>
         </div>
@@ -281,7 +281,7 @@ export function ProcessBand() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <Button asChild variant="outline" className="rounded-sm px-6">
+          <Button asChild variant="outline" className="btn-sheen rounded-sm px-6">
             <Link to="/process">View Our Process</Link>
           </Button>
         </div>
@@ -300,7 +300,7 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Featured Projects</p>
               <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Discover Our Work</h2>
             </div>
-            <Button asChild className="rounded-sm px-6">
+            <Button asChild className="btn-sheen rounded-sm px-6">
               <Link to="/projects">View All Projects</Link>
             </Button>
           </div>
@@ -358,7 +358,7 @@ export function ServicesGrid() {
             <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Comprehensive Architectural Solutions</h2>
           </div>
           <div className="flex justify-end">
-            <Button asChild className="rounded-sm px-6">
+            <Button asChild className="btn-sheen rounded-sm px-6">
               <Link to="/services">View All Services</Link>
             </Button>
           </div>
@@ -422,7 +422,7 @@ export function BlogAndQuoteBand() {
               <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
             </div>
             <textarea className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
-            <Button className="w-fit rounded-sm px-6">Send Request</Button>
+            <Button className="btn-sheen w-fit rounded-sm px-6">Send Request</Button>
           </form>
         </div>
       </div>
@@ -440,7 +440,7 @@ export function ContactStrip() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             We would love to hear your ideas and help turn them into intelligent, inspiring spaces.
           </p>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/contact">Get in Touch</Link>
           </Button>
         </div>
@@ -600,7 +600,7 @@ function WhyChooseUsBand() {
               <li key={item} className="flex items-start gap-3"><ChevronRight className="mt-0.5 h-4 w-4 text-primary" />{item}</li>
             ))}
           </ul>
-          <Button asChild className="rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6">
             <Link to="/about">Learn More About Us</Link>
           </Button>
         </div>
@@ -676,7 +676,7 @@ function FeaturedProjectsSplit() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             A curated selection of our most impactful projects, harmonizing design excellence and attention to detail.
           </p>
-          <Button asChild className="rounded-sm px-6"><Link to="/projects">View All Projects</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/projects">View All Projects</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {projects.slice(1, 4).map((project) => (
@@ -747,7 +747,7 @@ function ValueStrip() {
         <div className="space-y-4 xl:col-span-2">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Work With Us</p>
           <h2 className="max-w-[11ch] text-3xl font-semibold leading-tight">Designed Around You. Delivered with Excellence.</h2>
-          <Button asChild className="rounded-sm px-6"><Link to="/contact">Let’s Build Together</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Let’s Build Together</Link></Button>
         </div>
         {[
           ["Collaborative Approach", Users],
@@ -791,7 +791,7 @@ function FaqBand() {
             <p className="mb-5 text-base leading-8 text-muted-foreground">
               We are here to help. Reach out to our team and let’s discuss your project in detail.
             </p>
-            <Button asChild className="rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
+            <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Contact Our Team</Link></Button>
           </div>
         </div>
       </div>
@@ -833,7 +833,7 @@ function FeaturedArticleBand() {
             <span>{featured.category}</span>
           </div>
           <p className="max-w-xl text-base leading-8 text-muted-foreground">{featured.excerpt}</p>
-          <Button className="w-fit rounded-sm px-6">Read Full Article</Button>
+          <Button className="btn-sheen w-fit rounded-sm px-6">Read Full Article</Button>
         </div>
       </div>
     </section>
@@ -902,7 +902,7 @@ function NewsletterBand() {
         </div>
         <div className="grid gap-4 md:grid-cols-[1fr_auto]">
           <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
-          <Button className="h-12 rounded-sm px-6">Subscribe</Button>
+          <Button className="btn-sheen h-12 rounded-sm px-6">Subscribe</Button>
         </div>
       </div>
     </section>
@@ -956,7 +956,7 @@ function ContactDetailsBand() {
               <input key={field} className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder={field} />
             ))}
             <textarea className="md:col-span-2 min-h-[140px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
-            <Button className="md:col-span-2 w-fit rounded-sm px-6">Send Message</Button>
+            <Button className="btn-sheen md:col-span-2 w-fit rounded-sm px-6">Send Message</Button>
           </form>
         </div>
       </div>
@@ -1027,7 +1027,7 @@ function LeadershipBand() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             Our leadership combines professionalism with creativity, insight, and experience to drive our studio’s growth, ensure client satisfaction, and create success.
           </p>
-          <Button asChild className="rounded-sm px-6"><Link to="/contact">Meet Leadership</Link></Button>
+          <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Meet Leadership</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-4">
           {teamLeads.map((member) => (
@@ -1130,7 +1130,7 @@ function ProjectOverviewBand() {
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             Luxury Villa Haven is a private residence designed to offer serenity, functionality, and refined living. The villa blends soft forms with natural materials to create a calm retreat.
           </p>
-          <Button className="rounded-sm px-6">Download Case Study</Button>
+          <Button className="btn-sheen rounded-sm px-6">Download Case Study</Button>
         </div>
         <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
           <img src={media.heroMain} alt="Luxury villa exterior" className="h-full min-h-[380px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
