@@ -41,7 +41,9 @@ function renderParts(message: UIMessage) {
 }
 
 export function ChatWidget() {
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
+  const [showPromo, setShowPromo] = useState(false);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -49,6 +51,15 @@ export function ChatWidget() {
   const { messages, sendMessage, status, error } = useChat({
     transport,
   });
+
+  useEffect(() => {
+    setMounted(true);
+    const t = setTimeout(() => setShowPromo(true), 2500);
+    const t2 = setTimeout(() => setShowPromo(false), 12000);
+    return () => { clearTimeout(t); clearTimeout(t2); };
+  }, []);
+
+  if (!mounted) return null;
 
   const isLoading = status === "submitted" || status === "streaming";
 
