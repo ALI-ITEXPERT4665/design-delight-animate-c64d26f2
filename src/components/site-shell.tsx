@@ -816,7 +816,7 @@ function AboutCTABand() {
   return (
     <section className="relative overflow-hidden border-b border-border/60">
       <div className="absolute inset-0">
-        <BackgroundVideo src={media.video} poster={media.heroMain} alt="Architectural ambience" />
+        <BackgroundVideo src={pageVideos.cta} poster={media.heroMain} alt="Architectural ambience" />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/80 to-foreground/55" />
       </div>
       <div className="relative mx-auto grid max-w-[1200px] gap-10 px-4 py-20 md:px-6 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
