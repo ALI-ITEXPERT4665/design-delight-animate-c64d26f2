@@ -339,11 +339,11 @@ export function SiteFooter({
 
 function FooterList({ title, items }: { title: string; items: { label: string; to: string }[] }) {
   return (
-    <div className="space-y-4 text-sm text-muted-foreground">
-      <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground">{title}</h3>
+    <div className="space-y-4 text-sm text-neutral-300">
+      <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">{title}</h3>
       <div className="grid gap-3">
         {items.map((item) => (
-          <Link key={`${title}-${item.label}`} to={item.to} className="transition-colors hover:text-foreground">
+          <Link key={`${title}-${item.label}`} to={item.to} className="transition-colors hover:text-primary">
             {item.label}
           </Link>
         ))}
