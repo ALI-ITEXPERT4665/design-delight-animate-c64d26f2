@@ -171,7 +171,7 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
               type="button"
               aria-label="Open menu"
               onClick={() => setDrawerOpen(true)}
-              className="group relative grid h-11 w-11 place-items-center overflow-hidden rounded-full border border-border bg-card text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary"
+              className="group relative grid h-11 w-11 place-items-center overflow-hidden rounded-full border border-border bg-card text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary lg:hidden"
             >
               <span className="absolute inset-0 -z-10 translate-y-full bg-primary/10 transition-transform duration-500 group-hover:translate-y-0" />
               <Menu className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90" />
