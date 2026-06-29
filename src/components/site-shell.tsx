@@ -1,6 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { BackgroundVideo } from "@/components/background-video";
 import {
   ArrowRight,
   Award,
@@ -166,7 +167,7 @@ export function HeroSection({
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_top_left,var(--color-surface-soft),transparent_38%)]">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 pb-12 pt-12 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pt-16">
-        <div className="relative z-10 max-w-xl space-y-6">
+        <div className="relative z-10 max-w-xl space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
           <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl">
             {title}
@@ -174,35 +175,26 @@ export function HeroSection({
           </h1>
           <p className="max-w-md text-base leading-8 text-muted-foreground md:text-lg">{description}</p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="rounded-sm px-6">
+            <Button asChild size="lg" className="btn-sheen rounded-sm px-6">
               <Link to={primaryTo}>{primaryLabel}</Link>
             </Button>
             {secondaryLabel && secondaryTo ? (
-              <Button asChild size="lg" variant="outline" className="rounded-sm px-6">
+              <Button asChild size="lg" variant="outline" className="btn-sheen rounded-sm px-6">
                 <Link to={secondaryTo}>{secondaryLabel}</Link>
               </Button>
             ) : null}
           </div>
         </div>
-        <div className="relative min-h-[360px] overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] lg:min-h-[520px]">
+        <div className="group relative min-h-[360px] overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover lg:min-h-[520px]">
           {showVideo ? (
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={image}
-            >
-              <source src={media.video} type="video/mp4" />
-            </video>
+            <BackgroundVideo src={media.video} poster={image} alt={title} />
           ) : (
-            <img src={image} alt={title} className="h-full w-full object-cover" loading="eager" />
+            <img src={image} alt={title} className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" loading="eager" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/55" />
-          <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)]">
-            <CirclePlay className={cn("h-5 w-5", darkPlay ? "text-foreground" : "text-primary")} />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/55" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <div className="absolute bottom-6 right-6 flex items-center gap-3 rounded-full border border-white/20 bg-background/85 px-4 py-3 shadow-[var(--shadow-soft)] transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-background">
+            <CirclePlay className={cn("h-5 w-5 transition-transform duration-500 group-hover:scale-110", darkPlay ? "text-foreground" : "text-primary")} />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Play Showreel</span>
           </div>
         </div>
