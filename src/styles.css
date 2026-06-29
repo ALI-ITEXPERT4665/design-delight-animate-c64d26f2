@@ -205,12 +205,21 @@
 .hero-drift {
   animation: hero-drift 22s ease-in-out infinite;
   will-change: transform;
+  transform-origin: center center;
+}
+/* Prevent shake: kill the keyframe transform whenever a hover-scale is applied */
+.hero-drift:hover,
+.group:hover .hero-drift,
+.media-hover:hover .hero-drift,
+*:hover > .hero-drift {
+  animation: none;
 }
 .bg-video-zoom {
   animation: bg-video-zoom 28s ease-in-out infinite;
   will-change: transform;
   transform-origin: center center;
 }
+
 
 
 @utility media-hover {
