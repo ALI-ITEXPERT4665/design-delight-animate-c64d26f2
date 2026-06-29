@@ -1,65 +1,41 @@
-## Plan
+## Plan: Premium hero video + Hermès-style hover system
 
-### What I will build
-- Recreate the full prototype as a multi-page TanStack site matching your pasted design screenshots as closely as possible:
-  - Home
-  - About
-  - Services
-  - Projects
-  - Project detail
-  - Process
-  - Blog
-  - Contact
-  - Team
-- Keep the pasted design as the visual source of truth for layout, spacing, hierarchy, sections, card counts, and overall composition.
-- Use the original website only to extract and adapt real business content where useful.
-- Use the benchmark sites only to inform motion quality, hover behavior, and performant video treatment.
+### 1. Hero background video (design-matched)
+- Wire the existing `src/assets/hero-video.mp4` asset into `HeroSection` (and any secondary page hero blocks) as a true full-bleed background layer behind the headline/CTAs — preserving the pasted PNG layout exactly (no composition changes).
+- Stack order: `video` → dark gradient scrim → content. Scrim uses `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55))` so headline + gold accent stay legible.
+- Performance attributes: `autoPlay muted loop playsInline preload="metadata" poster={firstFrameImg}` + `disableRemotePlayback`. 
+- Lazy-load: use `IntersectionObserver` to only call `.play()` when the hero is ≥25% in view; pause when offscreen. Respect `prefers-reduced-motion` → show poster only.
+- Mobile fallback: under `md`, render the poster image instead of the MP4 to save bandwidth.
+- Add subtle Ken-Burns drift (`@keyframes heroDrift` scale 1 → 1.06 over 18s) for cinematic feel without re-encoding.
+- Add a second short looping clip behind the About / Projects intro band where the design shows a media strip — same component, reused.
 
-### Content and design rules I will follow
-- No redesigning the structure.
-- No extra sections, guessed layouts, or invented page compositions.
-- Use your pasted PNG designs as the exact page references.
-- Remove the visible Ali watermark from the implementation by rebuilding the UI rather than embedding the screenshots.
-- Keep the same premium architecture look: light palette, warm gold accent, refined minimal typography, large property visuals, and soft luxury presentation.
+### 2. Hermès-style hover system (sitewide)
+Add a reusable set of motion utilities in `src/styles.css` and apply them across the rebuilt components. None of these change layout — only motion.
 
-### Motion and video approach
-- Add subtle, premium interactions inspired by the benchmark sites:
-  - image hover lift / zoom
-  - card hover elevation
-  - button hover motion
-  - soft section reveals
-  - tasteful nav and CTA transitions
-- Introduce new, matched architecture video only where it fits the pasted design layout without changing the composition.
-- Prioritize performance:
-  - compressed video assets
-  - lazy loading for below-the-fold media
-  - preload only the main hero media
-  - avoid heavy always-on effects
-- Keep motion restrained and elegant rather than flashy.
+- **Image cards (`.media-hover`)**: image scales `1 → 1.06` over 700ms cubic-bezier(.22,1,.36,1); gold overlay fades 0 → 0.18; caption slides up 8px and reveals a thin underline.
+- **Project tiles (`.project-tile`)**: on hover, title shifts up, a small "View project →" line fades in, arrow translates 4px on repeat hover.
+- **Buttons (`.btn-sheen`)**: gold sheen sweep (pseudo-element gradient translating across) + 1px lift; primary CTA also animates underline.
+- **Nav links (`.story-link` extended)**: already present — extend with a small dot indicator and slower easing to match Hermès feel.
+- **Service rows (`.row-reveal`)**: hover reveals chevron + faint bg tint `oklch(from var(--primary) l c h / 0.06)`.
+- **Stat counters**: on first viewport entry, animate number from 0 → target with `requestAnimationFrame` (one-shot, not hover).
+- **Section reveals (`.reveal-up`)**: IntersectionObserver toggles class → opacity 0→1, translateY 24→0, 700ms ease-out, staggered via `--i` CSS var.
+- **Cursor affordance**: large media areas get `cursor: pointer` + a custom `.cursor-zoom` hint (small circular badge that follows cursor via CSS-only `:has` + transform — kept lightweight, desktop only).
+- **Marquee strip** (if present in design): infinite horizontal scroll for client/awards row using pure CSS keyframes, pauses on hover.
 
-### Data/content sourcing
-- Pull real business wording, services, contact details, and project-related references from the original site where usable.
-- Keep placeholders only where the original site lacks clean usable source content.
-- Normalize and polish extracted copy so it reads consistently across pages while still staying grounded in the real source.
+### 3. Files touched
+- `src/components/site-shell.tsx` — update `HeroSection` to render `<BackgroundVideo>`; add the new `BackgroundVideo` component; apply hover utility classes to `ProjectsShowcase`, `ServicesGrid`, footer media, related projects band.
+- `src/styles.css` — add `@utility` blocks: `media-hover`, `project-tile`, `btn-sheen`, `row-reveal`, `reveal-up`, `cursor-zoom`, `marquee`; add `@keyframes heroDrift`, `sheen`, `marquee`.
+- `src/hooks/use-in-view.ts` (new) — small IntersectionObserver hook used by video autoplay gate, reveal-up, and stat counters.
+- `src/components/background-video.tsx` (new) — encapsulates lazy/poster/reduced-motion logic.
+- Poster: extract first frame of `hero-video.mp4` with ffmpeg to `src/assets/hero-poster.jpg` and upload via `lovable-assets`.
 
-### Implementation steps
-1. Establish shared site shell and global tokens to match the pasted design.
-2. Build reusable header, footer, buttons, section wrappers, cards, metrics, and media blocks from the screenshot references.
-3. Create route files for all required pages and reproduce each screenshot composition faithfully.
-4. Add optimized image/video assets and hook them into the exact hero/media areas that exist in the pasted designs.
-5. Apply hover states and lightweight entrance animations inspired by the benchmark sites.
-6. Add route-specific metadata and polish responsive behavior while preserving the desktop design language.
-7. Verify preview quality across the main pages and ensure the placeholder starter page is fully replaced.
+### 4. Performance guardrails
+- Single `<video>` per page max; secondary heroes reuse poster image until in view.
+- `preload="metadata"` not `auto`; no `<source>` duplication.
+- `prefers-reduced-motion: reduce` disables Ken-Burns, sheen, marquee, and video autoplay.
+- All hover transforms use `transform`/`opacity` only (GPU-friendly, no layout thrash).
+- No new dependencies.
 
-### Technical details
-- Stack: TanStack Start + React + Tailwind v4
-- Routing: separate route files for each page under `src/routes/`
-- Assets: optimized local/CDN-backed assets for images and videos
-- SEO: route-specific title/description/Open Graph text on each page
-- Performance: semantic HTML, lazy media, restrained animation, no unnecessary client-heavy effects
-
-### Output of this prototype phase
-- A working front-end prototype of all pages
-- Strictly based on your pasted design set
-- Enriched with real audited content from the original site
-- Enhanced with benchmark-inspired hover/motion and matched architecture video
+### 5. Verification
+- Run dev build, open `/`, `/about`, `/projects`, `/services` via Playwright headless: screenshot hero (poster + playing frame), hover a project card, hover a CTA — confirm transforms fire and layout is unchanged vs. pasted PNG.
+- Check console for autoplay errors; confirm video pauses when scrolled out.
