@@ -11,7 +11,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
-import { ChatWidget } from "@/components/chat-widget";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import appCss from "../styles.css?url";
 
@@ -79,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "UPPAL Design" },
+      { title: "Uppal Design | Luxury UK Architecture" },
       {
         name: "description",
         content: "UPPAL Design creates intelligent architectural spaces with refined residential and commercial design across the UK.",
@@ -87,6 +86,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "UPPAL Design" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Uppal Design | Luxury UK Architecture" },
+      { name: "twitter:title", content: "Uppal Design | Luxury UK Architecture" },
+      { name: "description", content: "Uppal Design Animations is a website showcasing architectural designs with dynamic animations and background videos." },
+      { property: "og:description", content: "Uppal Design Animations is a website showcasing architectural designs with dynamic animations and background videos." },
+      { name: "twitter:description", content: "Uppal Design Animations is a website showcasing architectural designs with dynamic animations and background videos." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/84212a10-2aae-4363-9dbf-3be23dd5c44a" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/84212a10-2aae-4363-9dbf-3be23dd5c44a" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
     scripts: [
@@ -141,7 +147,7 @@ function RootComponent() {
         <SiteHeader wordmark={wordmark} />
         <Outlet />
         <SiteFooter wordmark={wordmark} variant={footerVariant} />
-        <ChatWidget />
+
       </div>
     </QueryClientProvider>
   );
