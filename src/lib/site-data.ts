@@ -1,4 +1,11 @@
 import heroVideo from "@/assets/hero-video.mp4.asset.json";
+import vidHome from "@/assets/videos/home.mp4.asset.json";
+import vidAbout from "@/assets/videos/about.mp4.asset.json";
+import vidProjects from "@/assets/videos/projects.mp4.asset.json";
+import vidServices from "@/assets/videos/services.mp4.asset.json";
+import vidProcess from "@/assets/videos/process.mp4.asset.json";
+import vidBlog from "@/assets/videos/blog.mp4.asset.json";
+import vidCta from "@/assets/videos/cta.mp4.asset.json";
 import heroBuilding from "@/assets/hero-building.jpg.asset.json";
 import curvedBuilding from "@/assets/curved-building.jpg.asset.json";
 import londonSkyline from "@/assets/london-skyline.jpg.asset.json";
@@ -15,6 +22,19 @@ import projBirminghamApartments from "@/assets/proj-birmingham-apartments.jpg.as
 import projReadingOffice from "@/assets/proj-reading-office.jpg.asset.json";
 import projPrivateVilla from "@/assets/proj-private-villa.jpg.asset.json";
 import projMixedUse from "@/assets/proj-mixed-use.jpg.asset.json";
+
+export const pageVideos = {
+  home: vidHome.url,
+  about: vidAbout.url,
+  projects: vidProjects.url,
+  services: vidServices.url,
+  process: vidProcess.url,
+  blog: vidBlog.url,
+  contact: vidCta.url,
+  team: vidAbout.url,
+  detail: vidProjects.url,
+  cta: vidCta.url,
+};
 
 export const navItems = [
   { label: "Home", to: "/" },

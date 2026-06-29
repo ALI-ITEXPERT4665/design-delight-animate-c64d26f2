@@ -1,43 +1,54 @@
-## Strict design alignment pass
+## Unified Header + Site-Wide Video Backgrounds
 
-The current build deviates from the pasted PNGs in several visible ways. This plan fixes only those gaps — no new pages, no new business logic.
+### 1. New unique header (locked, identical on every page)
 
-### Gaps found (audited via Playwright screenshots of `/`, `/projects`, `/services`, `/about`, `/process`, `/blog`, `/contact`, `/team`, `/project-detail`)
+Replace current `SiteHeader` in `src/components/site-shell.tsx` with a single premium header:
 
-1. **Hero & section imagery is wrong.** Current site uses harvested heimarchitecture *blueprint/sketch* renders. The design uses photorealistic curved-white modern architecture (same building reused across hero of every page). Project tiles also show sketches instead of photo renders (Modern Family House, London Business Hub, Cambridge University, Luxury Hotel & Spa, Birmingham Apartments, Reading Office Complex, Private Villa, Mixed Use Development).
-2. **Logo wordmark inconsistency.** Designs alternate between "UPPAL DESIGN" (home, about, team, process, blog, contact) and "UPPAL DECOR" (projects, services, project-detail). Match the per-page wordmark exactly.
-3. **Process step icons are all identical** (sparkle). Design uses 5 distinct line icons: concept (nodes), planning (document), visualization (cube/atom), documentation (drawing), construction (helmet/person).
-4. **Project category filter pills lack the small icons** shown in the design (home, building, book, bed, apartments).
-5. **Featured project cards** are missing the "FEATURED" gold ribbon overlay on the image bottom-left.
-6. **About-page collage** uses blueprint sketches; design uses 3 overlapping photo tiles (London skyline + glass tower + curved modern building) with a floating "15+ YEARS OF EXPERIENCE" card.
-7. **Stats row on home** renders with award icons on every stat; design uses 5 distinct icons (building, badge, heart-badge, trophy, people).
-8. **Team page leadership row** — current leadership tiles use placeholder avatars; design needs square portrait tiles with name + role under each.
-9. **Footers differ per page in the design** (Home/About/Team use 4-col with social icons; Services/Projects/Contact use 5-col with newsletter; Blog uses centered minimal). Current site uses one footer everywhere.
-10. **Contact page office cards** missing the studio photo and two address blocks (Head Office + Studio Office) with hours.
-11. **Project-detail page** missing: signature graphic, project meta strip (6 columns), 4 design-highlight cards, challenge/solution split with arrow, related projects strip, footer with newsletter mini.
-12. **Blog page** missing: featured article hero card, topic grid (6 icon tiles), recent insights row, newsletter strip.
+- **Transparent over hero** when at top, **frosted glass + shrink** (`backdrop-blur-xl`, height 96→64px, border-bottom appears) once scrolled >40px — tracked via scroll listener with `requestAnimationFrame`.
+- **Wordmark left**: UPPAL with thin "DESIGN" / "DECOR" subline (kept per-route).
+- **Nav center**: each link wrapped in a span with a gold underline that wipes in left→right on hover (`scaleX 0→1`, `transform-origin` swap on leave for the Hermès-style reverse-out).
+- **Right cluster**: phone number + "Menu" button with two-line icon that morphs to X.
+- **Side-drawer mega-menu** (right slide-in, 480px wide, dark): full nav list with large typography + 4 featured project thumbnails on the right half + contact block at bottom. Opens via Menu button; closes on ESC, route change, backdrop click. Body scroll locked while open. Staggered fade-up on links.
+- **Active route**: gold dot before the active link.
+- Mobile: drawer becomes full-screen, nav stacks.
 
-### Approach
+### 2. Free architecture background videos (sourced from internet AND FROM USER UPLOADED FILES THAT HE WILL UPLOAD)
 
-- **Replace imagery**: regenerate photorealistic architecture images via `imagegen` (premium not needed) for: 1 hero building (reused on every page hero per the design), 8 project photos (matching project titles + locations), 1 interior living-room (services page), 2 interiors (project-detail), 1 office studio (contact), 4 blog covers, 5 process-stage photos, 1 founder portrait (about quote block), 10 team headshots (team page) + 4 leadership portraits. Swap into `siteData` and section components — no layout changes.
-- **Replace process icons** with `lucide-react`: `Lightbulb`, `FileText`, `Box`, `ClipboardList`, `HardHat` (mapped to stages 01–05). Apply both on Home and `/process`.
-- **Replace stat icons**: `Building2`, `Award`, `HeartHandshake`, `Trophy`, `Users`.
-- **Add category-pill icons** on `/projects`: `Grid3x3`, `Home`, `Building`, `BookOpen`, `BedDouble`, `Building2`.
-- **Add FEATURED ribbon** to featured cards (absolute bottom-left gold badge).
-- **Per-page wordmark**: pass `variant="design" | "decor"` prop to `SiteHeader` and switch the small subtitle text.
-- **About collage**: 3 stacked image tiles with `15+ YEARS` floating card — pure CSS positions, reuse `media-hover`.
-- **Per-page footers**: add `<SiteFooter variant="four-col" | "five-col-newsletter" | "centered-minimal" />` and select per route.
-- **Contact offices**: studio photo + two address blocks with hours.
-- **Project-detail**: build the missing blocks (signature SVG line art, 6-col meta strip, 4 highlight cards using `lucide` icons, challenge/solution with circular arrow, related projects row, mini-newsletter footer).
-- **Blog page**: featured hero card, 6-icon topic grid, recent insights row, newsletter strip.
-- **Keep all current motion** (hero video, sheen, reveal-up, lift-card, project-tile, media-hover) intact.
+I'll fetch CC0/free-license architecture clips from Coverr/Pexels-style free CDNs (no Envato), upload via `lovable-assets`, and wire one per page:
 
-### Files touched (no new routes)
+- Home hero, About hero, Projects hero, Services hero, Process hero, Contact hero, Blog hero, Project-Detail hero, plus one shared CTA-band loop = ~8–9 clips total, 720p, ≤4MB each, muted/looping.
+- Each is paired with a still poster (extracted first frame) so first paint stays instant.
+- Existing `BackgroundVideo` (parallax + ken-burns zoom + `IntersectionObserver` pause + reduced-motion fallback) is reused —
 
-- `src/lib/site-data.ts` — swap asset imports to new photoreal images; add per-stage icon keys; add per-page footer variant.
-- `src/components/site-shell.tsx` — header variant prop; stat/process/category icon maps; FEATURED ribbon; about collage; contact office cards; project-detail rebuild; blog rebuild; footer variants.
-- `src/assets/*` — new `lovable-assets` pointers for the regenerated images (replacing the heimarchitecture-derived ones).
+### 3. "Unbelievable but professional" motion layer (no AI-cartoon look)
 
-### Verification
+Subtle, editorial-grade only:
 
-Re-run the Playwright screenshot pass on all 9 routes and visually diff each against the matching PNG. The pass succeeds when every page's overall composition, image style, icon set, and footer variant matches the design.
+- **Page-enter curtain**: thin gold line wipes across viewport on route change (200ms), content fades up underneath.
+- **Hero text reveal**: per-word mask reveal on first paint (translateY 100% → 0, 40ms stagger).
+- **Scroll-reveal** (`.reveal-up`) already exists — applied to every section heading.
+- **Magnetic CTA buttons**: primary buttons gently track cursor within 40px radius on hover.
+- **Project tiles**: image zooms 1.08, title slides up, gold underline draws under category label, FEATURED ribbon glows.
+- **Cursor-follow spotlight** on dark CTA bands (radial gradient that tracks mouse).
+- **Number counters** count up on first scroll into view (stats band).
+- All respect `prefers-reduced-motion`.
+
+### 4. Per-page wiring
+
+Every route's hero gets its dedicated `videoSrc`. The About CTA band, Contact hero, and Project-Detail hero get full-bleed video. No layout changes to any page already approved — only header swap + video assignment + motion polish.
+
+### Files touched
+
+- `src/components/site-shell.tsx` — replace `SiteHeader`, add `MegaDrawer`, magnetic-button hook, page-curtain wrapper
+- `src/components/background-video.tsx` — already good, no changes
+- `src/lib/site-data.ts` — add `pageVideos` map
+- `src/routes/__root.tsx` — mount page-curtain + lock new header
+- `src/routes/*.tsx` (8 files) — pass `videoSrc` prop to each hero
+- `src/styles.css` — keyframes for curtain, underline wipe, word-mask reveal
+- `src/assets/*.mp4.asset.json` — 8–9 new video pointers (uploaded via `lovable-assets`)
+
+### Out of scope
+
+- No layout restructuring of approved pages (Home, About, etc.)
+- No Envato/Toffu sourcing — strictly free architecture stock
+- No new pages  ,,WAIT FOR MY UPLOADS FILES CHOOSE BEST FOR THTA SECTION AND USE IT 
