@@ -39,7 +39,7 @@ function AdminDashboard() {
       <section className="mt-10">
         <h2 className="text-sm uppercase tracking-wider text-neutral-500">Latest activity</h2>
         <div className="mt-3 overflow-hidden rounded-xl border border-neutral-200 bg-white">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-neutral-50 text-neutral-500 uppercase text-xs tracking-wider">
               <tr><th className="text-left p-3">When</th><th className="text-left p-3">Actor</th><th className="text-left p-3">Action</th><th className="text-left p-3">Entity</th></tr>
             </thead>

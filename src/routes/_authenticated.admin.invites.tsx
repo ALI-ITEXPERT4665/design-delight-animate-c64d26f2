@@ -47,7 +47,7 @@ function InvitesPage() {
       </div>
 
       <div className="mt-6 overflow-hidden rounded-xl border border-neutral-200 bg-white">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[640px]">
           <thead className="bg-neutral-50 text-neutral-500 uppercase text-xs tracking-wider">
             <tr>
               <th className="text-left p-3">Email</th><th className="text-left p-3">Role</th>
