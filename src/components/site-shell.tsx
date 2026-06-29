@@ -42,7 +42,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { motion as MotionDiv } from "framer-motion";
+import { motion as M } from "framer-motion";
 import { type ComponentType, type ReactNode, useEffect, useState } from "react";
 import {
   blogPosts,
@@ -1182,7 +1182,7 @@ export function ProcessPageContent() {
 }
 
 function ProcessTimeline() {
-  const MotionAny = MotionDiv;
+  const MotionAny = M.div;
   return (
     <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
@@ -1266,7 +1266,7 @@ function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; ind
   };
   const reset = () => setTilt({ x: 0, y: 0 });
   return (
-    <MotionDiv
+    <M.div
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-12%" }}
@@ -1279,7 +1279,7 @@ function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; ind
         className="relative overflow-hidden rounded-sm border border-border bg-card shadow-[var(--shadow-soft)]"
         style={{ perspective: 1200 }}
       >
-        <MotionDiv
+        <M.div
           animate={{ rotateX: tilt.x, rotateY: tilt.y }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
           style={{ transformStyle: "preserve-3d" }}
@@ -1291,7 +1291,7 @@ function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; ind
             <span className="grid h-12 w-12 place-items-center rounded-full border border-white/40 bg-white/10 backdrop-blur text-lg font-semibold">{step.number}</span>
             <span className="text-[11px] uppercase tracking-[0.24em]">{step.subtitle}</span>
           </div>
-        </MotionDiv>
+        </M.div>
       </div>
       <div>
         <div className="mb-4 flex items-center gap-3">
@@ -1312,7 +1312,7 @@ function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; ind
           </ul>
         </div>
       </div>
-    </MotionDiv>
+    </M.div>
   );
 }
 
@@ -1334,7 +1334,7 @@ function ValueGrid4() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map(([label, copy, Icon], i) => (
-            <MotionDiv
+            <M.div
               key={label}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1349,7 +1349,7 @@ function ValueGrid4() {
               </span>
               <h3 className="mb-2 text-base font-semibold">{label}</h3>
               <p className="text-sm leading-7 text-muted-foreground">{copy}</p>
-            </MotionDiv>
+            </M.div>
           ))}
         </div>
         <div className="mt-12 flex justify-center">
