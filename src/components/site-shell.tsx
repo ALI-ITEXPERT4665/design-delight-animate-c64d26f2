@@ -280,18 +280,20 @@ export function SiteFooter({
 } = {}) {
   const quickLinks = navItems;
   const serviceLinks = [
-    { label: "BIM Modelling", to: "/services" },
+    { label: "BIM Modeller", to: "/services" },
     { label: "3D Visualization", to: "/services" },
-    { label: "Planning & Drawings", to: "/services" },
-    { label: "Structural Design", to: "/services" },
-    { label: "Construction Support", to: "/services" },
+    { label: "Planning Drawings", to: "/services" },
+    { label: "Building Regulations", to: "/services" },
+    { label: "Structural Calculations", to: "/services" },
+    { label: "Project Management", to: "/services" },
   ];
   const socials = [
-    { Icon: Linkedin, label: "LinkedIn" },
-    { Icon: Instagram, label: "Instagram" },
-    { Icon: Twitter, label: "Twitter" },
-    { Icon: PinterestIcon, label: "Pinterest" },
+    { Icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/uppaldb" },
+    { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/uppaldb" },
+    { Icon: Facebook, label: "Facebook", href: "https://www.facebook.com/uppaldb" },
+    { Icon: PinterestIcon, label: "Pinterest", href: "https://www.pinterest.com/uppaldb" },
   ];
+
 
   return (
     <footer className="relative isolate overflow-hidden bg-neutral-950 text-neutral-200">
