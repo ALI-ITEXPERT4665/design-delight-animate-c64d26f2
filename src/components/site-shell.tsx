@@ -2331,12 +2331,74 @@ export function ProjectDetailContent() {
       <ProjectDetailHero />
       <DetailMarquee />
       <ProjectOverviewBand />
+      <ProjectSpecsBar />
       <ParallaxQuoteBand />
       <ProjectHighlightsBand />
       <ChallengeSolutionBand />
       <RelatedProjectsBand related={related} />
       <ContactStrip />
     </>
+  );
+}
+
+function ProjectSpecsBar() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const x = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
+  const specs: Array<[string, string, IconCmp]> = [
+    ["Project Type", "Residential", HomeIcon],
+    ["Total Area", "8200 sq ft", Grid3x3],
+    ["Duration", "18 Months", Clock3],
+    ["Floors", "2", Layers],
+    ["Architect", "Uppal Decor", Compass],
+    ["Status", "Completed", ShieldCheck],
+  ];
+  return (
+    <section ref={ref} className="border-b border-border/60 bg-foreground py-10 text-background overflow-hidden">
+      <M.div style={{ x }} className="mx-auto grid max-w-[1280px] grid-cols-2 gap-x-6 gap-y-8 px-4 md:px-6 md:grid-cols-3 lg:grid-cols-6">
+        {specs.map(([label, value, Icon], i) => (
+          <M.div
+            key={label}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, ease: detailEase, delay: i * 0.06 }}
+            className="group flex items-start gap-4"
+          >
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-background/25 text-primary transition-all duration-500 group-hover:border-primary group-hover:bg-primary/10 group-hover:rotate-6">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-background/60">{label}</div>
+              <div className="mt-1 text-base font-semibold tracking-tight">{value}</div>
+            </div>
+          </M.div>
+        ))}
+      </M.div>
+    </section>
+  );
+}
+
+function KineticTitle({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={cn("inline-flex flex-wrap", className)} aria-label={text}>
+      {text.split(" ").map((word, wi) => (
+        <span key={`${word}-${wi}`} className="mr-[0.28em] inline-flex overflow-hidden align-bottom leading-[1.02]">
+          {word.split("").map((ch, ci) => (
+            <M.span
+              key={`${ch}-${ci}`}
+              initial={{ y: "110%", skewY: 8, opacity: 0 }}
+              whileInView={{ y: "0%", skewY: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ type: "spring", damping: 12, stiffness: 100, delay: (wi * 0.08) + ci * 0.03 }}
+              className="inline-block will-change-transform"
+            >
+              {ch}
+            </M.span>
+          ))}
+        </span>
+      ))}
+    </span>
   );
 }
 
