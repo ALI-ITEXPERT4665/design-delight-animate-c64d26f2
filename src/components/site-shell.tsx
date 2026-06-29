@@ -322,19 +322,23 @@ export function ProcessBand() {
             A seamless process that ensures precision, transparency, and excellence at every step.
           </p>
         </div>
-        <div className="grid gap-6 md:grid-cols-5">
-          {processSteps.map((step) => (
-            <div key={step.number} className="group relative space-y-4 text-center">
-              <div className="mx-auto grid h-[4.5rem] w-[4.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 group-hover:-translate-y-1">
-                <Sparkles className="h-6 w-6 text-primary" />
+        <div className="relative grid gap-6 md:grid-cols-5">
+          <div className="absolute left-[10%] right-[10%] top-[2.25rem] hidden h-px bg-border md:block" aria-hidden="true" />
+          {processSteps.map((step) => {
+            const Icon = processIcon[step.icon] ?? Sparkles;
+            return (
+              <div key={step.number} className="group relative space-y-4 text-center">
+                <div className="mx-auto grid h-[4.5rem] w-[4.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 group-hover:-translate-y-1 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-6 w-6 text-primary transition-colors duration-500 group-hover:text-primary-foreground" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{step.number}</p>
+                  <h3 className="text-sm font-semibold uppercase tracking-[0.12em]">{step.title}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{step.subtitle}</p>
+                </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{step.number}</p>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.12em]">{step.title}</h3>
-                <p className="text-sm leading-6 text-muted-foreground">{step.subtitle}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="mt-10 flex justify-center">
           <Button asChild variant="outline" className="btn-sheen rounded-sm px-6">
