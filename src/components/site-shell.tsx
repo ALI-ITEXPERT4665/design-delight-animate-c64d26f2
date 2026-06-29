@@ -263,15 +263,21 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 export function SiteFooter({
   wordmark = "Design",
   variant = "default",
+  videoFooter = false,
 }: {
   wordmark?: "Design" | "Decor";
   variant?: "default" | "minimal";
+  videoFooter?: boolean;
 } = {}) {
   if (variant === "minimal") {
     return (
       <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
-        <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+        {videoFooter && (
+          <>
+            <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+          </>
+        )}
         <div className="relative mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-neutral-300 md:flex-row md:px-6">
           <p>© 2024 Uppal {wordmark}. All rights reserved.</p>
           <div className="flex items-center gap-6">
@@ -297,8 +303,12 @@ export function SiteFooter({
   }
   return (
     <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
-      <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+      {videoFooter && (
+        <>
+          <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+        </>
+      )}
       <div className="relative mx-auto grid max-w-[1200px] gap-12 px-4 py-16 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
         <div className="space-y-5">
           <div>
