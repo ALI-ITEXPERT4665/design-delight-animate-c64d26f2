@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: "◆" },
+  { to: "/admin/preview", label: "Live Preview", icon: "◉" },
   { to: "/admin/content", label: "Content", icon: "✎" },
   { to: "/admin/collections", label: "Collections", icon: "▤" },
   { to: "/admin/media", label: "Media", icon: "▦" },
