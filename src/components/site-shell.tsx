@@ -590,47 +590,188 @@ export function AboutPageContent() {
         eyebrow="About Us"
         title="Designing with Intelligence."
         highlight="Building with Purpose."
-        description="At Uppal Decor, we believe architecture is more than buildings — it shapes lives, our cities, and future impact."
+        description="At Uppal Decor, we believe architecture is more than buildings — it shapes lives, our cities, and the future. Discover the story, values, and people behind our timeless spaces."
         primaryLabel="Explore Our Work"
         primaryTo="/projects"
         image={media.heroAlt}
+        showVideo={false}
+        showPlay={false}
+        compact
       />
-      <IntroSplit />
-      <MissionBand />
-      <StatsBand />
-      <FounderBand />
-      <TeamBand compact />
-      <ContactStrip />
+      <AboutIntroSplit />
+      <StoryMissionValues />
+      <AboutStatsRow />
+      <FounderQuoteBand />
+      <AboutTeamSection />
+      <AboutCTABand />
     </>
   );
 }
 
-function MissionBand() {
+function AboutIntroSplit() {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 lg:grid-cols-[0.78fr_1.22fr]">
-        <div className="space-y-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Story</p>
+    <section className="border-b border-border/60 bg-background py-20 md:py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="space-y-6 reveal-up">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Who We Are</p>
+          <h2 className="max-w-[16ch] text-4xl font-semibold leading-[1.1] md:text-5xl">
+            Designing Spaces,<br />Elevating Lives.
+          </h2>
+          <p className="max-w-xl text-base leading-8 text-muted-foreground">
+            Founded with a vision to redefine architectural excellence, Uppal Decor has spent over fifteen years crafting environments where form, function, and feeling converge. From private residences to landmark commercial developments, our work reflects an unwavering pursuit of detail.
+          </p>
+          <p className="max-w-xl text-base leading-8 text-muted-foreground">
+            We are storytellers, problem-solvers, and stewards of the built environment — guided by a belief that thoughtful design has the power to transform how people live, work, and connect.
+          </p>
+          <div className="pt-2" style={{ fontFamily: "'Brush Script MT', cursive" }}>
+            <span className="text-3xl text-foreground/80">Ar. Anugam Uppal</span>
+          </div>
+          <Button asChild size="lg" className="btn-sheen group rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
+            <Link to="/projects">
+              More About Us
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
+        <div className="relative h-[520px]">
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, oklch(0.68 0.095 63 / 0.35) 1px, transparent 1px)",
+              backgroundSize: "16px 16px",
+            }}
+            aria-hidden
+          />
+          <div className="media-hover absolute left-0 top-0 h-[300px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)]">
+            <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
+          </div>
+          <div className="media-hover absolute right-0 top-16 h-[260px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.interior} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
+          </div>
+          <div className="media-hover absolute bottom-0 left-12 h-[240px] w-[52%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
+          </div>
+          <div className="absolute bottom-4 right-4 z-10 flex flex-col items-center justify-center bg-primary px-6 py-5 text-primary-foreground shadow-[var(--shadow-soft)] transition-transform duration-500 hover:-translate-y-1 hover:rotate-1">
+            <span className="text-4xl font-semibold leading-none">15+</span>
+            <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em]">Years of Excellence</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const aboutValues = [
+  { label: "Innovation", desc: "Pushing boundaries with new ideas", icon: LightbulbIcon },
+  { label: "Sustainability", desc: "Designs that respect the planet", icon: Leaf },
+  { label: "Collaboration", desc: "Listening, partnering, co-creating", icon: Handshake },
+  { label: "Excellence", desc: "Crafted to the highest standard", icon: Sparkle },
+];
+
+function StoryMissionValues() {
+  return (
+    <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-3">
+        <div className="space-y-4 reveal-up">
+          <div className="flex items-center gap-3">
+            <Book className="h-5 w-5 text-primary" />
+            <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Story</h3>
+          </div>
+          <h4 className="text-2xl font-semibold leading-tight">A Legacy of Thoughtful Design</h4>
           <p className="text-base leading-8 text-muted-foreground">
-            Founded on a passion for architecture and a commitment to excellence, Uppal Decor was established to challenge convention and deliver timeless spaces.
+            From a small studio with a single drafting table to an award-winning practice, our journey has been defined by curiosity, craft, and an enduring commitment to the communities we serve.
           </p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-            <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
-            <p className="text-base leading-8 text-muted-foreground">
-              To create intelligent architectural solutions that inspire, enrich lives, and contribute positively to the environment and communities we touch.
-            </p>
+        <div className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+              <Target className="h-5 w-5" />
+            </span>
+            <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Mission</h3>
           </div>
-          <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-            <h3 className="mb-4 text-xl font-semibold">Our Values</h3>
-            <div className="grid gap-3">
-              {values.slice(1, 5).map((value) => (
-                <div key={value} className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>{value}</span>
+          <h4 className="text-2xl font-semibold leading-tight">Architecture with Intent</h4>
+          <p className="text-base leading-8 text-muted-foreground">
+            To create intelligent architectural solutions that inspire, enrich lives, and contribute positively to the environment and communities we touch — one carefully considered space at a time.
+          </p>
+        </div>
+        <div className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+              <Sparkles className="h-5 w-5" />
+            </span>
+            <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Values</h3>
+          </div>
+          <div className="grid gap-4">
+            {aboutValues.map(({ label, desc, icon: Icon }) => (
+              <div key={label} className="flex items-start gap-3 transition-transform duration-300 hover:translate-x-1">
+                <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center border border-border bg-background text-primary">
+                  <Icon className="h-4 w-4" />
+                </span>
+                <div>
+                  <div className="text-sm font-semibold text-foreground">{label}</div>
+                  <div className="text-sm text-muted-foreground">{desc}</div>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutStatsRow() {
+  const items = [
+    { value: "150+", label: "Projects Delivered", icon: Building2 },
+    { value: "15+", label: "Years of Experience", icon: Clock3 },
+    { value: "98%", label: "Client Satisfaction", icon: HeartHandshake },
+    { value: "25+", label: "Industry Awards", icon: Trophy },
+    { value: "40+", label: "Expert Team", icon: Users },
+  ];
+  return (
+    <section className="border-b border-border/60 bg-background py-16">
+      <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        {items.map(({ value, label, icon: Icon }) => (
+          <div key={label} className="group flex flex-col items-center text-center transition-transform duration-500 hover:-translate-y-1">
+            <span className="mb-3 grid h-12 w-12 place-items-center rounded-full border border-border text-primary transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div className="text-3xl font-semibold text-foreground md:text-4xl">{value}</div>
+            <div className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FounderQuoteBand() {
+  return (
+    <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="media-hover relative h-[480px] overflow-hidden shadow-[var(--shadow-soft)]">
+          <img src={media.founder} alt="Ar. Anugam Uppal — Founder" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.05]" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          <div className="absolute bottom-5 left-5 text-background">
+            <div className="text-lg font-semibold">Ar. Anugam Uppal</div>
+            <div className="text-xs uppercase tracking-[0.22em] opacity-90">Founder &amp; Principal Architect</div>
+          </div>
+        </div>
+        <div className="relative border border-border bg-card p-10 shadow-[var(--shadow-soft)] md:p-12">
+          <span className="absolute -top-6 left-8 select-none text-[110px] leading-none text-primary/30" aria-hidden>“</span>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">A Word From Our Founder</p>
+          <h3 className="mt-4 max-w-[20ch] text-3xl font-semibold leading-tight md:text-4xl">
+            Architecture is a responsibility — and a privilege.
+          </h3>
+          <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground">
+            Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to craft places that transform lives, honor context, and stand the test of time.
+          </p>
+          <div className="mt-8 flex items-center gap-4">
+            <span className="h-px w-12 bg-primary" />
+            <div>
+              <div className="text-sm font-semibold text-foreground">Ar. Anugam Uppal</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Founder, Uppal Decor</div>
             </div>
           </div>
         </div>
@@ -639,28 +780,77 @@ function MissionBand() {
   );
 }
 
-function FounderBand() {
+function AboutTeamSection() {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-        <div className="media-hover h-[420px] overflow-hidden shadow-[var(--shadow-soft)]">
-          <img src={media.founder} alt="Founder portrait" className="h-full w-full object-cover" loading="lazy" />
-        </div>
-        <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:p-10">
-          <p className="mb-5 text-5xl leading-none text-primary">“</p>
-          <h3 className="max-w-[16ch] text-3xl font-semibold leading-tight">Architecture is a responsibility — and a privilege.</h3>
-          <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">
-            Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to shape places that transform lives and enrich the world we live in.
-          </p>
-          <div className="mt-6 text-sm text-muted-foreground">
-            <div className="font-semibold text-foreground">Ar. Anugam Uppal</div>
-            <div>Founder & Principal Architect</div>
+    <section className="border-b border-border/60 bg-background py-20 md:py-24">
+      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+        <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-xl space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Team</p>
+            <h2 className="text-4xl font-semibold leading-tight md:text-5xl">The Minds Behind the Spaces</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              A multidisciplinary studio of architects, designers, and strategists united by a passion for meaningful, enduring design.
+            </p>
           </div>
+          <Link to="/team" className="story-link inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            Meet the Full Team <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <TeamBand compact />
+      </div>
+    </section>
+  );
+}
+
+function AboutCTABand() {
+  const contactItems = [
+    { icon: Phone, label: "Call Us", value: siteSettings.phone },
+    { icon: Mail, label: "Email Us", value: siteSettings.email },
+    { icon: MapPin, label: "Visit Studio", value: siteSettings.address },
+  ];
+  return (
+    <section className="relative overflow-hidden border-b border-border/60">
+      <div className="absolute inset-0">
+        <img src={media.heroMain} alt="" className="h-full w-full object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/80 to-foreground/55" />
+      </div>
+      <div className="relative mx-auto grid max-w-[1200px] gap-10 px-4 py-20 md:px-6 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="space-y-5 text-background">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Get In Touch</p>
+          <h2 className="max-w-[16ch] text-4xl font-semibold leading-tight md:text-5xl">
+            Let&apos;s Build Something Extraordinary Together.
+          </h2>
+          <p className="max-w-xl text-base leading-8 text-background/80">
+            Whether it&apos;s a residence, a workplace, or a landmark — we&apos;d love to hear your vision and explore how we can bring it to life.
+          </p>
+          <div className="pt-2">
+            <Button asChild size="lg" className="btn-sheen group rounded-sm bg-primary px-7 uppercase tracking-[0.16em] text-xs text-primary-foreground hover:bg-primary/90">
+              <Link to="/contact">
+                Start Your Project
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {contactItems.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="group flex items-center gap-5 border border-background/20 bg-background/10 p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-background/15">
+              <span className="grid h-12 w-12 shrink-0 place-items-center bg-primary text-primary-foreground transition-transform duration-500 group-hover:scale-110">
+                <Icon className="h-5 w-5" />
+              </span>
+              <div className="text-background">
+                <div className="text-xs uppercase tracking-[0.2em] text-primary">{label}</div>
+                <div className="mt-1 text-base">{value}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+
 
 export function ServicesPageContent() {
   return (
