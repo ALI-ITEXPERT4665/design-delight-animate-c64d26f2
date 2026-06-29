@@ -2728,9 +2728,9 @@ function ChallengeSolutionBand() {
     "Smart zones and energy-efficient systems",
   ];
   return (
-    <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-2">
-        <div>
+    <section className="relative border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-2">
+        <Tilt3DCard className="rounded-md border border-white/40 bg-white/40 p-10 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">The Challenge</p>
           <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Balancing Elegance with Functionality." />
@@ -2738,8 +2738,8 @@ function ChallengeSolutionBand() {
           <p className="mt-6 max-w-md text-base leading-8 text-muted-foreground">
             The client envisioned a luxury home that felt open and elevated while ensuring lasting functionality, privacy, and family comfort.
           </p>
-        </div>
-        <div>
+        </Tilt3DCard>
+        <Tilt3DCard className="rounded-md border border-white/40 bg-white/40 p-10 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Our Solution</p>
           <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Designing with Purpose and Precision." />
@@ -2763,7 +2763,7 @@ function ChallengeSolutionBand() {
               </M.li>
             ))}
           </M.ul>
-        </div>
+        </Tilt3DCard>
       </div>
     </section>
   );
