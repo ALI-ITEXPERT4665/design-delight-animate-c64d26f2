@@ -647,7 +647,7 @@ function AboutIntroSplit() {
             <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
           </div>
           <div className="media-hover absolute right-0 top-16 h-[260px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
-            <img src={media.interior} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
+            <img src={media.interiorLiving} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
           </div>
           <div className="media-hover absolute bottom-0 left-12 h-[240px] w-[52%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
             <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
