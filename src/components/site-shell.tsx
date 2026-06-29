@@ -241,7 +241,8 @@ export function HeroSection({
   secondaryLabel,
   secondaryTo,
   image = media.heroMain,
-  showVideo = true,
+  videoSrc,
+  showVideo,
   darkPlay = false,
   showPlay = true,
   compact = false,
@@ -255,11 +256,14 @@ export function HeroSection({
   secondaryLabel?: string;
   secondaryTo?: string;
   image?: string;
+  videoSrc?: string;
   showVideo?: boolean;
   darkPlay?: boolean;
   showPlay?: boolean;
   compact?: boolean;
 }) {
+  const useVideo = showVideo ?? Boolean(videoSrc);
+  const src = videoSrc ?? media.video;
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_top_left,var(--color-surface-soft),transparent_38%)]">
       <div className={cn(
@@ -268,7 +272,7 @@ export function HeroSection({
       )}>
         <div className="relative z-10 max-w-xl space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
-          <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl">
+          <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.05] md:text-6xl word-reveal">
             {title}
             {highlight ? <span className="block">{highlight}</span> : null}
           </h1>
@@ -294,8 +298,8 @@ export function HeroSection({
           "group relative overflow-hidden rounded-none border border-border/40 bg-card shadow-[var(--shadow-soft)] media-hover",
           compact ? "min-h-[320px] lg:min-h-[420px]" : "min-h-[360px] lg:min-h-[520px]",
         )}>
-          {showVideo ? (
-            <BackgroundVideo src={media.video} poster={image} alt={title} />
+          {useVideo ? (
+            <BackgroundVideo src={src} poster={image} alt={title} drift parallax />
           ) : (
             <img src={image} alt={title} className="hero-drift h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.08]" loading="eager" />
           )}
