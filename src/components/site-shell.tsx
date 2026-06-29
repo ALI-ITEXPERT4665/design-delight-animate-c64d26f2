@@ -5,21 +5,35 @@ import { BackgroundVideo } from "@/components/background-video";
 import {
   ArrowRight,
   Award,
+  BedDouble,
+  Book,
+  Box,
+  Building,
   Building2,
   ChevronRight,
   CirclePlay,
+  ClipboardList,
   Clock3,
+  FileText,
+  Grid3x3,
+  HardHat,
+  HeartHandshake,
+  Home as HomeIcon,
+  Layers,
   Leaf,
+  Lightbulb,
   Mail,
   MapPin,
   Menu,
   Phone,
+  Puzzle,
   ShieldCheck,
   Sparkles,
+  Trophy,
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import {
   blogPosts,
   faqItems,
@@ -35,17 +49,54 @@ import {
   values,
 } from "@/lib/site-data";
 
-export function SiteHeader() {
+type IconCmp = ComponentType<{ className?: string }>;
+
+const statIcon: Record<string, IconCmp> = {
+  building: Building2,
+  badge: Award,
+  heart: HeartHandshake,
+  trophy: Trophy,
+  users: Users,
+};
+
+const processIcon: Record<string, IconCmp> = {
+  lightbulb: Lightbulb,
+  file: FileText,
+  cube: Box,
+  clipboard: ClipboardList,
+  helmet: HardHat,
+};
+
+const serviceIcon: Record<string, IconCmp> = {
+  box: Box,
+  cube: Layers,
+  file: FileText,
+  puzzle: Puzzle,
+  helmet: HardHat,
+  leaf: Leaf,
+};
+
+const categoryIcon: Record<string, IconCmp> = {
+  All: Grid3x3,
+  "All Projects": Grid3x3,
+  Residential: HomeIcon,
+  Commercial: Building,
+  Educational: Book,
+  Hospitality: BedDouble,
+  "Mixed-use": Building2,
+};
+
+export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-4 py-4 md:px-6">
         <Link to="/" className="group flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-sm border border-border bg-background transition-transform duration-300 group-hover:-translate-y-0.5">
-            <Building2 className="h-5 w-5 text-primary" />
+            <HomeIcon className="h-5 w-5 text-primary" strokeWidth={1.5} />
           </div>
           <div>
             <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">Design</div>
+            <div className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">{wordmark}</div>
           </div>
         </Link>
 
@@ -55,7 +106,7 @@ export function SiteHeader() {
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              className="story-link text-sm font-medium text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
+              className="story-link text-sm font-medium uppercase tracking-[0.14em] text-foreground/75 transition-colors hover:text-foreground data-[status=active]:text-primary"
             >
               {item.label}
             </Link>
@@ -63,7 +114,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 md:inline-flex">
+          <Button asChild className="btn-sheen hidden h-11 rounded-sm px-5 uppercase tracking-[0.16em] text-xs md:inline-flex">
             <Link to="/contact">Get a Quote</Link>
           </Button>
           <button
@@ -79,14 +130,14 @@ export function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
   return (
     <footer className="border-t border-border/60 bg-card/60">
       <div className="mx-auto grid max-w-[1200px] gap-12 px-4 py-14 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
         <div className="space-y-5">
           <div>
             <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-xs uppercase tracking-[0.34em] text-muted-foreground">Decor</div>
+            <div className="text-xs uppercase tracking-[0.34em] text-muted-foreground">{wordmark}</div>
           </div>
           <p className="max-w-sm text-sm leading-7 text-muted-foreground">
             We create spaces that inspire, endure, and elevate the art of living.
@@ -109,10 +160,10 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-4 py-5 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
-          <p>© 2024 Uppal Decor. All Rights Reserved.</p>
+          <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
           <div className="flex gap-6">
-            <span>Privacy Policy</span>
-            <span>Terms & Conditions</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Terms & Conditions</span>
           </div>
         </div>
       </div>
@@ -206,16 +257,19 @@ export function HeroSection({
 export function StatsBand() {
   return (
     <section className="border-b border-border/60 bg-background">
-      <div className="mx-auto grid max-w-[1200px] gap-4 px-4 py-6 md:grid-cols-5 md:px-6">
-        {stats.map((stat) => (
-          <div key={stat.label} className="flex items-center gap-4 border-r border-border/50 py-3 last:border-r-0">
-            <Award className="h-6 w-6 text-primary" />
-            <div>
-              <div className="text-2xl font-semibold">{stat.value}</div>
-              <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{stat.label}</div>
+      <div className="mx-auto grid max-w-[1200px] gap-4 px-4 py-8 md:grid-cols-5 md:px-6">
+        {stats.map((stat) => {
+          const Icon = statIcon[stat.icon] ?? Award;
+          return (
+            <div key={stat.label} className="group flex items-center gap-4 border-r border-border/50 py-3 last:border-r-0 transition-colors hover:bg-primary/5 rounded-sm pl-2">
+              <Icon className="h-7 w-7 text-primary transition-transform duration-500 group-hover:rotate-[8deg] group-hover:scale-110" />
+              <div>
+                <div className="text-2xl font-semibold">{stat.value}</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{stat.label}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -225,27 +279,29 @@ export function IntroSplit() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-        <div className="space-y-6">
+        <div className="space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">About Us</p>
           <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Designing Spaces, Elevating Lives.</h2>
           <p className="max-w-md text-base leading-8 text-muted-foreground">
             At Uppal Design, we believe architecture is more than buildings — it is about creating meaningful spaces that enhance the way people live, work, and connect.
           </p>
-          <Button asChild className="btn-sheen rounded-sm px-6">
+          <Button asChild className="btn-sheen rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
             <Link to="/about">More About Us</Link>
           </Button>
         </div>
-        <div className="grid grid-cols-[1.1fr_0.9fr] gap-4">
-          <img src={media.collageA} alt="Architectural city composition" className="h-full min-h-[260px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          <div className="grid gap-4">
-            <img src={media.project3} alt="Modern facade detail" className="h-[170px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-            <div className="relative">
-              <img src={media.heroAlt} alt="Curved modern architecture" className="h-[220px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-              <div className="absolute -right-4 top-8 border border-primary/30 bg-background px-5 py-6 shadow-[var(--shadow-soft)]">
-                <div className="text-4xl font-semibold text-primary">15+</div>
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Years of Experience</div>
-              </div>
-            </div>
+        <div className="relative h-[460px]">
+          <div className="media-hover absolute left-0 top-4 h-[300px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)]">
+            <img src={media.collageA} alt="London skyline" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="media-hover absolute left-[28%] top-0 h-[220px] w-[42%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.collageB} alt="Glass tower" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="media-hover absolute right-0 bottom-12 h-[260px] w-[55%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
+            <img src={media.collageC} alt="Curved modern architecture" className="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div className="absolute right-4 top-8 z-10 border border-primary/30 bg-background px-6 py-5 shadow-[var(--shadow-soft)] text-center">
+            <div className="text-4xl font-semibold text-primary">15+</div>
+            <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Years of<br/>Experience</div>
           </div>
         </div>
       </div>
@@ -266,19 +322,23 @@ export function ProcessBand() {
             A seamless process that ensures precision, transparency, and excellence at every step.
           </p>
         </div>
-        <div className="grid gap-6 md:grid-cols-5">
-          {processSteps.map((step) => (
-            <div key={step.number} className="group relative space-y-4 text-center">
-              <div className="mx-auto grid h-[4.5rem] w-[4.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-transform duration-300 group-hover:-translate-y-1">
-                <Sparkles className="h-6 w-6 text-primary" />
+        <div className="relative grid gap-6 md:grid-cols-5">
+          <div className="absolute left-[10%] right-[10%] top-[2.25rem] hidden h-px bg-border md:block" aria-hidden="true" />
+          {processSteps.map((step) => {
+            const Icon = processIcon[step.icon] ?? Sparkles;
+            return (
+              <div key={step.number} className="group relative space-y-4 text-center">
+                <div className="mx-auto grid h-[4.5rem] w-[4.5rem] place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 group-hover:-translate-y-1 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-6 w-6 text-primary transition-colors duration-500 group-hover:text-primary-foreground" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{step.number}</p>
+                  <h3 className="text-sm font-semibold uppercase tracking-[0.12em]">{step.title}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{step.subtitle}</p>
+                </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{step.number}</p>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.12em]">{step.title}</h3>
-                <p className="text-sm leading-6 text-muted-foreground">{step.subtitle}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="mt-10 flex justify-center">
           <Button asChild variant="outline" className="btn-sheen rounded-sm px-6">
@@ -306,17 +366,21 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
           </div>
         ) : null}
         <div className="mb-8 flex flex-wrap gap-3">
-          {["All", "Residential", "Commercial", "Educational", "Hospitality"].map((item, index) => (
-            <div
-              key={item}
-              className={cn(
-                "rounded-full border px-5 py-2 text-sm transition-colors",
-                index === 0 ? "border-primary/30 bg-primary/8 text-primary" : "border-border text-muted-foreground",
-              )}
-            >
-              {item}
-            </div>
-          ))}
+          {["All", "Residential", "Commercial", "Educational", "Hospitality"].map((item, index) => {
+            const Icon = categoryIcon[item] ?? Grid3x3;
+            return (
+              <div
+                key={item}
+                className={cn(
+                  "group inline-flex cursor-pointer items-center gap-2 rounded-full border px-5 py-2 text-sm transition-all duration-300 hover:border-primary hover:text-primary",
+                  index === 0 ? "border-primary/40 bg-primary/8 text-primary" : "border-border text-muted-foreground",
+                )}
+              >
+                <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+                <span className="uppercase tracking-[0.14em] text-xs">{item}</span>
+              </div>
+            );
+          })}
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {projects.map((project) => (
@@ -331,18 +395,22 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
     <article className="project-tile group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)]">
-      <div className="media-hover overflow-hidden">
+      <div className="media-hover relative overflow-hidden">
         <img src={project.image} alt={project.title} className="h-56 w-full object-cover" loading="lazy" />
+        {project.featured ? (
+          <span className="absolute bottom-3 left-3 z-10 inline-flex items-center gap-1 bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary-foreground shadow-[var(--shadow-soft)]">
+            Featured
+          </span>
+        ) : null}
       </div>
       <div className="space-y-3 p-5">
-        <span className="inline-flex rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{project.category}</span>
         <div>
-          <h3 className="text-xl font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
+          <h3 className="text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
           <p className="text-sm text-muted-foreground">{project.location}</p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          View Project <ArrowRight className="tile-arrow h-3.5 w-3.5" />
-        </div>
+        <span className="inline-flex items-center gap-1.5 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+          {project.category}
+        </span>
       </div>
     </article>
   );
@@ -364,15 +432,18 @@ export function ServicesGrid() {
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-          {services.slice(0, 5).map((service) => (
-            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
-                <Building2 className="h-5 w-5" />
+          {services.slice(0, 5).map((service) => {
+            const Icon = serviceIcon[service.icon] ?? Building2;
+            return (
+              <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+                <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em] transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
+                <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
               </div>
-              <h3 className="mb-3 text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -513,7 +584,9 @@ function FounderBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-        <img src={media.collageA} alt="Founder portrait setting" className="h-[420px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
+        <div className="media-hover h-[420px] overflow-hidden shadow-[var(--shadow-soft)]">
+          <img src={media.founder} alt="Founder portrait" className="h-full w-full object-cover" loading="lazy" />
+        </div>
         <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:p-10">
           <p className="mb-5 text-5xl leading-none text-primary">“</p>
           <h3 className="max-w-[16ch] text-3xl font-semibold leading-tight">Architecture is a responsibility — and a privilege.</h3>
@@ -567,16 +640,19 @@ function CenteredHeading({ title, subtitle }: { title: string; subtitle: string 
 function FullServicesGrid() {
   return (
     <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-6">
-        {services.map((service) => (
-          <div key={service.title} className="border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-            <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary">
-              <Sparkles className="h-5 w-5" />
+      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-3">
+        {services.map((service) => {
+          const Icon = serviceIcon[service.icon] ?? Sparkles;
+          return (
+            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em] group-hover:text-primary transition-colors">{service.title}</h3>
+              <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
             </div>
-            <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em]">{service.title}</h3>
-            <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -657,10 +733,23 @@ export function ProjectsPageContent() {
 function CategoryBand() {
   return (
     <section className="border-b border-border/60 bg-background py-6">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap gap-4 px-4 md:px-6">
-        {["All Projects", "Residential", "Commercial", "Educational", "Hospitality", "Mixed-use"].map((item, index) => (
-          <div key={item} className={cn("rounded-full border px-5 py-3 text-sm", index === 0 ? "border-primary/30 bg-primary/8 text-primary" : "border-border text-muted-foreground")}>{item}</div>
-        ))}
+      <div className="mx-auto flex max-w-[1200px] flex-wrap gap-3 px-4 md:px-6">
+        {["All Projects", "Residential", "Commercial", "Educational", "Hospitality", "Mixed-use"].map((item, index) => {
+          const key = item === "All Projects" ? "All" : item;
+          const Icon = categoryIcon[key] ?? Grid3x3;
+          return (
+            <div
+              key={item}
+              className={cn(
+                "group inline-flex cursor-pointer items-center gap-2 rounded-full border px-5 py-3 text-sm transition-all duration-300 hover:border-primary hover:text-primary",
+                index === 0 ? "border-primary/40 bg-primary/8 text-primary" : "border-border text-muted-foreground",
+              )}
+            >
+              <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <span className="uppercase tracking-[0.14em] text-xs">{item}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

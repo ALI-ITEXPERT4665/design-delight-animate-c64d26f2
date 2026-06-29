@@ -1,41 +1,43 @@
-## Plan: Premium hero video + Hermès-style hover system
+## Strict design alignment pass
 
-### 1. Hero background video (design-matched)
-- Wire the existing `src/assets/hero-video.mp4` asset into `HeroSection` (and any secondary page hero blocks) as a true full-bleed background layer behind the headline/CTAs — preserving the pasted PNG layout exactly (no composition changes).
-- Stack order: `video` → dark gradient scrim → content. Scrim uses `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55))` so headline + gold accent stay legible.
-- Performance attributes: `autoPlay muted loop playsInline preload="metadata" poster={firstFrameImg}` + `disableRemotePlayback`. 
-- Lazy-load: use `IntersectionObserver` to only call `.play()` when the hero is ≥25% in view; pause when offscreen. Respect `prefers-reduced-motion` → show poster only.
-- Mobile fallback: under `md`, render the poster image instead of the MP4 to save bandwidth.
-- Add subtle Ken-Burns drift (`@keyframes heroDrift` scale 1 → 1.06 over 18s) for cinematic feel without re-encoding.
-- Add a second short looping clip behind the About / Projects intro band where the design shows a media strip — same component, reused.
+The current build deviates from the pasted PNGs in several visible ways. This plan fixes only those gaps — no new pages, no new business logic.
 
-### 2. Hermès-style hover system (sitewide)
-Add a reusable set of motion utilities in `src/styles.css` and apply them across the rebuilt components. None of these change layout — only motion.
+### Gaps found (audited via Playwright screenshots of `/`, `/projects`, `/services`, `/about`, `/process`, `/blog`, `/contact`, `/team`, `/project-detail`)
 
-- **Image cards (`.media-hover`)**: image scales `1 → 1.06` over 700ms cubic-bezier(.22,1,.36,1); gold overlay fades 0 → 0.18; caption slides up 8px and reveals a thin underline.
-- **Project tiles (`.project-tile`)**: on hover, title shifts up, a small "View project →" line fades in, arrow translates 4px on repeat hover.
-- **Buttons (`.btn-sheen`)**: gold sheen sweep (pseudo-element gradient translating across) + 1px lift; primary CTA also animates underline.
-- **Nav links (`.story-link` extended)**: already present — extend with a small dot indicator and slower easing to match Hermès feel.
-- **Service rows (`.row-reveal`)**: hover reveals chevron + faint bg tint `oklch(from var(--primary) l c h / 0.06)`.
-- **Stat counters**: on first viewport entry, animate number from 0 → target with `requestAnimationFrame` (one-shot, not hover).
-- **Section reveals (`.reveal-up`)**: IntersectionObserver toggles class → opacity 0→1, translateY 24→0, 700ms ease-out, staggered via `--i` CSS var.
-- **Cursor affordance**: large media areas get `cursor: pointer` + a custom `.cursor-zoom` hint (small circular badge that follows cursor via CSS-only `:has` + transform — kept lightweight, desktop only).
-- **Marquee strip** (if present in design): infinite horizontal scroll for client/awards row using pure CSS keyframes, pauses on hover.
+1. **Hero & section imagery is wrong.** Current site uses harvested heimarchitecture *blueprint/sketch* renders. The design uses photorealistic curved-white modern architecture (same building reused across hero of every page). Project tiles also show sketches instead of photo renders (Modern Family House, London Business Hub, Cambridge University, Luxury Hotel & Spa, Birmingham Apartments, Reading Office Complex, Private Villa, Mixed Use Development).
+2. **Logo wordmark inconsistency.** Designs alternate between "UPPAL DESIGN" (home, about, team, process, blog, contact) and "UPPAL DECOR" (projects, services, project-detail). Match the per-page wordmark exactly.
+3. **Process step icons are all identical** (sparkle). Design uses 5 distinct line icons: concept (nodes), planning (document), visualization (cube/atom), documentation (drawing), construction (helmet/person).
+4. **Project category filter pills lack the small icons** shown in the design (home, building, book, bed, apartments).
+5. **Featured project cards** are missing the "FEATURED" gold ribbon overlay on the image bottom-left.
+6. **About-page collage** uses blueprint sketches; design uses 3 overlapping photo tiles (London skyline + glass tower + curved modern building) with a floating "15+ YEARS OF EXPERIENCE" card.
+7. **Stats row on home** renders with award icons on every stat; design uses 5 distinct icons (building, badge, heart-badge, trophy, people).
+8. **Team page leadership row** — current leadership tiles use placeholder avatars; design needs square portrait tiles with name + role under each.
+9. **Footers differ per page in the design** (Home/About/Team use 4-col with social icons; Services/Projects/Contact use 5-col with newsletter; Blog uses centered minimal). Current site uses one footer everywhere.
+10. **Contact page office cards** missing the studio photo and two address blocks (Head Office + Studio Office) with hours.
+11. **Project-detail page** missing: signature graphic, project meta strip (6 columns), 4 design-highlight cards, challenge/solution split with arrow, related projects strip, footer with newsletter mini.
+12. **Blog page** missing: featured article hero card, topic grid (6 icon tiles), recent insights row, newsletter strip.
 
-### 3. Files touched
-- `src/components/site-shell.tsx` — update `HeroSection` to render `<BackgroundVideo>`; add the new `BackgroundVideo` component; apply hover utility classes to `ProjectsShowcase`, `ServicesGrid`, footer media, related projects band.
-- `src/styles.css` — add `@utility` blocks: `media-hover`, `project-tile`, `btn-sheen`, `row-reveal`, `reveal-up`, `cursor-zoom`, `marquee`; add `@keyframes heroDrift`, `sheen`, `marquee`.
-- `src/hooks/use-in-view.ts` (new) — small IntersectionObserver hook used by video autoplay gate, reveal-up, and stat counters.
-- `src/components/background-video.tsx` (new) — encapsulates lazy/poster/reduced-motion logic.
-- Poster: extract first frame of `hero-video.mp4` with ffmpeg to `src/assets/hero-poster.jpg` and upload via `lovable-assets`.
+### Approach
 
-### 4. Performance guardrails
-- Single `<video>` per page max; secondary heroes reuse poster image until in view.
-- `preload="metadata"` not `auto`; no `<source>` duplication.
-- `prefers-reduced-motion: reduce` disables Ken-Burns, sheen, marquee, and video autoplay.
-- All hover transforms use `transform`/`opacity` only (GPU-friendly, no layout thrash).
-- No new dependencies.
+- **Replace imagery**: regenerate photorealistic architecture images via `imagegen` (premium not needed) for: 1 hero building (reused on every page hero per the design), 8 project photos (matching project titles + locations), 1 interior living-room (services page), 2 interiors (project-detail), 1 office studio (contact), 4 blog covers, 5 process-stage photos, 1 founder portrait (about quote block), 10 team headshots (team page) + 4 leadership portraits. Swap into `siteData` and section components — no layout changes.
+- **Replace process icons** with `lucide-react`: `Lightbulb`, `FileText`, `Box`, `ClipboardList`, `HardHat` (mapped to stages 01–05). Apply both on Home and `/process`.
+- **Replace stat icons**: `Building2`, `Award`, `HeartHandshake`, `Trophy`, `Users`.
+- **Add category-pill icons** on `/projects`: `Grid3x3`, `Home`, `Building`, `BookOpen`, `BedDouble`, `Building2`.
+- **Add FEATURED ribbon** to featured cards (absolute bottom-left gold badge).
+- **Per-page wordmark**: pass `variant="design" | "decor"` prop to `SiteHeader` and switch the small subtitle text.
+- **About collage**: 3 stacked image tiles with `15+ YEARS` floating card — pure CSS positions, reuse `media-hover`.
+- **Per-page footers**: add `<SiteFooter variant="four-col" | "five-col-newsletter" | "centered-minimal" />` and select per route.
+- **Contact offices**: studio photo + two address blocks with hours.
+- **Project-detail**: build the missing blocks (signature SVG line art, 6-col meta strip, 4 highlight cards using `lucide` icons, challenge/solution with circular arrow, related projects row, mini-newsletter footer).
+- **Blog page**: featured hero card, 6-icon topic grid, recent insights row, newsletter strip.
+- **Keep all current motion** (hero video, sheen, reveal-up, lift-card, project-tile, media-hover) intact.
 
-### 5. Verification
-- Run dev build, open `/`, `/about`, `/projects`, `/services` via Playwright headless: screenshot hero (poster + playing frame), hover a project card, hover a CTA — confirm transforms fire and layout is unchanged vs. pasted PNG.
-- Check console for autoplay errors; confirm video pauses when scrolled out.
+### Files touched (no new routes)
+
+- `src/lib/site-data.ts` — swap asset imports to new photoreal images; add per-stage icon keys; add per-page footer variant.
+- `src/components/site-shell.tsx` — header variant prop; stat/process/category icon maps; FEATURED ribbon; about collage; contact office cards; project-detail rebuild; blog rebuild; footer variants.
+- `src/assets/*` — new `lovable-assets` pointers for the regenerated images (replacing the heimarchitecture-derived ones).
+
+### Verification
+
+Re-run the Playwright screenshot pass on all 9 routes and visually diff each against the matching PNG. The pass succeeds when every page's overall composition, image style, icon set, and footer variant matches the design.
