@@ -297,7 +297,7 @@ export function HeroSection({
           {showVideo ? (
             <BackgroundVideo src={media.video} poster={image} alt={title} />
           ) : (
-            <img src={image} alt={title} className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" loading="eager" />
+            <img src={image} alt={title} className="hero-drift h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.08]" loading="eager" />
           )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/45" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
