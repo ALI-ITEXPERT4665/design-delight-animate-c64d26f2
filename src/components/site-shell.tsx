@@ -2135,92 +2135,389 @@ function NewsletterBand() {
 export function ContactPageContent() {
   return (
     <>
-      <HeroSection
-        eyebrow="Get in Touch"
-        title="Let’s Build Something"
-        highlight="Extraordinary Together"
-        description="We are here to answer your questions, discuss your ideas, and bring your vision to life with intelligence, purpose, and elegance."
-        image={media.heroAlt}
-        videoSrc={pageVideos.contact}
-      />
-      <ContactDetailsBand />
-      <FaqCardsBand />
+      <ContactHero />
+      <ContactQuickInfo />
+      <ContactMapBand />
+      <ContactOfficesBand />
+      <ContactFormBand />
+      <ContactFaqBand />
       <ContactStrip />
     </>
   );
 }
 
-function ContactDetailsBand() {
+function ContactWordReveal({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
-        <div className="space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Offices</p>
-          <h2 className="text-3xl font-semibold md:text-5xl">Let’s Connect</h2>
-          <p className="max-w-md text-base leading-8 text-muted-foreground">Visit us at our studio or reach out through your preferred channel.</p>
-          <img src={media.project1} alt="Office visual" className="h-[260px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          <div className="grid gap-4 md:grid-cols-2">
-            <OfficeCard title="Head Office" address="Unit 3, Design House, Riverside Way, London" />
-            <OfficeCard title="Studio Office" address="Thames Tower, 5th Floor, Chiswick Square, London" />
-          </div>
-        </div>
-        <div className="border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Send Us a Message</p>
-          <h2 className="text-3xl font-semibold md:text-5xl">Request a Consultation</h2>
-          <p className="mt-4 max-w-xl text-base leading-8 text-muted-foreground">Share a few details about your project and our team will get back to you within 24 hours.</p>
-          <form className="mt-8 grid gap-4 md:grid-cols-2">
-            {[
-              "Your Name",
-              "Email Address",
-              "Phone Number",
-              "Project Type",
-              "Budget Range",
-              "Timeline",
-            ].map((field) => (
-              <input key={field} className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder={field} />
-            ))}
-            <textarea className="md:col-span-2 min-h-[140px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
-            <Button className="btn-sheen md:col-span-2 w-fit rounded-sm px-6">Send Message</Button>
-          </form>
-        </div>
+    <span className={cn("inline-flex flex-wrap gap-x-[0.28em]", className)}>
+      {text.split(" ").map((w, i) => (
+        <span key={`${w}-${i}`} className="relative inline-block overflow-hidden align-bottom leading-[1.05]">
+          <M.span
+            initial={{ y: "100%" }}
+            whileInView={{ y: "0%" }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: delay + i * 0.05 }}
+            className="inline-block will-change-transform"
+          >
+            {w}
+          </M.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function ContactHero() {
+  return (
+    <section className="relative isolate overflow-hidden bg-background pt-32 pb-20 md:pt-40 md:pb-28">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_60%)]" />
+      <div className="mx-auto max-w-[1080px] px-4 text-center md:px-6">
+        <M.p
+          initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-5 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary"
+        >
+          Get in Touch
+        </M.p>
+        <h1 className="mx-auto max-w-[18ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+          <ContactWordReveal text="Let's Build Something Extraordinary Together" />
+        </h1>
+        <M.p
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="mx-auto mt-7 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg"
+        >
+          We are here to answer your questions, discuss your ideas, and bring your vision to life with intelligence, purpose, and elegance.
+        </M.p>
       </div>
     </section>
   );
 }
 
-function OfficeCard({ title, address }: { title: string; address: string }) {
+function ContactQuickInfo() {
+  const items: Array<[IconCmp, string, string]> = [
+    [Phone, "Phone", siteSettings.phone],
+    [Mail, "Email", siteSettings.email],
+    [MapPin, "Location", siteSettings.address],
+  ];
   return (
-    <div className="grid gap-3 border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
-      <div className="text-base font-semibold">{title}</div>
-      <div className="text-sm leading-7 text-muted-foreground">{address}</div>
-      <div className="text-sm text-muted-foreground">Monday - Friday · 9:00 AM - 6:00 PM</div>
-    </div>
+    <section className="border-y border-border/60 bg-[color:var(--color-surface-soft)] py-12">
+      <div className="mx-auto grid max-w-[1080px] gap-6 px-4 md:grid-cols-3 md:px-6">
+        {items.map(([Icon, label, value], i) => (
+          <M.div
+            key={label}
+            initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.08 }}
+            className="group flex items-center gap-4"
+          >
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-border bg-background text-primary transition-all duration-500 group-hover:rotate-6 group-hover:border-primary group-hover:bg-primary/5">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{label}</div>
+              <div className="text-sm font-semibold tracking-tight transition-colors duration-300 group-hover:text-primary">{value}</div>
+            </div>
+          </M.div>
+        ))}
+      </div>
+    </section>
   );
 }
 
-function FaqCardsBand() {
+function WavyDivider() {
   return (
-    <section className="border-b border-border/60 bg-background py-20">
+    <svg viewBox="0 0 200 12" className="mx-auto h-3 w-40 text-primary" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 6 Q 20 0 40 6 T 80 6 T 120 6 T 160 6 T 200 6" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function TiltWrap({ children, className, intensity = 8 }: { children: ReactNode; className?: string; intensity?: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 160, damping: 16 });
+  const sry = useSpring(ry, { stiffness: 160, damping: 16 });
+  return (
+    <M.div
+      ref={ref}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 1200 }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        ry.set(px * intensity);
+        rx.set(-py * intensity);
+      }}
+      onMouseLeave={() => { rx.set(0); ry.set(0); }}
+      className={className}
+    >
+      {children}
+    </M.div>
+  );
+}
+
+function ContactMapBand() {
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
-        <div className="mb-8 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">How Can We Help?</p>
-          <h2 className="text-3xl font-semibold md:text-5xl">Frequently Asked Questions</h2>
+        <div className="mb-10 text-center">
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">Visit Us</p>
+          <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
+            <ContactWordReveal text="LONDON OFFICE" />
+          </h2>
+          <div className="mt-5 flex justify-center"><WavyDivider /></div>
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
+            Churchill House, 1 London Rd, Slough SL3 7RL, United Kingdom
+          </p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {faqItems.map((faq) => (
-            <div key={faq.question} className="flex min-h-[230px] flex-col justify-between border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-              <div>
-                <h3 className="text-xl font-semibold leading-tight">{faq.question}</h3>
-                <p className="mt-4 text-sm leading-7 text-muted-foreground">{faq.answer}</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-primary" />
-            </div>
+        <M.div
+          initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <TiltWrap intensity={4} className="overflow-hidden rounded-2xl border border-border shadow-[var(--shadow-soft)] hover:shadow-2xl transition-shadow duration-700">
+            <iframe
+              title="Uppal Design London Office"
+              src="https://www.google.com/maps?q=Churchill+House,+1+London+Rd,+Slough+SL3+7RL,+UK&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-[480px] w-full border-0"
+            />
+          </TiltWrap>
+        </M.div>
+      </div>
+    </section>
+  );
+}
+
+function ContactOfficesBand() {
+  return (
+    <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
+        <M.div
+          initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <TiltWrap intensity={6} className="overflow-hidden rounded-2xl shadow-[var(--shadow-soft)]">
+            <img src={media.interiorLiving} alt="Studio interior" className="h-[420px] w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.25,1,0.5,1)] hover:scale-105" loading="lazy" />
+          </TiltWrap>
+        </M.div>
+        <div className="space-y-8">
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">Our Offices</p>
+            <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
+              <ContactWordReveal text="Let's Connect" />
+            </h2>
+          </div>
+          {[
+            { title: "HEAD OFFICE", address: "Unit 3, Design House, Riverside Way, London", hours: "Mon – Fri · 9:00 AM – 6:00 PM" },
+            { title: "STUDIO-OFFICE", address: "Thames Tower, 5th Floor, Chiswick Square, London", hours: "Mon – Sat · 10:00 AM – 7:00 PM" },
+          ].map((o, i) => (
+            <M.div
+              key={o.title}
+              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.15 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <TiltWrap intensity={6} className="group rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-xl">
+                <div className="flex items-start gap-4">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                    <MapPin className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="text-base font-semibold uppercase tracking-[0.18em]">{o.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-muted-foreground">{o.address}</p>
+                    <p className="mt-2 flex items-center gap-2 text-xs text-foreground/70"><Clock3 className="h-3.5 w-3.5 text-primary" />{o.hours}</p>
+                  </div>
+                </div>
+              </TiltWrap>
+            </M.div>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+function LiquidField({ label, type = "text", textarea = false, name }: { label: string; type?: string; textarea?: boolean; name: string }) {
+  const [val, setVal] = useState("");
+  const [focused, setFocused] = useState(false);
+  const active = focused || val.length > 0;
+  const baseCls = "peer block w-full bg-transparent pt-6 pb-2 text-sm text-foreground outline-none";
+  return (
+    <div className="relative">
+      {textarea ? (
+        <textarea
+          name={name}
+          rows={4}
+          value={val}
+          onChange={(e) => setVal(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          className={cn(baseCls, "resize-none pt-7")}
+        />
+      ) : (
+        <input
+          name={name}
+          type={type}
+          value={val}
+          onChange={(e) => setVal(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          className={baseCls}
+        />
+      )}
+      <label
+        className={cn(
+          "pointer-events-none absolute left-0 top-4 origin-left text-sm text-muted-foreground transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          active && "-translate-y-3 scale-75 text-primary",
+        )}
+      >
+        {label}
+      </label>
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border" />
+      <span
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 mx-auto block h-[2px] origin-center scale-x-0 bg-primary shadow-[0_0_12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          active && "scale-x-100",
+        )}
+      />
+    </div>
+  );
+}
+
+function MagneticSendButton() {
+  const ref = useRef<HTMLButtonElement | null>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 180, damping: 16, mass: 0.4 });
+  const y = useSpring(my, { stiffness: 180, damping: 16, mass: 0.4 });
+  const [fill, setFill] = useState({ x: 50, y: 50, on: false });
+  return (
+    <motion.button
+      ref={ref}
+      type="submit"
+      style={{ x, y }}
+      onMouseEnter={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        setFill({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100, on: true });
+      }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        mx.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 28);
+        my.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 18);
+      }}
+      onMouseLeave={() => { mx.set(0); my.set(0); setFill((f) => ({ ...f, on: false })); }}
+      className="group relative inline-flex w-fit items-center gap-3 overflow-hidden rounded-full border border-foreground bg-foreground px-9 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-background shadow-[var(--shadow-soft)]"
+    >
+      <span
+        style={{ left: `${fill.x}%`, top: `${fill.y}%`, transform: `translate(-50%,-50%) scale(${fill.on ? 14 : 0})` }}
+        className="pointer-events-none absolute h-8 w-8 rounded-full bg-primary transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      />
+      <span className="relative z-10 transition-colors duration-500 group-hover:text-foreground">Send Message</span>
+      <ArrowRight className="relative z-10 h-4 w-4 transition-all duration-500 group-hover:translate-x-1 group-hover:text-foreground" />
+    </motion.button>
+  );
+}
+
+function ContactFormBand() {
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto max-w-[980px] px-4 md:px-6">
+        <M.div
+          initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:p-12"
+        >
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">Send Us a Message</p>
+          <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
+            <ContactWordReveal text="Request a Consultation" />
+          </h2>
+          <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
+            Share a few details about your project and our team will get back to you within 24 hours.
+          </p>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mt-10 grid gap-x-10 gap-y-2 md:grid-cols-2"
+          >
+            <LiquidField name="name" label="Your Name" />
+            <LiquidField name="email" label="Email Address" type="email" />
+            <LiquidField name="phone" label="Phone Number" type="tel" />
+            <LiquidField name="project" label="Project Type" />
+            <LiquidField name="budget" label="Budget Range" />
+            <LiquidField name="timeline" label="Timeline" />
+            <div className="md:col-span-2">
+              <LiquidField name="message" label="Your Message" textarea />
+            </div>
+            <div className="md:col-span-2 pt-6">
+              <MagneticSendButton />
+            </div>
+          </form>
+        </M.div>
+      </div>
+    </section>
+  );
+}
+
+function FluidFaqItem({ q, a, index }: { q: string; a: string; index: number }) {
+  const [open, setOpen] = useState(index === 0);
+  return (
+    <M.div
+      initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.08 }}
+      className="overflow-hidden border-b border-border"
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="group flex w-full items-center justify-between gap-6 py-6 text-left transition-colors duration-300 hover:text-primary"
+      >
+        <span className="text-base font-semibold tracking-tight md:text-lg">{q}</span>
+        <M.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-primary transition-colors duration-300 group-hover:border-primary group-hover:bg-primary/5"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </M.span>
+      </button>
+      <M.div
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="overflow-hidden"
+      >
+        <p className="pb-6 pr-12 text-sm leading-7 text-muted-foreground">{a}</p>
+      </M.div>
+    </M.div>
+  );
+}
+
+function ContactFaqBand() {
+  return (
+    <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
+        <div className="lg:sticky lg:top-32 lg:self-start">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">How Can We Help?</p>
+          <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
+            <ContactWordReveal text="Frequently Asked Questions" />
+          </h2>
+          <p className="mt-5 max-w-md text-sm leading-7 text-muted-foreground">
+            Answers to the most common questions about our process, timelines, and engagement.
+          </p>
+        </div>
+        <div>
+          {faqItems.map((f, i) => (
+            <FluidFaqItem key={f.question} q={f.question} a={f.answer} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 
 export function TeamPageContent() {
   return (
