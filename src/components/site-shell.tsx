@@ -640,16 +640,19 @@ function CenteredHeading({ title, subtitle }: { title: string; subtitle: string 
 function FullServicesGrid() {
   return (
     <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-6">
-        {services.map((service) => (
-          <div key={service.title} className="border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-            <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary">
-              <Sparkles className="h-5 w-5" />
+      <div className="mx-auto grid max-w-[1200px] gap-5 px-4 md:grid-cols-2 md:px-6 xl:grid-cols-3">
+        {services.map((service) => {
+          const Icon = serviceIcon[service.icon] ?? Sparkles;
+          return (
+            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em] group-hover:text-primary transition-colors">{service.title}</h3>
+              <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
             </div>
-            <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em]">{service.title}</h3>
-            <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
