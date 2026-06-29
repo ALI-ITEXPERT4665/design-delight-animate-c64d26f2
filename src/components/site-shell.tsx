@@ -2074,8 +2074,11 @@ export function ProjectDetailContent() {
   const related = projects.slice(1, 5);
   return (
     <>
+      <DetailScrollProgress />
       <ProjectDetailHero />
+      <DetailMarquee />
       <ProjectOverviewBand />
+      <ParallaxQuoteBand />
       <ProjectHighlightsBand />
       <ChallengeSolutionBand />
       <RelatedProjectsBand related={related} />
@@ -2083,6 +2086,60 @@ export function ProjectDetailContent() {
     </>
   );
 }
+
+function DetailScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 24, mass: 0.3 });
+  return (
+    <M.div
+      style={{ scaleX }}
+      className="fixed left-0 right-0 top-0 z-[60] h-[2px] origin-left bg-primary"
+    />
+  );
+}
+
+function DetailMarquee() {
+  const items = ["Residential", "Surrey · UK", "Completed 2023", "6200 sq ft", "Private Client", "Award Shortlist"];
+  const row = [...items, ...items, ...items];
+  return (
+    <div className="overflow-hidden border-y border-border/60 bg-foreground py-5">
+      <M.div
+        animate={{ x: ["0%", "-33.333%"] }}
+        transition={{ duration: 28, ease: "linear", repeat: Infinity }}
+        className="flex w-max items-center gap-12 whitespace-nowrap"
+      >
+        {row.map((t, i) => (
+          <span key={i} className="flex items-center gap-12 text-[13px] font-semibold uppercase tracking-[0.32em] text-background/90">
+            {t}
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          </span>
+        ))}
+      </M.div>
+    </div>
+  );
+}
+
+function ParallaxQuoteBand() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  return (
+    <section ref={ref} className="relative isolate overflow-hidden border-b border-border/60 bg-black">
+      <M.div style={{ y }} className="absolute inset-0 -z-10 will-change-transform">
+        <img src={media.project2} alt="" className="h-[130%] w-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-black/60" />
+      </M.div>
+      <div className="mx-auto max-w-[1000px] px-4 py-28 text-center md:px-6 md:py-36">
+        <h3 className="text-2xl font-medium leading-[1.25] tracking-tight text-white md:text-4xl">
+          <WordMaskReveal text="“A home where every line, light and material works in quiet conversation.”" />
+        </h3>
+        <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.36em] text-white/70">Lead Architect — Uppal Design</p>
+      </div>
+    </section>
+  );
+}
+
+
 
 const detailEase = [0.22, 1, 0.36, 1] as const;
 
