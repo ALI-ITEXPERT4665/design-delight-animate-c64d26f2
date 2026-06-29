@@ -296,14 +296,16 @@ export function SiteFooter({
     );
   }
   return (
-    <footer className="border-t border-border/60 bg-card/60">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 py-14 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
+    <footer className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-neutral-200">
+      <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+      <div className="relative mx-auto grid max-w-[1200px] gap-12 px-4 py-16 md:grid-cols-[1.2fr_0.9fr_0.9fr_1fr] md:px-6">
         <div className="space-y-5">
           <div>
-            <div className="text-lg font-semibold tracking-[0.22em] text-foreground">UPPAL</div>
-            <div className="text-xs uppercase tracking-[0.34em] text-muted-foreground">{wordmark}</div>
+            <div className="text-lg font-semibold tracking-[0.22em] text-white">UPPAL</div>
+            <div className="text-xs uppercase tracking-[0.34em] text-neutral-300">{wordmark}</div>
           </div>
-          <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+          <p className="max-w-sm text-sm leading-7 text-neutral-300">
             We create spaces that inspire, endure, and elevate the art of living.
           </p>
         </div>
@@ -315,19 +317,19 @@ export function SiteFooter({
           title="Our Services"
           items={services.slice(0, 5).map((service) => ({ label: service.title, to: "/services" }))}
         />
-        <div className="space-y-4 text-sm text-muted-foreground">
-          <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground">Contact Us</h3>
+        <div className="space-y-4 text-sm text-neutral-300">
+          <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">Contact Us</h3>
           <p>{siteSettings.phone}</p>
           <p>{siteSettings.email}</p>
           <p>{siteSettings.address}</p>
         </div>
       </div>
-      <div className="border-t border-border/60">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-4 py-5 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
+      <div className="relative border-t border-white/15">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-4 py-5 text-sm text-neutral-300 md:flex-row md:items-center md:justify-between md:px-6">
           <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
           <div className="flex gap-6">
-            <span className="hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-foreground transition-colors cursor-pointer">Terms &amp; Conditions</span>
+            <span className="hover:text-primary transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-primary transition-colors cursor-pointer">Terms &amp; Conditions</span>
           </div>
         </div>
       </div>
