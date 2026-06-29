@@ -42,6 +42,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { motion as MotionDiv } from "framer-motion";
 import { type ComponentType, type ReactNode, useEffect, useState } from "react";
 import {
   blogPosts,
