@@ -15,8 +15,8 @@ export function BackgroundVideo({
   src,
   poster,
   className,
-  drift = true,
-  parallax = true,
+  drift = false,
+  parallax = false,
   alt = "",
 }: Props) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2 });
