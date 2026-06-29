@@ -28,6 +28,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated.admin.logs'
 import { Route as AuthenticatedAdminInvitesRouteImport } from './routes/_authenticated.admin.invites'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated.admin.content'
+import { Route as AuthenticatedAdminCollectionsRouteImport } from './routes/_authenticated.admin.collections'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated.admin.approvals'
 
 const TeamRoute = TeamRouteImport.update({
@@ -126,6 +127,12 @@ const AuthenticatedAdminContentRoute =
     path: '/content',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminCollectionsRoute =
+  AuthenticatedAdminCollectionsRouteImport.update({
+    id: '/collections',
+    path: '/collections',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminApprovalsRoute =
   AuthenticatedAdminApprovalsRouteImport.update({
     id: '/approvals',
@@ -147,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/team': typeof TeamRoute
   '/api/chat': typeof ApiChatRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
@@ -190,6 +199,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/_authenticated/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRoute
   '/_authenticated/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/chat'
     | '/admin/approvals'
+    | '/admin/collections'
     | '/admin/content'
     | '/admin/invites'
     | '/admin/logs'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/api/chat'
     | '/admin/approvals'
+    | '/admin/collections'
     | '/admin/content'
     | '/admin/invites'
     | '/admin/logs'
@@ -255,6 +267,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/api/chat'
     | '/_authenticated/admin/approvals'
+    | '/_authenticated/admin/collections'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/invites'
     | '/_authenticated/admin/logs'
@@ -413,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/collections': {
+      id: '/_authenticated/admin/collections'
+      path: '/collections'
+      fullPath: '/admin/collections'
+      preLoaderRoute: typeof AuthenticatedAdminCollectionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/approvals': {
       id: '/_authenticated/admin/approvals'
       path: '/approvals'
@@ -425,6 +445,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
+  AuthenticatedAdminCollectionsRoute: typeof AuthenticatedAdminCollectionsRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRoute
   AuthenticatedAdminInvitesRoute: typeof AuthenticatedAdminInvitesRoute
   AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
@@ -435,6 +456,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
+  AuthenticatedAdminCollectionsRoute: AuthenticatedAdminCollectionsRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRoute,
   AuthenticatedAdminInvitesRoute: AuthenticatedAdminInvitesRoute,
   AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
