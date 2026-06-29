@@ -37,6 +37,7 @@ const SCHEMAS: Record<string, { key: string; label: string; description: string;
       { name: "image", label: "Cover image URL", kind: "image" },
       { name: "category", label: "Category", kind: "text" },
       { name: "date", label: "Date", kind: "text" },
+      { name: "readTime", label: "Read time", kind: "text" },
       { name: "author", label: "Author", kind: "text" },
       { name: "slug", label: "Slug", kind: "text" },
     ],
@@ -59,6 +60,66 @@ const SCHEMAS: Record<string, { key: string; label: string; description: string;
     fields: [
       { name: "question", label: "Question", kind: "text" },
       { name: "answer", label: "Answer", kind: "textarea" },
+    ],
+  },
+  testimonials: {
+    key: "collection.testimonials",
+    label: "Testimonials",
+    description: "Client quotes shown across the site.",
+    fields: [
+      { name: "quote", label: "Quote", kind: "textarea" },
+      { name: "author", label: "Author name", kind: "text" },
+      { name: "role", label: "Role / location", kind: "text" },
+      { name: "image", label: "Avatar URL (optional)", kind: "image" },
+    ],
+  },
+  team_leads: {
+    key: "collection.team_leads",
+    label: "Team — Leads",
+    description: "Leadership cards on the Team page.",
+    fields: [
+      { name: "name", label: "Name", kind: "text" },
+      { name: "role", label: "Role", kind: "text" },
+      { name: "image", label: "Portrait URL", kind: "image" },
+    ],
+  },
+  team_members: {
+    key: "collection.team_members",
+    label: "Team — Members",
+    description: "Full team roster on the Team page.",
+    fields: [
+      { name: "name", label: "Name", kind: "text" },
+      { name: "role", label: "Role", kind: "text" },
+    ],
+  },
+  process_steps: {
+    key: "collection.process_steps",
+    label: "Process steps",
+    description: "Five-stage delivery timeline on the Process page.",
+    fields: [
+      { name: "number", label: "Number", kind: "text" },
+      { name: "title", label: "Title", kind: "text" },
+      { name: "subtitle", label: "Subtitle", kind: "text" },
+      { name: "description", label: "Description", kind: "textarea" },
+      { name: "image", label: "Image URL", kind: "image" },
+    ],
+  },
+  stats: {
+    key: "collection.stats",
+    label: "Stats",
+    description: "Headline numbers (e.g. 250+ projects).",
+    fields: [
+      { name: "value", label: "Value", kind: "text" },
+      { name: "label", label: "Label", kind: "text" },
+    ],
+  },
+  nav: {
+    key: "nav.items",
+    label: "Navigation",
+    description: "Top navigation menu items.",
+    fields: [
+      { name: "label", label: "Label", kind: "text" },
+      { name: "to", label: "Path (e.g. /about)", kind: "text" },
     ],
   },
 };
