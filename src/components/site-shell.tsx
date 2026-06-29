@@ -45,7 +45,8 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { motion as M } from "framer-motion";
-import { type ComponentType, type ReactNode, useEffect, useState } from "react";
+import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
+import { useScroll, useTransform, useMotionValue, useSpring, motion } from "framer-motion";
 import {
   blogPosts,
   faqItems,
@@ -2073,114 +2074,262 @@ export function ProjectDetailContent() {
   const related = projects.slice(1, 5);
   return (
     <>
-      <HeroSection
-        eyebrow="Featured Project"
-        title="Luxury Villa"
-        highlight="Haven"
-        description="A seamless blend of modern architecture and natural harmony, designed for elevated living."
-        primaryLabel="View Gallery"
-        secondaryLabel="Discuss Project"
-        secondaryTo="/contact"
-        image={media.heroMain}
-        videoSrc={pageVideos.detail}
-      />
+      <ProjectDetailHero />
       <ProjectOverviewBand />
       <ProjectHighlightsBand />
+      <ChallengeSolutionBand />
       <RelatedProjectsBand related={related} />
       <ContactStrip />
     </>
   );
 }
 
-function ProjectOverviewBand() {
+const detailEase = [0.22, 1, 0.36, 1] as const;
+
+function WordMaskReveal({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
+  const words = text.split(" ");
   return (
-    <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.66fr_1.34fr]">
-        <div className="space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Project Overview</p>
-          <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Crafting Spaces That Inspire and Endure.</h2>
-          <p className="max-w-md text-base leading-8 text-muted-foreground">
-            Luxury Villa Haven is a private residence designed to offer serenity, functionality, and refined living. The villa blends soft forms with natural materials to create a calm retreat.
-          </p>
-          <Button className="btn-sheen rounded-sm px-6">Download Case Study</Button>
-        </div>
-        <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-          <img src={media.heroMain} alt="Luxury villa exterior" className="h-full min-h-[380px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          <div className="grid gap-4">
-            <img src={media.collageC} alt="Villa interior lounge" className="h-[185px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-            <img src={media.project2} alt="Villa bedroom" className="h-[185px] w-full object-cover shadow-[var(--shadow-soft)]" loading="lazy" />
-          </div>
+    <span className={cn("inline-flex flex-wrap gap-x-[0.28em]", className)}>
+      {words.map((w, i) => (
+        <span key={`${w}-${i}`} className="relative inline-block overflow-hidden align-bottom leading-[1.05]">
+          <M.span
+            initial={{ y: "110%" }}
+            whileInView={{ y: "0%" }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.9, ease: detailEase, delay: delay + i * 0.07 }}
+            className="inline-block will-change-transform"
+          >
+            {w}
+          </M.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function ProjectDetailHero() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1.05, 1.18]);
+
+  return (
+    <section ref={ref} className="relative isolate h-[92vh] min-h-[640px] w-full overflow-hidden bg-black">
+      <M.div style={{ y, scale }} className="absolute inset-0 will-change-transform">
+        <img src={media.heroMain} alt="Luxury Villa Haven" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
+      </M.div>
+      <div className="relative z-10 mx-auto flex h-full max-w-[1200px] flex-col justify-end px-4 pb-32 md:px-6">
+        <M.p
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: detailEase }}
+          className="mb-5 text-[11px] font-semibold uppercase tracking-[0.36em] text-white/80"
+        >
+          Featured Project — Residential
+        </M.p>
+        <h1 className="max-w-[18ch] text-4xl font-semibold leading-[1.02] tracking-tight text-white md:text-7xl">
+          <WordMaskReveal text="LUXURY VILLA HAVEN" />
+        </h1>
+        <div className="mt-6 max-w-2xl overflow-hidden">
+          <M.p
+            initial={{ y: "100%" }} whileInView={{ y: "0%" }} viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: detailEase, delay: 0.4 }}
+            className="text-base leading-8 text-white/85 md:text-lg"
+          >
+            A seamless blend of modern architecture and natural harmony, designed for elevated living.
+          </M.p>
         </div>
       </div>
-      <div className="mx-auto mt-8 grid max-w-[1200px] gap-4 px-4 md:grid-cols-6 md:px-6">
-        {[
-          ["Project Type", "Residential"],
-          ["Total Area", "6200 sq ft"],
-          ["Duration", "14 Months"],
-          ["Floors", "2"],
-          ["Architect", "Uppal Decor"],
-          ["Status", "Completed"],
-        ].map(([label, value]) => (
-          <div key={label as string} className="border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
-            <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{label as string}</div>
-            <div className="mt-2 text-lg font-semibold">{value as string}</div>
+      <M.div
+        initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: detailEase, delay: 0.5 }}
+        className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-[1200px] px-4 md:px-6"
+      >
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-white/20 bg-white/15 backdrop-blur-xl md:grid-cols-3">
+          {[
+            ["Location", "Surrey, UK"],
+            ["Total Completion", "2023"],
+            ["Client", "Private"],
+          ].map(([label, value]) => (
+            <div key={label} className="bg-white/5 px-6 py-5 text-white">
+              <div className="text-[11px] uppercase tracking-[0.28em] text-white/70">{label}</div>
+              <div className="mt-2 text-lg font-semibold">{value}</div>
+            </div>
+          ))}
+        </div>
+      </M.div>
+    </section>
+  );
+}
+
+function MagneticButton({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLButtonElement | null>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 200, damping: 18, mass: 0.4 });
+  const y = useSpring(my, { stiffness: 200, damping: 18, mass: 0.4 });
+  return (
+    <motion.button
+      ref={ref}
+      style={{ x, y }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        mx.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 24);
+        my.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 16);
+      }}
+      onMouseLeave={() => { mx.set(0); my.set(0); }}
+      className={cn(
+        "btn-sheen group inline-flex items-center gap-3 rounded-sm bg-primary px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-[var(--shadow-soft)]",
+        className,
+      )}
+    >
+      {children}
+      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+    </motion.button>
+  );
+}
+
+function ProjectOverviewBand() {
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="space-y-7">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Project Overview</p>
+          <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
+            <WordMaskReveal text="Crafting Spaces That Inspire and Endure." />
+          </h2>
+          <p className="max-w-md text-base leading-8 text-muted-foreground">
+            Luxury Villa Haven is a private residence designed to offer serenity, functionality, and refined living. Soft forms meet natural materials to create a calm, elevated retreat.
+          </p>
+          <div className="flex items-center gap-6 pt-2">
+            <MagneticButton>Download Case Study</MagneticButton>
+            <div className="hidden font-[cursive] text-2xl italic text-foreground/70 md:block">— Uppal</div>
           </div>
-        ))}
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <M.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: detailEase }}
+            className="group relative row-span-2 overflow-hidden rounded-sm"
+          >
+            <img src={media.heroMain} alt="Villa exterior" className="h-full min-h-[480px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/15" />
+          </M.div>
+          <M.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: detailEase, delay: 0.12 }}
+            className="group relative overflow-hidden rounded-sm"
+          >
+            <img src={media.collageC} alt="Villa lounge" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
+          </M.div>
+          <M.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: detailEase, delay: 0.2 }}
+            className="group relative overflow-hidden rounded-sm"
+          >
+            <img src={media.project2} alt="Villa bedroom" className="h-[232px] w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105" />
+          </M.div>
+        </div>
       </div>
     </section>
   );
 }
 
 function ProjectHighlightsBand() {
+  const highlights = [
+    { title: "Fluid Architecture", text: "Curved forms and open layouts create a sense of movement and openness.", icon: Sparkles },
+    { title: "Natural Light", text: "Expansive glazing maximizes daylight and connects indoors with nature.", icon: Lightbulb },
+    { title: "Premium Materials", text: "A refined palette of stone, wood and glass enhances durability and elegance.", icon: Layers },
+    { title: "Outdoor Living", text: "Landscaped terraces and water features extend relaxation and beauty.", icon: Leaf },
+  ];
   return (
-    <section className="border-b border-border/60 bg-background py-20">
+    <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
       <div className="mx-auto max-w-[1200px] px-4 md:px-6">
-        <div className="mb-8 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
+        <div className="mb-12 grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Design Highlights</p>
-            <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Timeless Design. Thoughtful Details.</h2>
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Design Highlights</p>
+            <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
+              <WordMaskReveal text="Timeless Design. Thoughtful Details." />
+            </h2>
           </div>
-          <div className="grid gap-5 md:grid-cols-4">
-            {[
-              ["Fluid Architecture", "Curved forms and open layouts create a sense of movement and openness."],
-              ["Natural Light", "Expansive glazing maximizes daylight and connects indoors with nature."],
-              ["Premium Materials", "A refined palette of stone, wood, and glass enhances durability and elegance."],
-              ["Outdoor Living", "Landscaped terraces and water features extend relaxation and beauty."],
-            ].map(([title, text]) => (
-              <div key={title as string} className="border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
-                <h3 className="mb-3 text-lg font-semibold">{title as string}</h3>
-                <p className="text-sm leading-7 text-muted-foreground">{text as string}</p>
-              </div>
-            ))}
-          </div>
+          <p className="max-w-xl text-base leading-8 text-muted-foreground">
+            Every decision — from massing to material — reinforces a single, calm idea of home.
+          </p>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[0.95fr_0.1fr_0.95fr_1fr] lg:items-center">
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">The Challenge</p>
-            <h3 className="max-w-[12ch] text-3xl font-semibold leading-tight">Balancing Elegance with Functionality.</h3>
-            <p className="mt-4 text-base leading-8 text-muted-foreground">The client envisioned a luxury home that felt open and elevated while ensuring lasting functionality, privacy, and family comfort.</p>
-          </div>
-          <div className="hidden justify-center lg:flex"><div className="grid h-14 w-14 place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-soft)]"><ChevronRight className="h-5 w-5" /></div></div>
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Solution</p>
-            <h3 className="max-w-[12ch] text-3xl font-semibold leading-tight">Designing with Purpose and Precision.</h3>
-            <p className="mt-4 text-base leading-8 text-muted-foreground">We crafted a design that brings together comfort and functionality. Every space prioritizes natural light, efficient planning, and elevated materiality.</p>
-          </div>
-          <div className="border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-            {[
-              "Curved roof crafted for flow and comfort",
-              "Maximized natural light and views",
-              "High-end materials for timeless appeal",
-              "Smart zones and energy-efficient systems",
-            ].map((item) => (
-              <div key={item} className="mb-4 flex items-start gap-3 text-sm leading-7 text-muted-foreground last:mb-0"><ShieldCheck className="mt-1 h-4 w-4 text-primary" />{item}</div>
+        <M.div
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}
+          className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
+        >
+          {highlights.map(({ title, text, icon: Icon }) => (
+            <M.div
+              key={title}
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.7, ease: detailEase }}
+              className="group relative overflow-hidden rounded-sm border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+            >
+              <Icon className="mb-5 h-6 w-6 text-primary transition-transform duration-500 group-hover:scale-110" />
+              <h3 className="mb-3 text-lg font-semibold">{title}</h3>
+              <p className="text-sm leading-7 text-muted-foreground">{text}</p>
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
+            </M.div>
+          ))}
+        </M.div>
+      </div>
+    </section>
+  );
+}
+
+function ChallengeSolutionBand() {
+  const points = [
+    "Curved roof crafted for flow and comfort",
+    "Maximised natural light and panoramic views",
+    "High-end materials for timeless appeal",
+    "Smart zones and energy-efficient systems",
+  ];
+  return (
+    <section className="border-b border-border/60 bg-background py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-2">
+        <div>
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">The Challenge</p>
+          <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
+            <WordMaskReveal text="Balancing Elegance with Functionality." />
+          </h3>
+          <p className="mt-6 max-w-md text-base leading-8 text-muted-foreground">
+            The client envisioned a luxury home that felt open and elevated while ensuring lasting functionality, privacy, and family comfort.
+          </p>
+        </div>
+        <div>
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Our Solution</p>
+          <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
+            <WordMaskReveal text="Designing with Purpose and Precision." />
+          </h3>
+          <M.ul
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } } }}
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
+            className="mt-6 space-y-3"
+          >
+            {points.map((p) => (
+              <M.li
+                key={p}
+                variants={{ hidden: { opacity: 0, x: -24 }, show: { opacity: 1, x: 0 } }}
+                transition={{ duration: 0.55, ease: detailEase }}
+                className="flex items-start gap-3 text-sm leading-7 text-foreground/85"
+              >
+                <span className="mt-1 grid h-5 w-5 place-items-center rounded-full bg-primary/15 text-primary">
+                  <Check className="h-3 w-3" />
+                </span>
+                {p}
+              </M.li>
             ))}
-          </div>
+          </M.ul>
         </div>
       </div>
     </section>
   );
 }
+
 
 function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
   return (
