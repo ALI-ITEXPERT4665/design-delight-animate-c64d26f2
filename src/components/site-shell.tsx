@@ -463,7 +463,7 @@ export function HeroSection({
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_top_left,var(--color-surface-soft),transparent_38%)]">
       <div className={cn(
-        "mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center",
+        "mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center",
         compact ? "pb-10 pt-10 lg:pt-12" : "pb-12 pt-12 lg:pt-16",
       )}>
         <div className="relative z-10 max-w-xl space-y-6 reveal-up">
@@ -517,7 +517,7 @@ export function HeroSection({
 export function StatsBand() {
   return (
     <section className="border-b border-border/60 bg-background">
-      <div className="mx-auto grid max-w-[1200px] gap-4 px-4 py-8 md:grid-cols-5 md:px-6">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-4 py-8 md:grid-cols-5 md:px-6">
         {stats.map((stat) => {
           const Icon = statIcon[stat.icon] ?? Award;
           return (
@@ -538,7 +538,7 @@ export function StatsBand() {
 export function IntroSplit() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
         <div className="space-y-6 reveal-up">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">About Us</p>
           <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Designing Spaces, Elevating Lives.</h2>
@@ -572,7 +572,7 @@ export function IntroSplit() {
 export function ProcessBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Design Process</p>
@@ -613,7 +613,7 @@ export function ProcessBand() {
 export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         {intro ? (
           <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -679,7 +679,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 export function ServicesGrid() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Services</p>
@@ -713,7 +713,7 @@ export function ServicesGrid() {
 export function BlogAndQuoteBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.56fr_0.44fr]">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.56fr_0.44fr]">
         <div className="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
           <div className="space-y-5">
             <div>
@@ -764,7 +764,7 @@ export function BlogAndQuoteBand() {
 export function ContactStrip() {
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_bottom_right,var(--color-surface-soft),transparent_42%)] py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Let’s Build Something Extraordinary</p>
           <h2 className="max-w-[14ch] text-3xl font-semibold leading-tight md:text-5xl">Have a Project in Mind?</h2>
@@ -846,7 +846,7 @@ function AboutIntroSplit() {
   const s3 = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   return (
     <section ref={ref} className="relative overflow-hidden border-b border-border/60 bg-background py-24 md:py-32">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Who We Are</p>
           <h2 className="max-w-[16ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
@@ -948,7 +948,7 @@ function MagneticValueCard({ label, desc, icon: Icon, i }: { label: string; desc
 function StoryMissionValues() {
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-3">
         <M.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: detailEase }} className="space-y-4">
           <div className="flex items-center gap-3">
             <Book className="h-5 w-5 text-primary" />
@@ -1001,7 +1001,7 @@ function AboutStatsRow() {
   ];
   return (
     <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className="mx-auto grid max-w-[1440px] gap-6 px-4 md:px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {items.map(({ value, suffix, label, icon: Icon }, i) => (
           <M.div
             key={label}
@@ -1028,7 +1028,7 @@ function AboutStatsRow() {
 function FounderQuoteBand() {
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <M.div
           initial={{ clipPath: "inset(50% 50% 50% 50%)", scale: 1.05 }}
           whileInView={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1 }}
@@ -1070,7 +1070,7 @@ function FounderQuoteBand() {
 function AboutTeamSection() {
   return (
     <section className="border-b border-border/60 bg-background py-20 md:py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl space-y-3">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Team</p>
@@ -1101,7 +1101,7 @@ function AboutCTABand() {
         <BackgroundVideo src={pageVideos.cta} poster={media.heroMain} alt="Architectural ambience" />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/80 to-foreground/55" />
       </div>
-      <div className="relative mx-auto grid max-w-[1200px] gap-10 px-4 py-20 md:px-6 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="relative mx-auto grid max-w-[1440px] gap-10 px-4 py-20 md:px-6 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="space-y-5 text-background">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Get In Touch</p>
           <h2 className="max-w-[16ch] text-4xl font-semibold leading-tight md:text-5xl">
@@ -1500,7 +1500,7 @@ export function ProjectsPageContent() {
 function CategoryBand() {
   return (
     <section className="border-b border-border/60 bg-background py-6">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap gap-3 px-4 md:px-6">
+      <div className="mx-auto flex max-w-[1440px] flex-wrap gap-3 px-4 md:px-6">
         {["All Projects", "Residential", "Commercial", "Educational", "Hospitality", "Mixed-use"].map((item, index) => {
           const key = item === "All Projects" ? "All" : item;
           const Icon = categoryIcon[key] ?? Grid3x3;
@@ -1525,7 +1525,7 @@ function CategoryBand() {
 function FeaturedProjectsSplit() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Featured Projects</p>
           <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Signature Creations That Inspire.</h2>
@@ -1581,7 +1581,7 @@ function ProcessPrinciples() {
     <section className="relative isolate overflow-hidden border-b border-border/60 bg-neutral-950 py-24 text-neutral-100">
       <BackgroundVideo src={pageVideos.process} poster={media.heroMain} />
       <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/85 via-black/75 to-black/90" />
-      <div className="relative mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="relative mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-14 max-w-2xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Guiding Principles</p>
           <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Three Beliefs That Shape Every Brief.</h2>
@@ -1614,7 +1614,7 @@ function ProcessMarquee() {
   const tools = ["Revit", "AutoCAD", "SketchUp", "Rhino", "Enscape", "Lumion", "V-Ray", "Twinmotion", "Photoshop", "InDesign", "ArchiCAD", "BIM 360"];
   return (
     <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto mb-8 max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto mb-8 max-w-[1440px] px-4 md:px-6">
         <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Tools We Master</p>
         <h2 className="text-2xl font-semibold md:text-3xl">A toolkit refined over fifteen years.</h2>
       </div>
@@ -1713,7 +1713,7 @@ function ProcessTimeline() {
   const MotionAny = M.div;
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-16 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Design Process</p>
           <h2 className="mx-auto max-w-[22ch] text-3xl font-semibold leading-tight md:text-5xl">
@@ -1767,7 +1767,7 @@ function ProcessTimeline() {
 function DetailedProcessAlternating() {
   return (
     <section className="border-b border-border/60 bg-neutral-50 py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-14">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">The Process, in Detail</p>
           <h2 className="max-w-[20ch] text-3xl font-semibold leading-tight md:text-5xl">How We Bring Your Vision to Life</h2>
@@ -1854,7 +1854,7 @@ function ValueGrid4() {
   ];
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-14 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Why Work With Us</p>
           <h2 className="mx-auto max-w-[22ch] text-3xl font-semibold leading-tight md:text-5xl">
@@ -1892,7 +1892,7 @@ function ValueGrid4() {
 function ProcessFaq() {
   return (
     <section className="border-b border-border/60 bg-neutral-50 py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">FAQ</p>
           <h2 className="mb-5 text-3xl font-semibold leading-tight md:text-5xl">Everything You Need to Know</h2>
@@ -1988,7 +1988,7 @@ function FeaturedArticleBand() {
   const featured = blogPosts[0];
   return (
     <section className="border-b border-border/60 bg-background py-14">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <MaskReveal>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.32em] text-primary">— Featured Article</p>
         </MaskReveal>
@@ -2068,7 +2068,7 @@ function BlogGrid() {
   const filters = ["All", "Architecture", "Interior Design", "Sustainability", "News"];
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <MaskReveal>
             <div>
@@ -2161,7 +2161,7 @@ function ExploreByTopic() {
   ];
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-10 flex flex-col items-start gap-3">
           <MaskReveal>
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">— Explore By Topic</p>
@@ -2184,7 +2184,7 @@ function ExploreByTopic() {
 function NewsletterBand() {
   return (
     <section className="border-b border-border/60 bg-background py-16">
-      <div className="mx-auto grid max-w-[1200px] gap-6 border border-border bg-card px-5 py-7 shadow-[var(--shadow-soft)] md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-6 border border-border bg-card px-5 py-7 shadow-[var(--shadow-soft)] md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Stay Inspired</p>
           <h2 className="text-3xl font-semibold">Subscribe to Our Newsletter</h2>
@@ -2327,7 +2327,7 @@ function TiltWrap({ children, className, intensity = 8 }: { children: ReactNode;
 function ContactMapBand() {
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-10 text-center">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">Visit Us</p>
           <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
@@ -2360,7 +2360,7 @@ function ContactMapBand() {
 function ContactOfficesBand() {
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
         <M.div
           initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -2564,7 +2564,7 @@ function FluidFaqItem({ q, a, index }: { q: string; a: string; index: number }) 
 function ContactFaqBand() {
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary">How Can We Help?</p>
           <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
@@ -2609,7 +2609,7 @@ export function TeamPageContent() {
 function LeadershipBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Leadership</p>
           <h2 className="max-w-[12ch] text-3xl font-semibold leading-tight md:text-5xl">Guiding Vision. Building Futures.</h2>
@@ -2638,7 +2638,7 @@ function TeamBand({ compact = false }: { compact?: boolean }) {
   const members = compact ? teamLeads : teamMembers;
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-8 grid gap-6 lg:grid-cols-[0.74fr_1.26fr]">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Team</p>
@@ -2666,7 +2666,7 @@ function TeamBand({ compact = false }: { compact?: boolean }) {
 function CultureBand() {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-8 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Values</p>
@@ -2855,7 +2855,7 @@ function ProjectDetailHero() {
         <img src={media.heroMain} alt="Luxury Villa Haven" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
       </M.div>
-      <div className="relative z-10 mx-auto flex h-full max-w-[1200px] flex-col justify-end px-4 pb-32 md:px-6">
+      <div className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-4 pb-32 md:px-6">
         <M.p
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.7, ease: detailEase }}
@@ -2879,7 +2879,7 @@ function ProjectDetailHero() {
       <M.div
         initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         transition={{ duration: 0.9, ease: detailEase, delay: 0.5 }}
-        className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-[1200px] px-4 md:px-6"
+        className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-[1440px] px-4 md:px-6"
       >
         <M.div
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
@@ -3012,7 +3012,7 @@ function Tilt3DCard({ children, className }: { children: ReactNode; className?: 
 function ProjectOverviewBand() {
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div className="lg:sticky lg:top-32 lg:self-start space-y-7">
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Project Overview</p>
           <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
@@ -3045,7 +3045,7 @@ function ProjectHighlightsBand() {
   ];
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-12 grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
           <div>
             <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Design Highlights</p>
@@ -3093,7 +3093,7 @@ function ChallengeSolutionBand() {
   ];
   return (
     <section className="relative border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-2">
         <Tilt3DCard className="rounded-md border border-white/40 bg-white/40 p-10 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">The Challenge</p>
           <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
@@ -3137,7 +3137,7 @@ function ChallengeSolutionBand() {
 function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
   return (
     <section className="border-b border-border/60 bg-background py-20">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Related Projects</p>
