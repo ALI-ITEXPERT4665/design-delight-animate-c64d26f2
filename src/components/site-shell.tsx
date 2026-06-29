@@ -2198,22 +2198,43 @@ function ProjectDetailHero() {
         </div>
       </div>
       <M.div
-        initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: detailEase, delay: 0.5 }}
+        initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        transition={{ duration: 0.9, ease: detailEase, delay: 0.5 }}
         className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-[1200px] px-4 md:px-6"
       >
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-white/20 bg-white/15 backdrop-blur-xl md:grid-cols-3">
+        <M.div
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
+          initial="hidden" whileInView="show" viewport={{ once: true }}
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-white/20 bg-white/15 backdrop-blur-xl md:grid-cols-3"
+        >
           {[
             ["Location", "Surrey, UK"],
             ["Total Completion", "2023"],
             ["Client", "Private"],
           ].map(([label, value]) => (
-            <div key={label} className="bg-white/5 px-6 py-5 text-white">
+            <M.div
+              key={label}
+              variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.7, ease: detailEase }}
+              className="group relative overflow-hidden bg-white/5 px-6 py-5 text-white transition-colors duration-500 hover:bg-white/10"
+            >
+              <span className="pointer-events-none absolute inset-x-0 -top-px h-px origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
               <div className="text-[11px] uppercase tracking-[0.28em] text-white/70">{label}</div>
-              <div className="mt-2 text-lg font-semibold">{value}</div>
-            </div>
+              <div className="mt-2 text-lg font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-1">{value}</div>
+            </M.div>
           ))}
-        </div>
+        </M.div>
+      </M.div>
+      <M.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4, duration: 0.6 }}
+        className="absolute right-6 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-3 text-white/80 md:flex"
+      >
+        <span className="text-[10px] uppercase tracking-[0.36em]">Scroll</span>
+        <M.span
+          animate={{ y: [0, 14, 0], opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="block h-12 w-px bg-white/80"
+        />
       </M.div>
     </section>
   );
@@ -2362,17 +2383,20 @@ function ProjectHighlightsBand() {
           initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}
           className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
         >
-          {highlights.map(({ title, text, icon: Icon }) => (
+          {highlights.map(({ title, text, icon: Icon }, i) => (
             <M.div
               key={title}
-              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.7, ease: detailEase }}
-              className="group relative overflow-hidden rounded-sm border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+              variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.75, ease: detailEase }}
             >
-              <Icon className="mb-5 h-6 w-6 text-primary transition-transform duration-500 group-hover:scale-110" />
-              <h3 className="mb-3 text-lg font-semibold">{title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{text}</p>
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-500 group-hover:scale-x-100" />
+              <Tilt3DCard className="group relative h-full overflow-hidden rounded-sm border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                <span className="mb-5 inline-block text-[10px] font-semibold uppercase tracking-[0.32em] text-primary/80">0{i + 1}</span>
+                <Icon className="mb-5 h-7 w-7 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
+                <h3 className="mb-3 text-lg font-semibold">{title}</h3>
+                <p className="text-sm leading-7 text-muted-foreground">{text}</p>
+                <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-700 group-hover:scale-x-100" />
+                <span className="pointer-events-none absolute -inset-px rounded-sm bg-[radial-gradient(circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--primary)_18%,transparent),transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              </Tilt3DCard>
             </M.div>
           ))}
         </M.div>
