@@ -196,11 +196,22 @@
   0%   { opacity: 0; transform: translateY(28px); }
   100% { opacity: 1; transform: translateY(0); }
 }
+@keyframes bg-video-zoom {
+  0%   { transform: scale(1) translate3d(0, 0, 0); }
+  50%  { transform: scale(1.08) translate3d(-1%, -0.5%, 0); }
+  100% { transform: scale(1) translate3d(0, 0, 0); }
+}
 
 .hero-drift {
   animation: hero-drift 22s ease-in-out infinite;
   will-change: transform;
 }
+.bg-video-zoom {
+  animation: bg-video-zoom 28s ease-in-out infinite;
+  will-change: transform;
+  transform-origin: center center;
+}
+
 
 @utility media-hover {
   position: relative;
