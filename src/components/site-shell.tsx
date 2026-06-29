@@ -47,6 +47,7 @@ import {
   faqItems,
   media,
   navItems,
+  pageVideos,
   processSteps,
   projects,
   services,
