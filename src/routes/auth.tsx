@@ -7,6 +7,7 @@ import { acceptInvitation } from "@/lib/admin/invites.functions";
 type Search = { redirect?: string; invite?: string };
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   validateSearch: (s: Record<string, unknown>): Search => ({
     redirect: typeof s.redirect === "string" ? s.redirect : undefined,
     invite: typeof s.invite === "string" ? s.invite : undefined,
