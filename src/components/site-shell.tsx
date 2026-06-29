@@ -2331,12 +2331,74 @@ export function ProjectDetailContent() {
       <ProjectDetailHero />
       <DetailMarquee />
       <ProjectOverviewBand />
+      <ProjectSpecsBar />
       <ParallaxQuoteBand />
       <ProjectHighlightsBand />
       <ChallengeSolutionBand />
       <RelatedProjectsBand related={related} />
       <ContactStrip />
     </>
+  );
+}
+
+function ProjectSpecsBar() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const x = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
+  const specs: Array<[string, string, IconCmp]> = [
+    ["Project Type", "Residential", HomeIcon],
+    ["Total Area", "8200 sq ft", Grid3x3],
+    ["Duration", "18 Months", Clock3],
+    ["Floors", "2", Layers],
+    ["Architect", "Uppal Decor", Compass],
+    ["Status", "Completed", ShieldCheck],
+  ];
+  return (
+    <section ref={ref} className="border-b border-border/60 bg-foreground py-10 text-background overflow-hidden">
+      <M.div style={{ x }} className="mx-auto grid max-w-[1280px] grid-cols-2 gap-x-6 gap-y-8 px-4 md:px-6 md:grid-cols-3 lg:grid-cols-6">
+        {specs.map(([label, value, Icon], i) => (
+          <M.div
+            key={label}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, ease: detailEase, delay: i * 0.06 }}
+            className="group flex items-start gap-4"
+          >
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-background/25 text-primary transition-all duration-500 group-hover:border-primary group-hover:bg-primary/10 group-hover:rotate-6">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-background/60">{label}</div>
+              <div className="mt-1 text-base font-semibold tracking-tight">{value}</div>
+            </div>
+          </M.div>
+        ))}
+      </M.div>
+    </section>
+  );
+}
+
+function KineticTitle({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={cn("inline-flex flex-wrap", className)} aria-label={text}>
+      {text.split(" ").map((word, wi) => (
+        <span key={`${word}-${wi}`} className="mr-[0.28em] inline-flex overflow-hidden align-bottom leading-[1.02]">
+          {word.split("").map((ch, ci) => (
+            <M.span
+              key={`${ch}-${ci}`}
+              initial={{ y: "110%", skewY: 8, opacity: 0 }}
+              whileInView={{ y: "0%", skewY: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ type: "spring", damping: 12, stiffness: 100, delay: (wi * 0.08) + ci * 0.03 }}
+              className="inline-block will-change-transform"
+            >
+              {ch}
+            </M.span>
+          ))}
+        </span>
+      ))}
+    </span>
   );
 }
 
@@ -2438,7 +2500,7 @@ function ProjectDetailHero() {
           Featured Project — Residential
         </M.p>
         <h1 className="max-w-[18ch] text-4xl font-semibold leading-[1.02] tracking-tight text-white md:text-7xl">
-          <WordMaskReveal text="LUXURY VILLA HAVEN" />
+          <KineticTitle text="LUXURY VILLA HAVEN" />
         </h1>
         <div className="mt-6 max-w-2xl overflow-hidden">
           <M.p
@@ -2586,8 +2648,8 @@ function Tilt3DCard({ children, className }: { children: ReactNode; className?: 
 function ProjectOverviewBand() {
   return (
     <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div className="space-y-7">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div className="lg:sticky lg:top-32 lg:self-start space-y-7">
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Project Overview</p>
           <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Crafting Spaces That Inspire and Endure." />
@@ -2601,9 +2663,9 @@ function ProjectOverviewBand() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[480px]" />
-          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[232px]" delay={0.12} />
-          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[232px]" delay={0.2} />
+          <GalleryImage src={media.heroMain} alt="Villa exterior" className="row-span-2 min-h-[560px]" />
+          <GalleryImage src={media.collageC} alt="Villa lounge" className="h-[272px]" delay={0.12} />
+          <GalleryImage src={media.project2} alt="Villa bedroom" className="h-[272px]" delay={0.2} />
         </div>
       </div>
     </section>
@@ -2666,9 +2728,9 @@ function ChallengeSolutionBand() {
     "Smart zones and energy-efficient systems",
   ];
   return (
-    <section className="border-b border-border/60 bg-background py-24">
-      <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-2">
-        <div>
+    <section className="relative border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
+      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-2">
+        <Tilt3DCard className="rounded-md border border-white/40 bg-white/40 p-10 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">The Challenge</p>
           <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Balancing Elegance with Functionality." />
@@ -2676,8 +2738,8 @@ function ChallengeSolutionBand() {
           <p className="mt-6 max-w-md text-base leading-8 text-muted-foreground">
             The client envisioned a luxury home that felt open and elevated while ensuring lasting functionality, privacy, and family comfort.
           </p>
-        </div>
-        <div>
+        </Tilt3DCard>
+        <Tilt3DCard className="rounded-md border border-white/40 bg-white/40 p-10 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-primary">Our Solution</p>
           <h3 className="max-w-[14ch] text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
             <WordMaskReveal text="Designing with Purpose and Precision." />
@@ -2701,7 +2763,7 @@ function ChallengeSolutionBand() {
               </M.li>
             ))}
           </M.ul>
-        </div>
+        </Tilt3DCard>
       </div>
     </section>
   );
