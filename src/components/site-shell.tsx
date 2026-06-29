@@ -432,15 +432,18 @@ export function ServicesGrid() {
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-          {services.slice(0, 5).map((service) => (
-            <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-              <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
-                <Building2 className="h-5 w-5" />
+          {services.slice(0, 5).map((service) => {
+            const Icon = serviceIcon[service.icon] ?? Building2;
+            return (
+              <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+                <div className="mb-5 inline-flex rounded-full border border-primary/20 bg-primary/8 p-3 text-primary transition-all duration-500 group-hover:rotate-[8deg] group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mb-3 text-base font-semibold uppercase tracking-[0.08em] transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
+                <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
               </div>
-              <h3 className="mb-3 text-lg font-semibold transition-colors duration-300 group-hover:text-primary">{service.title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{service.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
