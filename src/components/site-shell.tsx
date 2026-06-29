@@ -263,9 +263,11 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 export function SiteFooter({
   wordmark = "Design",
   variant = "default",
+  videoFooter = false,
 }: {
   wordmark?: "Design" | "Decor";
   variant?: "default" | "minimal";
+  videoFooter?: boolean;
 } = {}) {
   if (variant === "minimal") {
     return (
