@@ -742,54 +742,94 @@ export function AboutPageContent() {
   );
 }
 
+function AboutCountUp({ to, suffix = "", duration = 1.8 }: { to: number; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const [val, setVal] = useState(0);
+  const [started, setStarted] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) {
+        setStarted(true);
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / (duration * 1000), 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setVal(Math.round(to * eased));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [to, duration, started]);
+  return <span ref={ref}>{val}{suffix}</span>;
+}
+
 function AboutIntroSplit() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], ["-8%", "12%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], ["10%", "-14%"]);
+  const y3 = useTransform(scrollYProgress, [0, 1], ["-4%", "18%"]);
+  const s1 = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const s2 = useTransform(scrollYProgress, [0, 1], [1.05, 1]);
+  const s3 = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   return (
-    <section className="border-b border-border/60 bg-background py-20 md:py-24">
+    <section ref={ref} className="relative overflow-hidden border-b border-border/60 bg-background py-24 md:py-32">
       <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div className="space-y-6 reveal-up">
+        <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Who We Are</p>
-          <h2 className="max-w-[16ch] text-4xl font-semibold leading-[1.1] md:text-5xl">
-            Designing Spaces,<br />Elevating Lives.
+          <h2 className="max-w-[16ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+            <WordMaskReveal text="DESIGNING SPACES," />
+            <br />
+            <WordMaskReveal text="ELEVATING LIVES." delay={0.18} />
           </h2>
-          <p className="max-w-xl text-base leading-8 text-muted-foreground">
-            Founded with a vision to redefine architectural excellence, Uppal Decor has spent over fifteen years crafting environments where form, function, and feeling converge. From private residences to landmark commercial developments, our work reflects an unwavering pursuit of detail.
-          </p>
-          <p className="max-w-xl text-base leading-8 text-muted-foreground">
-            We are storytellers, problem-solvers, and stewards of the built environment — guided by a belief that thoughtful design has the power to transform how people live, work, and connect.
-          </p>
+          <MaskReveal delay={0.3}>
+            <p className="max-w-xl text-base leading-8 text-muted-foreground">
+              At Uppal Design, we believe architecture is more than just buildings — it is the art of shaping how people live, work, and connect. Over fifteen years of crafted environments where form, function, and feeling converge.
+            </p>
+          </MaskReveal>
+          <MaskReveal delay={0.4}>
+            <p className="max-w-xl text-base leading-8 text-muted-foreground">
+              We are storytellers, problem-solvers, and stewards of the built environment — guided by a belief that thoughtful design has the power to transform.
+            </p>
+          </MaskReveal>
           <div className="pt-2" style={{ fontFamily: "'Brush Script MT', cursive" }}>
-            <span className="text-3xl text-foreground/80">Ar. Anugam Uppal</span>
+            <span className="text-3xl text-foreground/80">Ar. Anupam Uppal</span>
           </div>
-          <Button asChild size="lg" className="btn-sheen group rounded-sm px-6 uppercase tracking-[0.16em] text-xs">
-            <Link to="/projects">
-              More About Us
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          <MagneticButton>More About Us</MagneticButton>
         </div>
-        <div className="relative h-[520px]">
+        <div className="relative h-[560px]" style={{ perspective: 1200 }}>
           <div
             className="absolute inset-0 opacity-60"
             style={{
-              backgroundImage:
-                "radial-gradient(circle, oklch(0.68 0.095 63 / 0.35) 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(circle, oklch(0.68 0.095 63 / 0.35) 1px, transparent 1px)",
               backgroundSize: "16px 16px",
             }}
             aria-hidden
           />
-          <div className="media-hover absolute left-0 top-0 h-[300px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)]">
-            <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
-          </div>
-          <div className="media-hover absolute right-0 top-16 h-[260px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
-            <img src={media.interiorLiving} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
-          </div>
-          <div className="media-hover absolute bottom-0 left-12 h-[240px] w-[52%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)]">
-            <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.06]" loading="lazy" />
-          </div>
-          <div className="absolute bottom-4 right-4 z-10 flex flex-col items-center justify-center bg-primary px-6 py-5 text-primary-foreground shadow-[var(--shadow-soft)] transition-transform duration-500 hover:-translate-y-1 hover:rotate-1">
+          <M.div style={{ y: y1, scale: s1 }} className="media-hover absolute left-0 top-0 h-[320px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)] will-change-transform">
+            <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+          </M.div>
+          <M.div style={{ y: y2, scale: s2 }} className="media-hover absolute right-0 top-20 h-[280px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
+            <img src={media.interiorLiving} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+          </M.div>
+          <M.div style={{ y: y3, scale: s3 }} className="media-hover absolute bottom-0 left-10 h-[260px] w-[54%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
+            <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+          </M.div>
+          <M.div
+            initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5, ease: detailEase }}
+            className="absolute bottom-4 right-4 z-10 flex flex-col items-center justify-center bg-primary px-6 py-5 text-primary-foreground shadow-[var(--shadow-soft)] hover:-translate-y-1 hover:rotate-1 transition-transform duration-500"
+          >
             <span className="text-4xl font-semibold leading-none">15+</span>
             <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em]">Years of Excellence</span>
-          </div>
+          </M.div>
         </div>
       </div>
     </section>
@@ -803,21 +843,58 @@ const aboutValues = [
   { label: "Excellence", desc: "Crafted to the highest standard", icon: Sparkle },
 ];
 
+function MagneticValueCard({ label, desc, icon: Icon, i }: { label: string; desc: string; icon: ComponentType<{ className?: string }>; i: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 180, damping: 16 });
+  const y = useSpring(my, { stiffness: 180, damping: 16 });
+  return (
+    <M.div
+      ref={ref}
+      style={{ x, y }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: i * 0.08, ease: detailEase }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        mx.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 12);
+        my.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 10);
+      }}
+      onMouseLeave={() => { mx.set(0); my.set(0); }}
+      className="group relative flex items-start gap-3 overflow-hidden border border-border/60 bg-background p-4 transition-all duration-500 hover:-translate-y-3 hover:border-primary/60 hover:bg-white/40 hover:shadow-[var(--shadow-glow)] hover:backdrop-blur-lg"
+    >
+      <span className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center border border-border bg-background text-primary transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+        <Icon className="h-4 w-4" />
+      </span>
+      <div>
+        <div className="text-sm font-semibold text-foreground">{label}</div>
+        <div className="text-sm text-muted-foreground">{desc}</div>
+      </div>
+    </M.div>
+  );
+}
+
 function StoryMissionValues() {
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-3">
-        <div className="space-y-4 reveal-up">
+        <M.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: detailEase }} className="space-y-4">
           <div className="flex items-center gap-3">
             <Book className="h-5 w-5 text-primary" />
             <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Story</h3>
           </div>
-          <h4 className="text-2xl font-semibold leading-tight">A Legacy of Thoughtful Design</h4>
-          <p className="text-base leading-8 text-muted-foreground">
-            From a small studio with a single drafting table to an award-winning practice, our journey has been defined by curiosity, craft, and an enduring commitment to the communities we serve.
-          </p>
-        </div>
-        <div className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+          <h4 className="text-2xl font-semibold leading-tight"><WordMaskReveal text="A Legacy of Thoughtful Design" /></h4>
+          <MaskReveal delay={0.2}>
+            <p className="text-base leading-8 text-muted-foreground">
+              From a small studio with a single drafting table to an award-winning practice, our journey has been defined by curiosity, craft, and an enduring commitment to the communities we serve.
+            </p>
+          </MaskReveal>
+        </M.div>
+        <Tilt3DCard className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
               <Target className="h-5 w-5" />
@@ -828,7 +905,7 @@ function StoryMissionValues() {
           <p className="text-base leading-8 text-muted-foreground">
             To create intelligent architectural solutions that inspire, enrich lives, and contribute positively to the environment and communities we touch — one carefully considered space at a time.
           </p>
-        </div>
+        </Tilt3DCard>
         <div className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
@@ -836,17 +913,9 @@ function StoryMissionValues() {
             </span>
             <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Values</h3>
           </div>
-          <div className="grid gap-4">
-            {aboutValues.map(({ label, desc, icon: Icon }) => (
-              <div key={label} className="flex items-start gap-3 transition-transform duration-300 hover:translate-x-1">
-                <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center border border-border bg-background text-primary">
-                  <Icon className="h-4 w-4" />
-                </span>
-                <div>
-                  <div className="text-sm font-semibold text-foreground">{label}</div>
-                  <div className="text-sm text-muted-foreground">{desc}</div>
-                </div>
-              </div>
+          <div className="grid gap-3">
+            {aboutValues.map((v, i) => (
+              <MagneticValueCard key={v.label} {...v} i={i} />
             ))}
           </div>
         </div>
@@ -857,23 +926,32 @@ function StoryMissionValues() {
 
 function AboutStatsRow() {
   const items = [
-    { value: "150+", label: "Projects Delivered", icon: Building2 },
-    { value: "15+", label: "Years of Experience", icon: Clock3 },
-    { value: "98%", label: "Client Satisfaction", icon: HeartHandshake },
-    { value: "25+", label: "Industry Awards", icon: Trophy },
-    { value: "40+", label: "Expert Team", icon: Users },
+    { value: 250, suffix: "+", label: "Projects Completed", icon: Building2 },
+    { value: 15, suffix: "+", label: "Years of Experience", icon: Clock3 },
+    { value: 98, suffix: "%", label: "Client Satisfaction", icon: HeartHandshake },
+    { value: 20, suffix: "+", label: "Awards Won", icon: Trophy },
+    { value: 50, suffix: "+", label: "Expert Team", icon: Users },
   ];
   return (
     <section className="border-b border-border/60 bg-background py-16">
       <div className="mx-auto grid max-w-[1200px] gap-6 px-4 md:px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        {items.map(({ value, label, icon: Icon }) => (
-          <div key={label} className="group flex flex-col items-center text-center transition-transform duration-500 hover:-translate-y-1">
+        {items.map(({ value, suffix, label, icon: Icon }, i) => (
+          <M.div
+            key={label}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.08, ease: detailEase }}
+            className="group flex flex-col items-center text-center transition-transform duration-500 hover:-translate-y-1"
+          >
             <span className="mb-3 grid h-12 w-12 place-items-center rounded-full border border-border text-primary transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
               <Icon className="h-5 w-5" />
             </span>
-            <div className="text-3xl font-semibold text-foreground md:text-4xl">{value}</div>
+            <div className="text-3xl font-semibold text-foreground md:text-4xl group-hover:[text-shadow:0_0_24px_oklch(0.68_0.095_63/0.65)] transition-[text-shadow] duration-500">
+              <AboutCountUp to={value} suffix={suffix} />
+            </div>
             <div className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</div>
-          </div>
+          </M.div>
         ))}
       </div>
     </section>
@@ -884,28 +962,36 @@ function FounderQuoteBand() {
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
       <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div className="media-hover relative h-[480px] overflow-hidden shadow-[var(--shadow-soft)]">
-          <img src={media.founder} alt="Ar. Anugam Uppal — Founder" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.05]" loading="lazy" />
+        <M.div
+          initial={{ clipPath: "inset(50% 50% 50% 50%)", scale: 1.05 }}
+          whileInView={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.2, ease: detailEase }}
+          className="media-hover relative h-[480px] overflow-hidden shadow-[var(--shadow-soft)]"
+        >
+          <img src={media.founder} alt="Ar. Anupam Uppal — Founder" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.05]" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           <div className="absolute bottom-5 left-5 text-background">
-            <div className="text-lg font-semibold">Ar. Anugam Uppal</div>
+            <div className="text-lg font-semibold">Ar. Anupam Uppal</div>
             <div className="text-xs uppercase tracking-[0.22em] opacity-90">Founder &amp; Principal Architect</div>
           </div>
-        </div>
+        </M.div>
         <div className="relative border border-border bg-card p-10 shadow-[var(--shadow-soft)] md:p-12">
           <span className="absolute -top-6 left-8 select-none text-[110px] leading-none text-primary/30" aria-hidden>“</span>
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">A Word From Our Founder</p>
           <h3 className="mt-4 max-w-[20ch] text-3xl font-semibold leading-tight md:text-4xl">
-            Architecture is a responsibility — and a privilege.
+            <WordMaskReveal text="Architecture is a responsibility — and a privilege." />
           </h3>
-          <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground">
-            Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to craft places that transform lives, honor context, and stand the test of time.
-          </p>
+          <MaskReveal delay={0.3}>
+            <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground">
+              Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to craft places that transform lives, honor context, and stand the test of time.
+            </p>
+          </MaskReveal>
           <div className="mt-8 flex items-center gap-4">
             <span className="h-px w-12 bg-primary" />
             <div>
-              <div className="text-sm font-semibold text-foreground">Ar. Anugam Uppal</div>
-              <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Founder, Uppal Decor</div>
+              <div className="text-sm font-semibold text-foreground">Ar. Anupam Uppal</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Founder, Uppal Design</div>
             </div>
           </div>
         </div>
