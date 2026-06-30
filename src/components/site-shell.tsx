@@ -396,7 +396,7 @@ export function SiteFooter({
         {/* Bottom bar */}
         <div className="relative border-t border-white/10">
           <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-neutral-400 md:flex-row lg:px-8">
-            <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
+            <p>{copyright}</p>
             <div className="flex items-center gap-6">
               <a href="#" className="transition-colors hover:text-primary">Privacy Policy</a>
               <a href="#" className="transition-colors hover:text-primary">Terms &amp; Conditions</a>
