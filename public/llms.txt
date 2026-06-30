@@ -1,0 +1,13 @@
+# UPPAL Design
+
+> UK architecture studio crafting refined residential, commercial, and interior spaces with thoughtful, process-led design.
+
+## Pages
+
+- [Home](/): Studio overview, featured projects, and services.
+- [About](/about): Studio story, mission, values, and team.
+- [Services](/services): Architecture, interiors, planning, and consultancy.
+- [Process](/process): Five-stage design and delivery process.
+- [Projects](/projects): Selected residential and commercial work.
+- [Blog](/blog): Architecture insights, design ideas, and studio updates.
+- [Contact](/contact): Studio contact details and project enquiries.

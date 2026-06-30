@@ -437,6 +437,7 @@ export function SiteFooter({
                 <input
                   type="email"
                   placeholder="Your email..."
+                  aria-label="Email address for newsletter"
                   className="w-full bg-transparent py-3 pr-10 text-sm text-white placeholder:text-neutral-500 focus:outline-none"
                 />
                 <button
@@ -487,7 +488,7 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
 }
 
 export function PageFrame({ children }: { children: ReactNode }) {
-  return <div className="bg-background text-foreground">{children}</div>;
+  return <main className="bg-background text-foreground">{children}</main>;
 }
 
 export function HeroSection({
@@ -815,12 +816,12 @@ export function BlogAndQuoteBand() {
               <h2 className="text-3xl font-semibold">Request a Quote</h2>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Your Name" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Email Address" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Phone Number" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
+              <input aria-label="Your name" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Your Name" />
+              <input aria-label="Email address" type="email" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Email Address" />
+              <input aria-label="Phone number" type="tel" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Phone Number" />
+              <input aria-label="Project type" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
             </div>
-            <textarea className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
+            <textarea aria-label="Your message" className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
             <Button className="btn-sheen w-fit rounded-sm px-6">Send Request</Button>
           </form>
         </div>
@@ -951,13 +952,13 @@ function AboutIntroSplit() {
             aria-hidden
           />
           <M.div style={{ y: y1, scale: s1 }} className="media-hover absolute left-0 top-0 h-[320px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.heroAlt} alt="Contemporary residential project exterior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div style={{ y: y2, scale: s2 }} className="media-hover absolute right-0 top-20 h-[280px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.interiorLiving} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.interiorLiving} alt="Warm minimalist living room interior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div style={{ y: y3, scale: s3 }} className="media-hover absolute bottom-0 left-10 h-[260px] w-[54%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.heroMain} alt="Detailed architectural facade close-up" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div
             initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
@@ -2293,7 +2294,7 @@ function NewsletterBand() {
           <p className="mt-4 text-base leading-8 text-muted-foreground">Get the latest articles, design ideas, and updates delivered straight to your inbox.</p>
         </div>
         <div className="grid gap-4 md:grid-cols-[1fr_auto]">
-          <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
+          <input aria-label="Newsletter email address" type="email" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
           <Button className="btn-sheen h-12 rounded-sm px-6">Subscribe</Button>
         </div>
       </div>
