@@ -2697,14 +2697,18 @@ function ContactFaqBand() {
 
 
 export function TeamPageContent() {
+  const eyebrow = useContent("team.hero.eyebrow", "Our Team");
+  const title = useContent("team.hero.title", "The Minds Behind");
+  const highlight = useContent("team.hero.highlight", "The Masterpieces.");
+  const description = useContent("team.hero.subtitle", "A passionate team of architects, designers, and dreamers dedicated to bringing your vision to life.");
   const video = useContent("team.hero.video", pageVideos.team);
   return (
     <>
       <HeroSection
-        eyebrow="Our Team"
-        title="The Minds Behind"
-        highlight="The Masterpieces."
-        description="A passionate team of architects, designers, and dreamers dedicated to bringing your vision to life."
+        eyebrow={eyebrow}
+        title={title}
+        highlight={highlight}
+        description={description}
         primaryLabel="Meet the Team"
         image={media.heroMain}
         videoSrc={video}
