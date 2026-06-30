@@ -63,6 +63,7 @@ import {
   teamMembers,
   values,
 } from "@/lib/site-data";
+import { useContent } from "@/lib/use-content";
 
 type IconCmp = ComponentType<{ className?: string }>;
 
@@ -256,8 +257,8 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </div>
 
         <div className="border-t border-border px-6 py-5 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {siteSettings.phone}</div>
-          <div className="mt-2 flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {siteSettings.email}</div>
+          <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {useContent("settings.phone", siteSettings.phone)}</div>
+          <div className="mt-2 flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {useContent("settings.email", siteSettings.email)}</div>
         </div>
       </aside>
     </div>
@@ -279,6 +280,10 @@ export function SiteFooter({
   wordmark?: "Design" | "Decor";
   variant?: "default" | "minimal";
 } = {}) {
+  const tagline = useContent<string>("footer.brand.tagline", "Intelligent design. Lasting impact. Spaces that inspire, built with purpose.");
+  const copyright = useContent<string>("footer.copyright", `© 2024 Uppal ${wordmark}. All Rights Reserved.`);
+  const footerEmail = useContent<string>("settings.email", "info@uppaldb.co.uk");
+  const footerPhone = useContent<string>("settings.phone", "+44 7547 487675");
   const quickLinks = navItems;
   const serviceLinks = [
     { label: "BIM Modeller", to: "/services" },
@@ -317,7 +322,7 @@ export function SiteFooter({
               <div className="mt-1 text-xs uppercase tracking-[0.4em] text-primary">{wordmark}</div>
             </div>
             <p className="max-w-sm text-sm leading-7 text-neutral-300">
-              Intelligent design. Lasting impact. Spaces that inspire, built with purpose.
+              {tagline}
             </p>
             <div className="flex items-center gap-3 pt-2">
               {socials.map(({ Icon, label, href }) => (
@@ -355,11 +360,11 @@ export function SiteFooter({
               </li>
               <li className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="mailto:info@uppaldb.co.uk" className="transition-colors hover:text-primary">info@uppaldb.co.uk</a>
+                <a href={`mailto:${footerEmail}`} className="transition-colors hover:text-primary">{footerEmail}</a>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="tel:+447547487675" className="transition-colors hover:text-primary">+44 7547 487675</a>
+                <a href={`tel:${footerPhone.replace(/\s+/g, "")}`} className="transition-colors hover:text-primary">{footerPhone}</a>
               </li>
             </ul>
 
@@ -391,7 +396,7 @@ export function SiteFooter({
         {/* Bottom bar */}
         <div className="relative border-t border-white/10">
           <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-neutral-400 md:flex-row lg:px-8">
-            <p>© 2024 Uppal {wordmark}. All Rights Reserved.</p>
+            <p>{copyright}</p>
             <div className="flex items-center gap-6">
               <a href="#" className="transition-colors hover:text-primary">Privacy Policy</a>
               <a href="#" className="transition-colors hover:text-primary">Terms &amp; Conditions</a>
