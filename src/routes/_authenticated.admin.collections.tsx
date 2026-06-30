@@ -147,7 +147,11 @@ function CollectionsPage() {
       if (isStaff) await updateSiteContent({ data: { key: schema.key, value: items } });
       else await submitContentDraft({ data: { key: schema.key, value: items } });
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["content"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["content"] });
+      qc.invalidateQueries({ queryKey: ["site", "content"] });
+      qc.invalidateQueries({ queryKey: ["drafts", "pending"] });
+    },
   });
 
   function update(idx: number, name: string, value: string) {
