@@ -360,11 +360,11 @@ export function SiteFooter({
               </li>
               <li className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="mailto:info@uppaldb.co.uk" className="transition-colors hover:text-primary">info@uppaldb.co.uk</a>
+                <a href={`mailto:${footerEmail}`} className="transition-colors hover:text-primary">{footerEmail}</a>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <a href="tel:+447547487675" className="transition-colors hover:text-primary">+44 7547 487675</a>
+                <a href={`tel:${footerPhone.replace(/\s+/g, "")}`} className="transition-colors hover:text-primary">{footerPhone}</a>
               </li>
             </ul>
 
