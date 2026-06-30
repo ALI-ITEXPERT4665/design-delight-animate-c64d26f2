@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "@/components/admin/AdminShell";
 import { getAllSiteContent, updateSiteContent, submitContentDraft } from "@/lib/admin/content.functions";
 import { getMe } from "@/lib/admin/users.functions";
@@ -239,6 +239,10 @@ function Row({
 }) {
   const [val, setVal] = useState(typeof initial === "string" ? initial : initial == null ? "" : JSON.stringify(initial, null, 2));
   const [status, setStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    setVal(typeof initial === "string" ? initial : initial == null ? "" : JSON.stringify(initial, null, 2));
+  }, [contentKey, initial]);
 
   const publish = useMutation({
     mutationFn: async () => {
