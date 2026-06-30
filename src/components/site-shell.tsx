@@ -322,7 +322,7 @@ export function SiteFooter({
               <div className="mt-1 text-xs uppercase tracking-[0.4em] text-primary">{wordmark}</div>
             </div>
             <p className="max-w-sm text-sm leading-7 text-neutral-300">
-              Intelligent design. Lasting impact. Spaces that inspire, built with purpose.
+              {tagline}
             </p>
             <div className="flex items-center gap-3 pt-2">
               {socials.map(({ Icon, label, href }) => (
