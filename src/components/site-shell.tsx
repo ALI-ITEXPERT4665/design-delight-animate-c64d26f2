@@ -280,6 +280,10 @@ export function SiteFooter({
   wordmark?: "Design" | "Decor";
   variant?: "default" | "minimal";
 } = {}) {
+  const tagline = useContent<string>("footer.brand.tagline", "Intelligent design. Lasting impact. Spaces that inspire, built with purpose.");
+  const copyright = useContent<string>("footer.copyright", `© 2024 Uppal ${wordmark}. All Rights Reserved.`);
+  const footerEmail = useContent<string>("settings.email", "info@uppaldb.co.uk");
+  const footerPhone = useContent<string>("settings.phone", "+44 7547 487675");
   const quickLinks = navItems;
   const serviceLinks = [
     { label: "BIM Modeller", to: "/services" },
