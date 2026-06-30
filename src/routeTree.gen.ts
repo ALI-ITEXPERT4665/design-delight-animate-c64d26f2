@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeamRouteImport } from './routes/team'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProjectDetailRouteImport } from './routes/project-detail'
@@ -35,6 +36,11 @@ import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authe
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/project-detail': typeof ProjectDetailRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/project-detail': typeof ProjectDetailRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/api/chat': typeof ApiChatRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/project-detail': typeof ProjectDetailRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/project-detail'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/team'
     | '/admin'
     | '/api/chat'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/project-detail'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/team'
     | '/api/chat'
     | '/admin/approvals'
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/project-detail'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/team'
     | '/_authenticated/admin'
     | '/api/chat'
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   ProjectDetailRoute: typeof ProjectDetailRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   ApiChatRoute: typeof ApiChatRoute
 }
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -513,19 +533,10 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectDetailRoute: ProjectDetailRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
