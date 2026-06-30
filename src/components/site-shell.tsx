@@ -63,6 +63,7 @@ import {
   teamMembers,
   values,
 } from "@/lib/site-data";
+import { useContent } from "@/lib/use-content";
 
 type IconCmp = ComponentType<{ className?: string }>;
 
