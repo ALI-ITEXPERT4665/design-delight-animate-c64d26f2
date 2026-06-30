@@ -2803,7 +2803,7 @@ function CultureBand() {
 }
 
 export function ProjectDetailContent() {
-  const related = projects.slice(1, 5);
+  const related = useProjects().slice(1, 5);
   return (
     <>
       <DetailScrollProgress />
@@ -3249,7 +3249,7 @@ function ChallengeSolutionBand() {
 }
 
 
-function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
+function RelatedProjectsBand({ related }: { related: ProjectItem[] }) {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
