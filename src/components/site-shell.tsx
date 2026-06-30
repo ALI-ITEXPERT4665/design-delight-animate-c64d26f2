@@ -257,8 +257,8 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </div>
 
         <div className="border-t border-border px-6 py-5 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {siteSettings.phone}</div>
-          <div className="mt-2 flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {siteSettings.email}</div>
+          <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {useContent("settings.phone", siteSettings.phone)}</div>
+          <div className="mt-2 flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {useContent("settings.email", siteSettings.email)}</div>
         </div>
       </aside>
     </div>
