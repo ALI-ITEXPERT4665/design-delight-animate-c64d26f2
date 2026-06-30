@@ -437,6 +437,7 @@ export function SiteFooter({
                 <input
                   type="email"
                   placeholder="Your email..."
+                  aria-label="Email address for newsletter"
                   className="w-full bg-transparent py-3 pr-10 text-sm text-white placeholder:text-neutral-500 focus:outline-none"
                 />
                 <button
@@ -487,7 +488,7 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
 }
 
 export function PageFrame({ children }: { children: ReactNode }) {
-  return <div className="bg-background text-foreground">{children}</div>;
+  return <main className="bg-background text-foreground">{children}</main>;
 }
 
 export function HeroSection({
@@ -815,12 +816,12 @@ export function BlogAndQuoteBand() {
               <h2 className="text-3xl font-semibold">Request a Quote</h2>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Your Name" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Email Address" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Phone Number" />
-              <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
+              <input aria-label="Your name" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Your Name" />
+              <input aria-label="Email address" type="email" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Email Address" />
+              <input aria-label="Phone number" type="tel" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Phone Number" />
+              <input aria-label="Project type" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Project Type" />
             </div>
-            <textarea className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
+            <textarea aria-label="Your message" className="min-h-[126px] border border-input bg-background px-4 py-3 text-sm outline-none" placeholder="Your Message" />
             <Button className="btn-sheen w-fit rounded-sm px-6">Send Request</Button>
           </form>
         </div>
@@ -2293,7 +2294,7 @@ function NewsletterBand() {
           <p className="mt-4 text-base leading-8 text-muted-foreground">Get the latest articles, design ideas, and updates delivered straight to your inbox.</p>
         </div>
         <div className="grid gap-4 md:grid-cols-[1fr_auto]">
-          <input className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
+          <input aria-label="Newsletter email address" type="email" className="h-12 border border-input bg-background px-4 text-sm outline-none" placeholder="Enter your email address" />
           <Button className="btn-sheen h-12 rounded-sm px-6">Subscribe</Button>
         </div>
       </div>
