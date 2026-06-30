@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "@/components/admin/AdminShell";
 import { getAllSiteContent, updateSiteContent, submitContentDraft } from "@/lib/admin/content.functions";
 import { getMe } from "@/lib/admin/users.functions";
@@ -32,6 +32,7 @@ const GROUPS: Group[] = [
     keys: [
       { key: "footer.brand.tagline", label: "Footer tagline" },
       { key: "footer.copyright", label: "Copyright line" },
+      { key: "footer.video", label: "Footer background video URL", kind: "url" },
     ],
   },
   {
@@ -56,6 +57,7 @@ const GROUPS: Group[] = [
       { key: "about.hero.eyebrow", label: "Hero eyebrow" },
       { key: "about.hero.title", label: "Hero title", kind: "textarea" },
       { key: "about.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "about.hero.video", label: "Hero video URL", kind: "url" },
       { key: "about.story.heading", label: "Story heading" },
       { key: "about.story.body", label: "Story body", kind: "textarea" },
       { key: "about.mission.heading", label: "Mission heading" },
@@ -69,6 +71,7 @@ const GROUPS: Group[] = [
       { key: "services.hero.eyebrow", label: "Hero eyebrow" },
       { key: "services.hero.title", label: "Hero title", kind: "textarea" },
       { key: "services.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "services.hero.video", label: "Hero video URL", kind: "url" },
       { key: "services.why.heading", label: "Why-choose-us heading" },
       { key: "services.cta.title", label: "CTA title" },
       { key: "services.cta.body", label: "CTA body", kind: "textarea" },
@@ -81,6 +84,7 @@ const GROUPS: Group[] = [
       { key: "process.hero.eyebrow", label: "Hero eyebrow" },
       { key: "process.hero.title", label: "Hero title", kind: "textarea" },
       { key: "process.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "process.hero.video", label: "Hero video URL", kind: "url" },
       { key: "process.principles.heading", label: "Principles heading" },
     ],
   },
@@ -90,6 +94,19 @@ const GROUPS: Group[] = [
       { key: "projects.hero.eyebrow", label: "Hero eyebrow" },
       { key: "projects.hero.title", label: "Hero title", kind: "textarea" },
       { key: "projects.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "projects.hero.video", label: "Hero video URL", kind: "url" },
+    ],
+  },
+  {
+    label: "Project detail page",
+    keys: [
+      { key: "projectDetail.hero.eyebrow", label: "Hero eyebrow" },
+      { key: "projectDetail.hero.title", label: "Hero title", kind: "textarea" },
+      { key: "projectDetail.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "projectDetail.hero.image", label: "Hero image URL", kind: "url" },
+      { key: "projectDetail.overview.heading", label: "Overview heading", kind: "textarea" },
+      { key: "projectDetail.overview.body", label: "Overview body", kind: "textarea" },
+      { key: "projectDetail.challenge.body", label: "Challenge body", kind: "textarea" },
     ],
   },
   {
@@ -98,6 +115,17 @@ const GROUPS: Group[] = [
       { key: "blog.hero.eyebrow", label: "Hero eyebrow" },
       { key: "blog.hero.title", label: "Hero title", kind: "textarea" },
       { key: "blog.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "blog.hero.video", label: "Hero video URL", kind: "url" },
+    ],
+  },
+  {
+    label: "Team page",
+    keys: [
+      { key: "team.hero.eyebrow", label: "Hero eyebrow" },
+      { key: "team.hero.title", label: "Hero title", kind: "textarea" },
+      { key: "team.hero.highlight", label: "Hero highlight" },
+      { key: "team.hero.subtitle", label: "Hero subtitle", kind: "textarea" },
+      { key: "team.hero.video", label: "Hero video URL", kind: "url" },
     ],
   },
   {
@@ -211,6 +239,10 @@ function Row({
 }) {
   const [val, setVal] = useState(typeof initial === "string" ? initial : initial == null ? "" : JSON.stringify(initial, null, 2));
   const [status, setStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    setVal(typeof initial === "string" ? initial : initial == null ? "" : JSON.stringify(initial, null, 2));
+  }, [contentKey, initial]);
 
   const publish = useMutation({
     mutationFn: async () => {

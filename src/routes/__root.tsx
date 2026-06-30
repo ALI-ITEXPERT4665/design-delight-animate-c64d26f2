@@ -131,7 +131,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         const { getAllSiteContent } = await import("@/lib/admin/content.functions");
         return getAllSiteContent();
       },
-      staleTime: 30_000,
+      staleTime: 0,
     });
   },
 });

@@ -63,7 +63,7 @@ import {
   teamMembers,
   values,
 } from "@/lib/site-data";
-import { useContent } from "@/lib/use-content";
+import { useCollection, useContent } from "@/lib/use-content";
 
 type IconCmp = ComponentType<{ className?: string }>;
 
@@ -102,9 +102,72 @@ const categoryIcon: Record<string, IconCmp> = {
   "Mixed-use": Building2,
 };
 
+type NavItem = (typeof navItems)[number];
+type ProjectItem = (typeof projects)[number] & { year?: string; slug?: string; summary?: string };
+type BlogItem = (typeof blogPosts)[number] & { author?: string; slug?: string };
+type ServiceItem = (typeof services)[number] & { image?: string };
+type ProcessStepItem = (typeof processSteps)[number];
+type StatItem = (typeof stats)[number];
+type TeamLeadItem = (typeof teamLeads)[number];
+type TeamMemberItem = (typeof teamMembers)[number];
+type FaqItem = (typeof faqItems)[number];
+
+function useNavItems() {
+  return useCollection<NavItem>("nav.items", navItems).filter((item) => item?.label && item?.to);
+}
+
+function useProjects() {
+  return useCollection<ProjectItem>("collection.projects", projects as ProjectItem[]);
+}
+
+function useBlogPosts() {
+  return useCollection<BlogItem>("collection.blog", blogPosts as BlogItem[]);
+}
+
+function useServices() {
+  return useCollection<ServiceItem>("collection.services", services as ServiceItem[]);
+}
+
+function useFaqItems() {
+  return useCollection<FaqItem>("collection.faqs", faqItems);
+}
+
+function useStatsItems() {
+  const editable = useCollection<Partial<StatItem>>("collection.stats", stats);
+  return editable.map((item, index) => ({ ...stats[index % stats.length], ...item })) as StatItem[];
+}
+
+function useProcessStepItems() {
+  const editable = useCollection<Partial<ProcessStepItem>>("collection.process_steps", processSteps);
+  return editable.map((item, index) => {
+    const fallback = processSteps[index % processSteps.length];
+    return {
+      ...fallback,
+      ...item,
+      deliverables: Array.isArray(item.deliverables) ? item.deliverables : fallback.deliverables,
+      icon: item.icon ?? fallback.icon,
+      image: item.image ?? fallback.image,
+    } as ProcessStepItem;
+  });
+}
+
+function useTeamLeadItems() {
+  return useCollection<TeamLeadItem>("collection.team_leads", teamLeads);
+}
+
+function useTeamMemberItems() {
+  const editable = useCollection<Partial<TeamMemberItem>>("collection.team_members", teamMembers);
+  return editable.map((item) => ({ image: media.founder, ...item })) as TeamMemberItem[];
+}
+
+function useValueItems() {
+  return useCollection<string>("collection.values", values);
+}
+
 export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Decor" } = {}) {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const menuItems = useNavItems();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -149,7 +212,7 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
-            {navItems.map((item) => (
+            {menuItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -188,6 +251,7 @@ export function SiteHeader({ wordmark = "Design" }: { wordmark?: "Design" | "Dec
 }
 
 function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const menuItems = useNavItems();
   return (
     <div
       className={cn(
@@ -224,7 +288,7 @@ function MegaDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </div>
 
         <nav className="flex flex-col px-2 py-4">
-          {navItems.map((item, i) => (
+          {menuItems.map((item, i) => (
             <Link
               key={item.to}
               to={item.to}
@@ -284,15 +348,9 @@ export function SiteFooter({
   const copyright = useContent<string>("footer.copyright", `© 2024 Uppal ${wordmark}. All Rights Reserved.`);
   const footerEmail = useContent<string>("settings.email", "info@uppaldb.co.uk");
   const footerPhone = useContent<string>("settings.phone", "+44 7547 487675");
-  const quickLinks = navItems;
-  const serviceLinks = [
-    { label: "BIM Modeller", to: "/services" },
-    { label: "3D Visualization", to: "/services" },
-    { label: "Planning Drawings", to: "/services" },
-    { label: "Building Regulations", to: "/services" },
-    { label: "Structural Calculations", to: "/services" },
-    { label: "Project Management", to: "/services" },
-  ];
+  const footerVideo = useContent<string>("footer.video", pageVideos.footer);
+  const quickLinks = useNavItems();
+  const serviceLinks = useServices().map((service) => ({ label: service.title, to: "/services" }));
   const socials = [
     { Icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/uppaldb" },
     { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/uppaldb" },
@@ -303,7 +361,7 @@ export function SiteFooter({
 
   return (
     <footer className="relative isolate overflow-hidden bg-neutral-950 text-neutral-200">
-      <BackgroundVideo src={pageVideos.footer} poster={media.heroMain} />
+      <BackgroundVideo src={footerVideo} poster={media.heroMain} />
       <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/80 to-black/90" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,80,0.10),transparent_60%)]" />
 
@@ -520,10 +578,11 @@ export function HeroSection({
 }
 
 export function StatsBand() {
+  const editableStats = useStatsItems();
   return (
     <section className="border-b border-border/60 bg-background">
       <div className="mx-auto grid max-w-[1440px] gap-4 px-4 py-8 md:grid-cols-5 md:px-6">
-        {stats.map((stat) => {
+        {editableStats.map((stat) => {
           const Icon = statIcon[stat.icon] ?? Award;
           return (
             <div key={stat.label} className="group flex items-center gap-4 border-r border-border/50 py-3 last:border-r-0 transition-colors hover:bg-primary/5 rounded-sm pl-2">
@@ -575,6 +634,7 @@ export function IntroSplit() {
 }
 
 export function ProcessBand() {
+  const editableSteps = useProcessStepItems();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -589,7 +649,7 @@ export function ProcessBand() {
         </div>
         <div className="relative grid gap-6 md:grid-cols-5">
           <div className="absolute left-[10%] right-[10%] top-[2.25rem] hidden h-px bg-border md:block" aria-hidden="true" />
-          {processSteps.map((step) => {
+          {editableSteps.map((step) => {
             const Icon = processIcon[step.icon] ?? Sparkles;
             return (
               <div key={step.number} className="group relative space-y-4 text-center">
@@ -616,6 +676,7 @@ export function ProcessBand() {
 }
 
 export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
+  const editableProjects = useProjects();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -648,7 +709,7 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
           })}
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {projects.map((project) => (
+          {editableProjects.map((project) => (
             <ProjectCard key={project.title} project={project} />
           ))}
         </div>
@@ -657,7 +718,7 @@ export function ProjectsShowcase({ intro = true }: { intro?: boolean }) {
   );
 }
 
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({ project }: { project: ProjectItem }) {
   return (
     <article className="project-tile group overflow-hidden border border-border bg-card shadow-[var(--shadow-soft)]">
       <div className="media-hover relative overflow-hidden">
@@ -682,6 +743,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 }
 
 export function ServicesGrid() {
+  const editableServices = useServices();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -697,7 +759,7 @@ export function ServicesGrid() {
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-          {services.slice(0, 5).map((service) => {
+          {editableServices.slice(0, 5).map((service) => {
             const Icon = serviceIcon[service.icon] ?? Building2;
             return (
               <div key={service.title} className="lift-card group border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
@@ -716,6 +778,7 @@ export function ServicesGrid() {
 }
 
 export function BlogAndQuoteBand() {
+  const editablePosts = useBlogPosts();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.56fr_0.44fr]">
@@ -730,7 +793,7 @@ export function BlogAndQuoteBand() {
             </Link>
           </div>
           <div className="grid gap-4">
-            {blogPosts.slice(0, 3).map((post) => (
+            {editablePosts.slice(0, 3).map((post) => (
               <article key={post.title} className="grid grid-cols-[100px_1fr] gap-4 border border-border bg-card p-3 shadow-[var(--shadow-soft)]">
                 <img src={post.image} alt={post.title} className="h-24 w-full object-cover" loading="lazy" />
                 <div className="space-y-2">
@@ -790,17 +853,21 @@ export function ContactStrip() {
 }
 
 export function AboutPageContent() {
+  const eyebrow = useContent("about.hero.eyebrow", "About Us");
+  const title = useContent("about.hero.title", "Designing with Intelligence.");
+  const description = useContent("about.hero.subtitle", "At Uppal Decor, we believe architecture is more than buildings — it shapes lives, our cities, and the future. Discover the story, values, and people behind our timeless spaces.");
+  const video = useContent("about.hero.video", pageVideos.about);
   return (
     <>
       <HeroSection
-        eyebrow="About Us"
-        title="Designing with Intelligence."
+        eyebrow={eyebrow}
+        title={title}
         highlight="Building with Purpose."
-        description="At Uppal Decor, we believe architecture is more than buildings — it shapes lives, our cities, and the future. Discover the story, values, and people behind our timeless spaces."
+        description={description}
         primaryLabel="Explore Our Work"
         primaryTo="/projects"
         image={media.heroAlt}
-        videoSrc={pageVideos.about}
+        videoSrc={video}
         showPlay={false}
         compact
       />
@@ -841,6 +908,8 @@ function AboutCountUp({ to, suffix = "", duration = 1.8 }: { to: number; suffix?
 }
 
 function AboutIntroSplit() {
+  const heading = useContent("about.story.heading", "DESIGNING SPACES, ELEVATING LIVES.");
+  const body = useContent("about.story.body", "At Uppal Design, we believe architecture is more than just buildings — it is the art of shaping how people live, work, and connect. Over fifteen years of crafted environments where form, function, and feeling converge.");
   const ref = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], ["-8%", "12%"]);
@@ -855,13 +924,11 @@ function AboutIntroSplit() {
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Who We Are</p>
           <h2 className="max-w-[16ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-            <WordMaskReveal text="DESIGNING SPACES," />
-            <br />
-            <WordMaskReveal text="ELEVATING LIVES." delay={0.18} />
+            <WordMaskReveal text={heading} />
           </h2>
           <MaskReveal delay={0.3}>
             <p className="max-w-xl text-base leading-8 text-muted-foreground">
-              At Uppal Design, we believe architecture is more than just buildings — it is the art of shaping how people live, work, and connect. Over fifteen years of crafted environments where form, function, and feeling converge.
+              {body}
             </p>
           </MaskReveal>
           <MaskReveal delay={0.4}>
@@ -951,6 +1018,10 @@ function MagneticValueCard({ label, desc, icon: Icon, i }: { label: string; desc
 }
 
 function StoryMissionValues() {
+  const storyHeading = useContent("about.story.heading", "A Legacy of Thoughtful Design");
+  const storyBody = useContent("about.story.body", "From a small studio with a single drafting table to an award-winning practice, our journey has been defined by curiosity, craft, and an enduring commitment to the communities we serve.");
+  const missionHeading = useContent("about.mission.heading", "Architecture with Intent");
+  const missionBody = useContent("about.mission.body", "To create intelligent architectural solutions that inspire, enrich lives, and contribute positively to the environment and communities we touch — one carefully considered space at a time.");
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-3">
@@ -959,10 +1030,10 @@ function StoryMissionValues() {
             <Book className="h-5 w-5 text-primary" />
             <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Story</h3>
           </div>
-          <h4 className="text-2xl font-semibold leading-tight"><WordMaskReveal text="A Legacy of Thoughtful Design" /></h4>
+          <h4 className="text-2xl font-semibold leading-tight"><WordMaskReveal text={storyHeading} /></h4>
           <MaskReveal delay={0.2}>
             <p className="text-base leading-8 text-muted-foreground">
-              From a small studio with a single drafting table to an award-winning practice, our journey has been defined by curiosity, craft, and an enduring commitment to the communities we serve.
+              {storyBody}
             </p>
           </MaskReveal>
         </M.div>
@@ -973,9 +1044,9 @@ function StoryMissionValues() {
             </span>
             <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Mission</h3>
           </div>
-          <h4 className="text-2xl font-semibold leading-tight">Architecture with Intent</h4>
+          <h4 className="text-2xl font-semibold leading-tight">{missionHeading}</h4>
           <p className="text-base leading-8 text-muted-foreground">
-            To create intelligent architectural solutions that inspire, enrich lives, and contribute positively to the environment and communities we touch — one carefully considered space at a time.
+            {missionBody}
           </p>
         </Tilt3DCard>
         <div className="group space-y-5 border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
@@ -997,13 +1068,15 @@ function StoryMissionValues() {
 }
 
 function AboutStatsRow() {
-  const items = [
-    { value: 250, suffix: "+", label: "Projects Completed", icon: Building2 },
-    { value: 15, suffix: "+", label: "Years of Experience", icon: Clock3 },
-    { value: 98, suffix: "%", label: "Client Satisfaction", icon: HeartHandshake },
-    { value: 20, suffix: "+", label: "Awards Won", icon: Trophy },
-    { value: 50, suffix: "+", label: "Expert Team", icon: Users },
-  ];
+  const items = useStatsItems().map((stat) => {
+    const match = String(stat.value).match(/^(\d+)(.*)$/);
+    return {
+      value: Number(match?.[1] ?? 0),
+      suffix: match?.[2] ?? "",
+      label: stat.label,
+      icon: statIcon[stat.icon] ?? Award,
+    };
+  });
   return (
     <section className="border-b border-border/60 bg-background py-16">
       <div className="mx-auto grid max-w-[1440px] gap-6 px-4 md:px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
@@ -1031,6 +1104,7 @@ function AboutStatsRow() {
 }
 
 function FounderQuoteBand() {
+  const quote = useContent("about.founder.quote", "Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to craft places that transform lives, honor context, and stand the test of time.");
   return (
     <section className="border-b border-border/60 bg-[var(--color-surface-soft)] py-20 md:py-24">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -1056,7 +1130,7 @@ function FounderQuoteBand() {
           </h3>
           <MaskReveal delay={0.3}>
             <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground">
-              Every project we take on is an opportunity to shape a better future. Beyond walls and materials, we are here to craft places that transform lives, honor context, and stand the test of time.
+              {quote}
             </p>
           </MaskReveal>
           <div className="mt-8 flex items-center gap-4">
@@ -1145,18 +1219,22 @@ function AboutCTABand() {
 
 
 export function ServicesPageContent() {
+  const eyebrow = useContent("services.hero.eyebrow", "Our Services");
+  const title = useContent("services.hero.title", "Comprehensive");
+  const description = useContent("services.hero.subtitle", "From concept to completion, we provide fully integrated architectural and design services that turn your vision into reality with precision.");
+  const video = useContent("services.hero.video", pageVideos.services);
   return (
     <>
       <HeroSection
-        eyebrow="Our Services"
-        title="Comprehensive"
+        eyebrow={eyebrow}
+        title={title}
         highlight="Architectural Solutions."
-        description="From concept to completion, we provide fully integrated architectural and design services that turn your vision into reality with precision."
+        description={description}
         primaryLabel="Discuss Your Project"
         secondaryLabel="View Our Work"
         secondaryTo="/projects"
         image={media.heroMain}
-        videoSrc={pageVideos.services}
+        videoSrc={video}
       />
       <ServicesIntro />
       <ServicesFiveGrid />
@@ -1215,6 +1293,7 @@ const fiveServices = [
 ];
 
 function ServicesFiveGrid() {
+  const editableServices = useServices();
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-20">
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
@@ -1225,7 +1304,9 @@ function ServicesFiveGrid() {
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
           className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
         >
-          {fiveServices.map(({ title, icon: Icon }) => (
+          {editableServices.slice(0, 5).map(({ title, icon }) => {
+            const Icon = serviceIcon[icon] ?? Building2;
+            return (
             <M.div
               key={title}
               variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOut } } }}
@@ -1240,7 +1321,7 @@ function ServicesFiveGrid() {
               </h3>
               <div className="mx-auto mt-4 h-px w-6 bg-border transition-all duration-500 group-hover:w-12 group-hover:bg-primary" />
             </M.div>
-          ))}
+          );})}
         </M.div>
       </div>
     </section>
@@ -1267,6 +1348,7 @@ const whyImages = [
 ];
 
 function WhyChooseUsBand() {
+  const heading = useContent("services.why.heading", "Design Expertise You Can Rely On.");
   return (
     <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto grid max-w-[1240px] gap-14 px-4 md:px-6 lg:grid-cols-2 lg:items-start">
@@ -1276,7 +1358,7 @@ function WhyChooseUsBand() {
           </MaskReveal>
           <MaskReveal delay={0.08}>
             <h2 className="max-w-[14ch] text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
-              Design Expertise <span className="text-primary">You Can Rely On.</span>
+              {heading}
             </h2>
           </MaskReveal>
           <MaskReveal delay={0.16}>
@@ -1369,13 +1451,7 @@ function WhyChooseUsBand() {
 }
 
 function ServicesProcessTeaser() {
-  const steps = [
-    { n: "01", t: "Concept" },
-    { n: "02", t: "Planning" },
-    { n: "03", t: "Visualization" },
-    { n: "04", t: "Documentation" },
-    { n: "05", t: "Construction" },
-  ];
+  const steps = useProcessStepItems().map((step) => ({ n: step.number, t: step.title }));
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
       <div className="mx-auto max-w-[1240px] px-4 text-center md:px-6">
@@ -1431,6 +1507,9 @@ function ServicesProcessTeaser() {
 }
 
 function ServicesCTA() {
+  const title = useContent("services.cta.title", "Let’s Build Something Extraordinary Together.");
+  const body = useContent("services.cta.body", "Share a few details and our team will reach out within one business day to start the conversation.");
+  const button = useContent("services.cta.button", "Start the Conversation");
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-background py-24">
       <div className="absolute inset-0 -z-10 opacity-[0.06] [background-image:radial-gradient(var(--color-foreground)_1px,transparent_1px)] [background-size:24px_24px]" />
@@ -1440,12 +1519,12 @@ function ServicesCTA() {
         </MaskReveal>
         <MaskReveal delay={0.08}>
           <h2 className="mx-auto max-w-[18ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-            Let’s Build Something <span className="italic text-primary">Extraordinary</span> Together.
+            {title}
           </h2>
         </MaskReveal>
         <MaskReveal delay={0.16}>
           <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-muted-foreground">
-            Share a few details and our team will reach out within one business day to start the conversation.
+            {body}
           </p>
         </MaskReveal>
 
@@ -1461,7 +1540,7 @@ function ServicesCTA() {
               className="h-12 flex-1 rounded-sm border border-border bg-background px-4 text-sm outline-none transition-all duration-300 placeholder:text-muted-foreground/70 focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_15%,transparent)]"
             />
             <Button type="submit" className="btn-sheen group h-12 rounded-sm px-6">
-              Start the Conversation
+              {button}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
           </form>
@@ -1481,18 +1560,22 @@ function ServicesCTA() {
 
 
 export function ProjectsPageContent() {
+  const eyebrow = useContent("projects.hero.eyebrow", "Our Projects");
+  const title = useContent("projects.hero.title", "Spaces Designed.");
+  const description = useContent("projects.hero.subtitle", "Explore our portfolio of thoughtfully designed architecture that blends intelligence, aesthetics, and purpose to create lasting impact.");
+  const video = useContent("projects.hero.video", pageVideos.projects);
   return (
     <>
       <HeroSection
-        eyebrow="Our Projects"
-        title="Spaces Designed."
+        eyebrow={eyebrow}
+        title={title}
         highlight="Stories Elevated."
-        description="Explore our portfolio of thoughtfully designed architecture that blends intelligence, aesthetics, and purpose to create lasting impact."
+        description={description}
         primaryLabel="Start a Project"
         secondaryLabel="View Our Process"
         secondaryTo="/process"
         image={media.heroMain}
-        videoSrc={pageVideos.projects}
+        videoSrc={video}
       />
       <CategoryBand />
       <FeaturedProjectsSplit />
@@ -1528,6 +1611,7 @@ function CategoryBand() {
 }
 
 function FeaturedProjectsSplit() {
+  const editableProjects = useProjects();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
@@ -1540,7 +1624,7 @@ function FeaturedProjectsSplit() {
           <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/projects">View All Projects</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
-          {projects.slice(1, 4).map((project) => (
+          {editableProjects.slice(1, 4).map((project) => (
             <ProjectCard key={project.title} project={project} />
           ))}
         </div>
@@ -1550,18 +1634,22 @@ function FeaturedProjectsSplit() {
 }
 
 export function ProcessPageContent() {
+  const eyebrow = useContent("process.hero.eyebrow", "Our Process");
+  const title = useContent("process.hero.title", "From Concept to Creation.");
+  const description = useContent("process.hero.subtitle", "A structured, transparent, and collaborative journey that turns your vision into intelligent spaces that inspire and elevate everyday living.");
+  const video = useContent("process.hero.video", pageVideos.process);
   return (
     <>
       <HeroSection
-        eyebrow="Our Process"
-        title="From Concept to Creation."
+        eyebrow={eyebrow}
+        title={title}
         highlight="Excellence at Every Step."
-        description="A structured, transparent, and collaborative journey that turns your vision into intelligent spaces that inspire and elevate everyday living."
+        description={description}
         primaryLabel="Start Your Project"
         secondaryLabel="View Our Projects"
         secondaryTo="/projects"
         image={media.heroAlt}
-        videoSrc={pageVideos.process}
+        videoSrc={video}
       />
       <ProcessTimeline />
       <ProcessPrinciples />
@@ -1577,6 +1665,7 @@ export function ProcessPageContent() {
 }
 
 function ProcessPrinciples() {
+  const heading = useContent("process.principles.heading", "Three Beliefs That Shape Every Brief.");
   const items = [
     { k: "01", t: "Listen First", d: "Every great project begins with deep understanding of the people who will live and work within it." },
     { k: "02", t: "Design With Intent", d: "Each detail is deliberate — proportion, material, light, and flow tuned to the brief." },
@@ -1589,7 +1678,7 @@ function ProcessPrinciples() {
       <div className="relative mx-auto max-w-[1440px] px-4 md:px-6">
         <div className="mb-14 max-w-2xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Our Guiding Principles</p>
-          <h2 className="text-3xl font-semibold leading-tight md:text-5xl">Three Beliefs That Shape Every Brief.</h2>
+          <h2 className="text-3xl font-semibold leading-tight md:text-5xl">{heading}</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((it, i) => (
@@ -1716,6 +1805,7 @@ function ProcessCTA() {
 
 function ProcessTimeline() {
   const MotionAny = M.div;
+  const editableSteps = useProcessStepItems();
   return (
     <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -1739,7 +1829,7 @@ function ProcessTimeline() {
             aria-hidden
           />
           <div className="grid gap-10 md:grid-cols-5 md:gap-4">
-            {processSteps.map((step, i) => {
+            {editableSteps.map((step, i) => {
               const Icon = processIcon[step.icon] ?? Sparkles;
               return (
                 <MotionAny
@@ -1770,6 +1860,7 @@ function ProcessTimeline() {
 }
 
 function DetailedProcessAlternating() {
+  const editableSteps = useProcessStepItems();
   return (
     <section className="border-b border-border/60 bg-neutral-50 py-24">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -1778,7 +1869,7 @@ function DetailedProcessAlternating() {
           <h2 className="max-w-[20ch] text-3xl font-semibold leading-tight md:text-5xl">How We Bring Your Vision to Life</h2>
         </div>
         <div className="space-y-16">
-          {processSteps.map((step, i) => (
+          {editableSteps.map((step, i) => (
             <StepCardAlt key={step.number} step={step} index={i} />
           ))}
         </div>
@@ -1787,7 +1878,7 @@ function DetailedProcessAlternating() {
   );
 }
 
-function StepCardAlt({ step, index }: { step: (typeof processSteps)[number]; index: number }) {
+function StepCardAlt({ step, index }: { step: ProcessStepItem; index: number }) {
   const Icon = processIcon[step.icon] ?? Sparkles;
   const reversed = index % 2 === 1;
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -1895,6 +1986,7 @@ function ValueGrid4() {
 }
 
 function ProcessFaq() {
+  const editableFaqs = useFaqItems();
   return (
     <section className="border-b border-border/60 bg-neutral-50 py-24">
       <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -1914,7 +2006,7 @@ function ProcessFaq() {
           </div>
         </div>
         <Accordion type="single" collapsible className="self-start rounded-sm border border-border bg-card px-6 shadow-[var(--shadow-soft)]">
-          {faqItems.map((faq) => (
+          {editableFaqs.map((faq) => (
             <AccordionItem key={faq.question} value={faq.question}>
               <AccordionTrigger className="text-left text-base font-semibold">{faq.question}</AccordionTrigger>
               <AccordionContent className="text-sm leading-7 text-muted-foreground">{faq.answer}</AccordionContent>
@@ -1927,16 +2019,20 @@ function ProcessFaq() {
 }
 
 export function BlogPageContent() {
+  const eyebrow = useContent("blog.hero.eyebrow", "Our Blog");
+  const title = useContent("blog.hero.title", "Insights That Inspire.");
+  const description = useContent("blog.hero.subtitle", "Explore expert perspectives, design inspirations, and the latest in architecture and interior design.");
+  const video = useContent("blog.hero.video", pageVideos.blog);
   return (
     <>
       <HeroSection
-        eyebrow="Our Blog"
-        title="Insights That Inspire."
+        eyebrow={eyebrow}
+        title={title}
         highlight="Ideas That Build."
-        description="Explore expert perspectives, design inspirations, and the latest in architecture and interior design."
+        description={description}
         primaryLabel="Explore Articles"
         image={media.heroAlt}
-        videoSrc={pageVideos.blog}
+        videoSrc={video}
       />
       <BlogTopicMarquee />
       <FeaturedArticleBand />
@@ -1990,7 +2086,7 @@ function LiquidImage({ src, alt, className }: { src: string; alt: string; classN
 }
 
 function FeaturedArticleBand() {
-  const featured = blogPosts[0];
+  const featured = useBlogPosts()[0] ?? blogPosts[0];
   return (
     <section className="border-b border-border/60 bg-background py-14">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -2030,7 +2126,7 @@ function FeaturedArticleBand() {
   );
 }
 
-function ArticleCard({ post, index }: { post: typeof blogPosts[number]; index: number }) {
+function ArticleCard({ post, index }: { post: BlogItem; index: number }) {
   return (
     <M.article
       initial={{ opacity: 0, y: 36 }}
@@ -2070,6 +2166,7 @@ function ArticleCard({ post, index }: { post: typeof blogPosts[number]; index: n
 
 function BlogGrid() {
   const [active, setActive] = useState("All");
+  const editablePosts = useBlogPosts();
   const filters = ["All", "Architecture", "Interior Design", "Sustainability", "News"];
   return (
     <section className="border-b border-border/60 bg-background py-20">
@@ -2099,7 +2196,7 @@ function BlogGrid() {
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {blogPosts.slice(1, 5).map((post, i) => (
+          {editablePosts.slice(1, 5).map((post, i) => (
             <ArticleCard key={post.title} post={post} index={i} />
           ))}
         </div>
@@ -2239,6 +2336,9 @@ function ContactWordReveal({ text, className, delay = 0 }: { text: string; class
 }
 
 function ContactHero() {
+  const eyebrow = useContent("contact.hero.eyebrow", "Get in Touch");
+  const title = useContent("contact.hero.title", "Let's Build Something Extraordinary Together");
+  const description = useContent("contact.hero.subtitle", "We are here to answer your questions, discuss your ideas, and bring your vision to life with intelligence, purpose, and elegance.");
   return (
     <section className="relative isolate overflow-hidden bg-background pt-32 pb-20 md:pt-40 md:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_60%)]" />
@@ -2248,17 +2348,17 @@ function ContactHero() {
           transition={{ duration: 0.6 }}
           className="mb-5 text-[11px] font-semibold uppercase tracking-[0.36em] text-primary"
         >
-          Get in Touch
+          {eyebrow}
         </M.p>
         <h1 className="mx-auto max-w-[18ch] text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-          <ContactWordReveal text="Let's Build Something Extraordinary Together" />
+          <ContactWordReveal text={title} />
         </h1>
         <M.p
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.5 }}
           className="mx-auto mt-7 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg"
         >
-          We are here to answer your questions, discuss your ideas, and bring your vision to life with intelligence, purpose, and elegance.
+          {description}
         </M.p>
       </div>
     </section>
@@ -2266,10 +2366,13 @@ function ContactHero() {
 }
 
 function ContactQuickInfo() {
+  const phone = useContent("contact.phone", siteSettings.phone);
+  const email = useContent("contact.email", siteSettings.email);
+  const address = useContent("contact.address", siteSettings.address);
   const items: Array<[IconCmp, string, string]> = [
-    [Phone, "Phone", siteSettings.phone],
-    [Mail, "Email", siteSettings.email],
-    [MapPin, "Location", siteSettings.address],
+    [Phone, "Phone", phone],
+    [Mail, "Email", email],
+    [MapPin, "Location", address],
   ];
   return (
     <section className="border-y border-border/60 bg-[color:var(--color-surface-soft)] py-12">
@@ -2330,6 +2433,7 @@ function TiltWrap({ children, className, intensity = 8 }: { children: ReactNode;
 }
 
 function ContactMapBand() {
+  const address = useContent("contact.address", "Churchill House, 1 London Rd, Slough SL3 7RL, United Kingdom");
   return (
     <section className="border-b border-border/60 bg-background py-24">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -2340,7 +2444,7 @@ function ContactMapBand() {
           </h2>
           <div className="mt-5 flex justify-center"><WavyDivider /></div>
           <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
-            Churchill House, 1 London Rd, Slough SL3 7RL, United Kingdom
+            {address}
           </p>
         </div>
         <M.div
@@ -2567,6 +2671,7 @@ function FluidFaqItem({ q, a, index }: { q: string; a: string; index: number }) 
 }
 
 function ContactFaqBand() {
+  const editableFaqs = useFaqItems();
   return (
     <section className="border-b border-border/60 bg-[color:var(--color-surface-soft)] py-24">
       <div className="mx-auto grid max-w-[1440px] gap-12 px-4 md:px-6 lg:grid-cols-[0.7fr_1.3fr]">
@@ -2580,7 +2685,7 @@ function ContactFaqBand() {
           </p>
         </div>
         <div>
-          {faqItems.map((f, i) => (
+          {editableFaqs.map((f, i) => (
             <FluidFaqItem key={f.question} q={f.question} a={f.answer} index={i} />
           ))}
         </div>
@@ -2592,16 +2697,21 @@ function ContactFaqBand() {
 
 
 export function TeamPageContent() {
+  const eyebrow = useContent("team.hero.eyebrow", "Our Team");
+  const title = useContent("team.hero.title", "The Minds Behind");
+  const highlight = useContent("team.hero.highlight", "The Masterpieces.");
+  const description = useContent("team.hero.subtitle", "A passionate team of architects, designers, and dreamers dedicated to bringing your vision to life.");
+  const video = useContent("team.hero.video", pageVideos.team);
   return (
     <>
       <HeroSection
-        eyebrow="Our Team"
-        title="The Minds Behind"
-        highlight="The Masterpieces."
-        description="A passionate team of architects, designers, and dreamers dedicated to bringing your vision to life."
+        eyebrow={eyebrow}
+        title={title}
+        highlight={highlight}
+        description={description}
         primaryLabel="Meet the Team"
         image={media.heroMain}
-        videoSrc={pageVideos.team}
+        videoSrc={video}
       />
       <LeadershipBand />
       <TeamBand />
@@ -2612,6 +2722,7 @@ export function TeamPageContent() {
 }
 
 function LeadershipBand() {
+  const leads = useTeamLeadItems();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr]">
@@ -2624,7 +2735,7 @@ function LeadershipBand() {
           <Button asChild className="btn-sheen rounded-sm px-6"><Link to="/contact">Meet Leadership</Link></Button>
         </div>
         <div className="grid gap-5 md:grid-cols-4">
-          {teamLeads.map((member) => (
+          {leads.map((member) => (
             <div key={member.name} className="border border-border bg-card p-3 shadow-[var(--shadow-soft)]">
               <img src={member.image} alt={member.name} className="h-56 w-full object-cover" loading="lazy" />
               <div className="space-y-1 p-2">
@@ -2640,7 +2751,9 @@ function LeadershipBand() {
 }
 
 function TeamBand({ compact = false }: { compact?: boolean }) {
-  const members = compact ? teamLeads : teamMembers;
+  const leads = useTeamLeadItems();
+  const team = useTeamMemberItems();
+  const members = compact ? leads : team;
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -2669,6 +2782,7 @@ function TeamBand({ compact = false }: { compact?: boolean }) {
 }
 
 function CultureBand() {
+  const editableValues = useValueItems();
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -2680,7 +2794,7 @@ function CultureBand() {
           <p className="max-w-xl text-base leading-8 text-muted-foreground">We believe great architecture is built on strong values and shared commitment to people, purpose, and the future.</p>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
-          {values.map((value) => (
+          {editableValues.map((value) => (
             <div key={value} className="border border-border bg-card p-6 text-center shadow-[var(--shadow-soft)]">
               <Leaf className="mx-auto mb-4 h-6 w-6 text-primary" />
               <h3 className="text-base font-semibold">{value}</h3>
@@ -2693,7 +2807,7 @@ function CultureBand() {
 }
 
 export function ProjectDetailContent() {
-  const related = projects.slice(1, 5);
+  const related = useProjects().slice(1, 5);
   return (
     <>
       <DetailScrollProgress />
@@ -3139,7 +3253,7 @@ function ChallengeSolutionBand() {
 }
 
 
-function RelatedProjectsBand({ related }: { related: (typeof projects)[number][] }) {
+function RelatedProjectsBand({ related }: { related: ProjectItem[] }) {
   return (
     <section className="border-b border-border/60 bg-background py-20">
       <div className="mx-auto max-w-[1440px] px-4 md:px-6">
@@ -3161,6 +3275,7 @@ function RelatedProjectsBand({ related }: { related: (typeof projects)[number][]
 }
 
 export function HomePageContent() {
+  const video = useContent("home.hero.video", pageVideos.home);
   return (
     <>
       <HeroSection
@@ -3172,7 +3287,7 @@ export function HomePageContent() {
         secondaryLabel="Our Services"
         secondaryTo="/services"
         image={media.heroMain}
-        videoSrc={pageVideos.home}
+        videoSrc={video}
       />
       <StatsBand />
       <IntroSplit />

@@ -1,16 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { createClient } from "@supabase/supabase-js";
 import { logAudit } from "./audit.server";
 
 // Public: read all site content (used by SSR loader to hydrate the site).
 export const getAllSiteContent = createServerFn({ method: "GET" }).handler(async () => {
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-  });
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const supabase = supabaseAdmin;
   const { data, error } = await supabase.from("site_content").select("key,value,updated_at");
-  if (error) return { items: [] as Array<{ key: string; value: any; updated_at: string }> };
+  if (error) throw new Error(error.message);
   return { items: (data ?? []) as Array<{ key: string; value: any; updated_at: string }> };
 });
 
