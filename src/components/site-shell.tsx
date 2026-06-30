@@ -952,13 +952,13 @@ function AboutIntroSplit() {
             aria-hidden
           />
           <M.div style={{ y: y1, scale: s1 }} className="media-hover absolute left-0 top-0 h-[320px] w-[58%] overflow-hidden shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.heroAlt} alt="Project" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.heroAlt} alt="Contemporary residential project exterior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div style={{ y: y2, scale: s2 }} className="media-hover absolute right-0 top-20 h-[280px] w-[48%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.interiorLiving} alt="Interior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.interiorLiving} alt="Warm minimalist living room interior" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div style={{ y: y3, scale: s3 }} className="media-hover absolute bottom-0 left-10 h-[260px] w-[54%] overflow-hidden border-4 border-background shadow-[var(--shadow-soft)] will-change-transform">
-            <img src={media.heroMain} alt="Facade" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
+            <img src={media.heroMain} alt="Detailed architectural facade close-up" className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.08]" loading="lazy" />
           </M.div>
           <M.div
             initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
