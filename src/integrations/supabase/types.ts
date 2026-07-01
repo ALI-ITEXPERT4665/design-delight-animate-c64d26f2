@@ -53,6 +53,45 @@ export type Database = {
         }
         Relationships: []
       }
+      chatbot_events: {
+        Row: {
+          completion_tokens: number
+          created_at: string
+          credits: number
+          id: string
+          ip_hash: string | null
+          message_count: number
+          model: string
+          prompt_tokens: number
+          session_id: string | null
+          total_tokens: number
+        }
+        Insert: {
+          completion_tokens?: number
+          created_at?: string
+          credits?: number
+          id?: string
+          ip_hash?: string | null
+          message_count?: number
+          model?: string
+          prompt_tokens?: number
+          session_id?: string | null
+          total_tokens?: number
+        }
+        Update: {
+          completion_tokens?: number
+          created_at?: string
+          credits?: number
+          id?: string
+          ip_hash?: string | null
+          message_count?: number
+          model?: string
+          prompt_tokens?: number
+          session_id?: string | null
+          total_tokens?: number
+        }
+        Relationships: []
+      }
       content_drafts: {
         Row: {
           created_at: string
