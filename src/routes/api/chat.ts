@@ -88,6 +88,8 @@ export const Route = createFileRoute("/api/chat")({
               console.error("chatbot_events insert failed", e);
             }
           },
+          stopWhen: stepCountIs(50),
+
 
           tools: {
             get_contact_info: tool({
