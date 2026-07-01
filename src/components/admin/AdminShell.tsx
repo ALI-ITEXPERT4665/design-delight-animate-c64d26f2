@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: "◆" },
+  { to: "/admin/analytics", label: "Chatbot Analytics", icon: "◈", ownerOnly: true },
   { to: "/admin/preview", label: "Live Preview", icon: "◉" },
   { to: "/admin/content", label: "Content", icon: "✎" },
   { to: "/admin/collections", label: "Collections", icon: "▤" },
@@ -14,6 +15,7 @@ const NAV = [
   { to: "/admin/invites", label: "Invites", icon: "✉" },
   { to: "/admin/logs", label: "Audit Logs", icon: "⌘" },
 ] as const;
+
 
 export function AdminShell({
   children,
@@ -30,9 +32,11 @@ export function AdminShell({
   const isOwner = me.roles.includes("owner");
   const isAdmin = isOwner || me.roles.includes("admin");
   const visible = NAV.filter((n) => {
+    if ((n as any).ownerOnly) return isOwner;
     if (n.to === "/admin/users" || n.to === "/admin/invites" || n.to === "/admin/logs") return isAdmin;
     return true;
   });
+
 
   const SidebarBody = (
     <div className="flex h-full flex-col">
