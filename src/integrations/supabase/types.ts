@@ -161,6 +161,39 @@ export type Database = {
         }
         Relationships: []
       }
+      invite_links: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          redeemed_at: string | null
+          redeemed_by: string | null
+          redeemed_email: string | null
+          slot: Database["public"]["Enums"]["invite_slot"]
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          redeemed_email?: string | null
+          slot: Database["public"]["Enums"]["invite_slot"]
+          token: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          redeemed_email?: string | null
+          slot?: Database["public"]["Enums"]["invite_slot"]
+          token?: string
+        }
+        Relationships: []
+      }
       media_assets: {
         Row: {
           alt: string | null
@@ -205,7 +238,9 @@ export type Database = {
           full_name: string | null
           id: string
           is_protected: boolean
+          is_temp: boolean
           status: Database["public"]["Enums"]["user_status"]
+          temp_expires_at: string | null
           updated_at: string
         }
         Insert: {
@@ -215,7 +250,9 @@ export type Database = {
           full_name?: string | null
           id: string
           is_protected?: boolean
+          is_temp?: boolean
           status?: Database["public"]["Enums"]["user_status"]
+          temp_expires_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -225,7 +262,9 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_protected?: boolean
+          is_temp?: boolean
           status?: Database["public"]["Enums"]["user_status"]
+          temp_expires_at?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -319,6 +358,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_invite_by_token: {
+        Args: { _token: string }
+        Returns: {
+          slot: Database["public"]["Enums"]["invite_slot"]
+          valid: boolean
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -341,6 +387,7 @@ export type Database = {
     Enums: {
       app_role: "owner" | "admin" | "editor"
       draft_status: "pending" | "approved" | "rejected"
+      invite_slot: "admin" | "editor" | "temp_owner"
       media_kind: "image" | "video"
       signup_request_status: "pending" | "approved" | "rejected"
       user_status: "active" | "suspended"
@@ -473,6 +520,7 @@ export const Constants = {
     Enums: {
       app_role: ["owner", "admin", "editor"],
       draft_status: ["pending", "approved", "rejected"],
+      invite_slot: ["admin", "editor", "temp_owner"],
       media_kind: ["image", "video"],
       signup_request_status: ["pending", "approved", "rejected"],
       user_status: ["active", "suspended"],
