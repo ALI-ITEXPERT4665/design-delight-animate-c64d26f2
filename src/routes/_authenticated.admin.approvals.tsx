@@ -2,65 +2,175 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { PageHeader } from "@/components/admin/AdminShell";
-import { listContentDrafts, reviewContentDraft } from "@/lib/admin/content.functions";
+import {
+  listSignupRequests,
+  approveSignupRequest,
+  rejectSignupRequest,
+  deleteSignupRequest,
+} from "@/lib/admin/signup-requests.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/approvals")({
-  component: Approvals,
+  component: ApprovalsPage,
 });
 
-function Approvals() {
-  const [status, setStatus] = useState<"pending" | "approved" | "rejected" | "all">("pending");
+function ApprovalsPage() {
   const qc = useQueryClient();
-  const list = useQuery({ queryKey: ["drafts", status], queryFn: () => listContentDrafts({ data: { status } }) });
-  const review = useMutation({
-    mutationFn: (v: { draftId: string; action: "approve" | "reject"; note?: string }) => reviewContentDraft({ data: v }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["drafts"] }),
+  const list = useQuery({
+    queryKey: ["signup-requests"],
+    queryFn: () => listSignupRequests(),
+    refetchInterval: 30_000,
   });
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  function refresh() { qc.invalidateQueries({ queryKey: ["signup-requests"] }); }
+
+  const approve = useMutation({
+    mutationFn: ({ id, role }: { id: string; role: "admin" | "editor" }) =>
+      approveSignupRequest({ data: { id, role } }),
+    onMutate: (v) => setBusyId(v.id),
+    onSuccess: () => { setMsg("Approved — invitation email sent."); refresh(); },
+    onError: (e: any) => setMsg(e?.message ?? "Failed to approve"),
+    onSettled: () => setBusyId(null),
+  });
+  const reject = useMutation({
+    mutationFn: (id: string) => rejectSignupRequest({ data: { id } }),
+    onMutate: setBusyId,
+    onSuccess: () => { setMsg("Rejected."); refresh(); },
+    onSettled: () => setBusyId(null),
+  });
+  const remove = useMutation({
+    mutationFn: (id: string) => deleteSignupRequest({ data: { id } }),
+    onSuccess: refresh,
+  });
+
+  const items = list.data?.items ?? [];
+  const pending = items.filter((r: any) => r.status === "pending");
+  const history = items.filter((r: any) => r.status !== "pending");
 
   return (
     <>
       <PageHeader
-        title="Approvals"
-        subtitle="Editor-submitted drafts. Approving publishes to the live site instantly."
-        right={
-          <select value={status} onChange={(e) => setStatus(e.target.value as any)}
-            className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm">
-            <option value="pending">Pending</option><option value="approved">Approved</option>
-            <option value="rejected">Rejected</option><option value="all">All</option>
-          </select>
-        }
+        title="Signup Approvals"
+        subtitle="Review new access requests. Approving sends the user an invitation email so they can choose their own password."
       />
-      <div className="space-y-3">
-        {(list.data?.items ?? []).map((d: any) => (
-          <div key={d.id} className="rounded-xl border border-neutral-200 bg-white p-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <code className="text-xs font-mono text-amber-700">{d.key}</code>
-                <div className="mt-0.5 text-xs text-neutral-500">
-                  Submitted {new Date(d.created_at).toLocaleString()} ·
-                  <span className={`ml-1 uppercase tracking-wider ${
-                    d.status === "pending" ? "text-amber-700" : d.status === "approved" ? "text-emerald-700" : "text-rose-700"
-                  }`}>{d.status}</span>
-                </div>
-              </div>
-              {d.status === "pending" && (
-                <div className="flex gap-2">
-                  <button onClick={() => review.mutate({ draftId: d.id, action: "reject" })}
-                    className="rounded-md border border-rose-200 text-rose-700 px-3 py-1.5 text-xs hover:bg-rose-50">Reject</button>
-                  <button onClick={() => review.mutate({ draftId: d.id, action: "approve" })}
-                    className="rounded-md bg-emerald-600 text-white px-3 py-1.5 text-xs hover:bg-emerald-700">Approve & publish</button>
-                </div>
+      {msg && (
+        <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 text-amber-900 text-sm px-3 py-2">
+          {msg}
+        </div>
+      )}
+
+      <section className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
+        <header className="p-3 border-b border-neutral-200 text-xs uppercase tracking-wider text-neutral-500">
+          Pending ({pending.length})
+        </header>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[720px]">
+            <thead className="bg-neutral-50 text-neutral-500 uppercase text-xs tracking-wider">
+              <tr>
+                <th className="text-left p-3">Email</th>
+                <th className="text-left p-3">Name</th>
+                <th className="text-left p-3">Requested</th>
+                <th className="text-left p-3">Message</th>
+                <th className="text-left p-3">Assign role</th>
+                <th className="p-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {pending.map((r: any) => (
+                <PendingRow
+                  key={r.id}
+                  r={r}
+                  busy={busyId === r.id}
+                  onApprove={(role) => approve.mutate({ id: r.id, role })}
+                  onReject={() => reject.mutate(r.id)}
+                />
+              ))}
+              {!pending.length && (
+                <tr><td colSpan={6} className="p-6 text-center text-neutral-500">No pending requests.</td></tr>
               )}
-            </div>
-            <pre className="mt-3 max-h-64 overflow-auto rounded-md bg-neutral-50 p-3 text-xs whitespace-pre-wrap break-words">
-              {typeof d.value === "string" ? d.value : JSON.stringify(d.value, null, 2)}
-            </pre>
-          </div>
-        ))}
-        {!list.data?.items.length && (
-          <div className="p-12 text-center text-sm text-neutral-500 border border-dashed rounded-xl">Nothing here.</div>
-        )}
-      </div>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-neutral-200 bg-white overflow-hidden">
+        <header className="p-3 border-b border-neutral-200 text-xs uppercase tracking-wider text-neutral-500">
+          History
+        </header>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[640px]">
+            <thead className="bg-neutral-50 text-neutral-500 uppercase text-xs tracking-wider">
+              <tr>
+                <th className="text-left p-3">Email</th>
+                <th className="text-left p-3">Status</th>
+                <th className="text-left p-3">Reviewed</th>
+                <th className="text-left p-3">Note</th>
+                <th className="p-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((r: any) => (
+                <tr key={r.id} className="border-t border-neutral-100">
+                  <td className="p-3">{r.email}</td>
+                  <td className="p-3">
+                    <span className={`text-xs uppercase tracking-wider ${
+                      r.status === "approved" ? "text-emerald-700" : "text-rose-700"
+                    }`}>{r.status}</span>
+                  </td>
+                  <td className="p-3 text-neutral-500 text-xs">
+                    {r.reviewed_at ? new Date(r.reviewed_at).toLocaleString() : "—"}
+                  </td>
+                  <td className="p-3 text-neutral-500 text-xs">{r.review_note ?? "—"}</td>
+                  <td className="p-3 text-right">
+                    <button onClick={() => remove.mutate(r.id)} className="text-xs text-neutral-400 hover:text-rose-600">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {!history.length && (
+                <tr><td colSpan={5} className="p-6 text-center text-neutral-500">No history yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </>
+  );
+}
+
+function PendingRow({
+  r, busy, onApprove, onReject,
+}: {
+  r: any; busy: boolean;
+  onApprove: (role: "admin" | "editor") => void;
+  onReject: () => void;
+}) {
+  const [role, setRole] = useState<"admin" | "editor">(r.requested_role === "admin" ? "admin" : "editor");
+  return (
+    <tr className="border-t border-neutral-100 align-top">
+      <td className="p-3">{r.email}</td>
+      <td className="p-3">{r.full_name ?? "—"}</td>
+      <td className="p-3 uppercase text-xs tracking-wider">{r.requested_role}</td>
+      <td className="p-3 text-neutral-600 text-xs max-w-[240px] whitespace-pre-wrap">{r.message ?? "—"}</td>
+      <td className="p-3">
+        <select value={role} onChange={(e) => setRole(e.target.value as any)}
+          className="rounded-md border border-neutral-300 px-2 py-1 text-xs">
+          <option value="editor">Editor</option>
+          <option value="admin">Admin</option>
+        </select>
+      </td>
+      <td className="p-3 text-right whitespace-nowrap">
+        <button disabled={busy} onClick={() => onApprove(role)}
+          className="rounded-md bg-emerald-600 text-white px-3 py-1.5 text-xs disabled:opacity-50">
+          {busy ? "…" : "Approve & Invite"}
+        </button>
+        <button disabled={busy} onClick={onReject}
+          className="ml-2 rounded-md border border-rose-300 text-rose-700 px-3 py-1.5 text-xs disabled:opacity-50">
+          Reject
+        </button>
+      </td>
+    </tr>
   );
 }
