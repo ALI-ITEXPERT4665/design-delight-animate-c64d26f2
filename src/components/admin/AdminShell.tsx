@@ -166,6 +166,14 @@ export function AdminShell({
         transition={{ duration: 0.25 }}
         className="flex-1 min-w-0 p-4 sm:p-6 lg:p-10 pt-[4.5rem] lg:pt-10"
       >
+        {isTemp && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-rose-300 bg-rose-50 px-4 py-2.5 text-sm text-rose-800">
+            <span>
+              <strong>Temporary Owner session</strong> — full owner access to explore. Account will be auto-deleted when the timer hits 0.
+            </span>
+            <span className="font-mono text-base font-semibold">{fmt(msLeft)}</span>
+          </div>
+        )}
         {children}
       </motion.main>
     </div>
