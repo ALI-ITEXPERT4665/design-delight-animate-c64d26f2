@@ -22,6 +22,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
@@ -35,6 +36,7 @@ import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminCollectionsRouteImport } from './routes/_authenticated.admin.collections'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated.admin.approvals'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated.admin.analytics'
+import { Route as ApiPublicCronExpireTempOwnersRouteImport } from './routes/api/public/cron/expire-temp-owners'
 
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
@@ -98,6 +100,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -172,6 +179,12 @@ const AuthenticatedAdminAnalyticsRoute =
     path: '/analytics',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiPublicCronExpireTempOwnersRoute =
+  ApiPublicCronExpireTempOwnersRouteImport.update({
+    id: '/api/public/cron/expire-temp-owners',
+    path: '/api/public/cron/expire-temp-owners',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -188,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/team': typeof TeamRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
@@ -199,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/cron/expire-temp-owners': typeof ApiPublicCronExpireTempOwnersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -214,6 +229,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/api/chat': typeof ApiChatRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
@@ -225,6 +241,7 @@ export interface FileRoutesByTo {
   '/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/api/public/cron/expire-temp-owners': typeof ApiPublicCronExpireTempOwnersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -243,6 +260,7 @@ export interface FileRoutesById {
   '/team': typeof TeamRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/collections': typeof AuthenticatedAdminCollectionsRoute
@@ -254,6 +272,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/cron/expire-temp-owners': typeof ApiPublicCronExpireTempOwnersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -272,6 +291,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/admin'
     | '/api/chat'
+    | '/invite/$token'
     | '/admin/analytics'
     | '/admin/approvals'
     | '/admin/collections'
@@ -283,6 +303,7 @@ export interface FileRouteTypes {
     | '/admin/preview'
     | '/admin/users'
     | '/admin/'
+    | '/api/public/cron/expire-temp-owners'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -298,6 +319,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/api/chat'
+    | '/invite/$token'
     | '/admin/analytics'
     | '/admin/approvals'
     | '/admin/collections'
@@ -309,6 +331,7 @@ export interface FileRouteTypes {
     | '/admin/preview'
     | '/admin/users'
     | '/admin'
+    | '/api/public/cron/expire-temp-owners'
   id:
     | '__root__'
     | '/'
@@ -326,6 +349,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/_authenticated/admin'
     | '/api/chat'
+    | '/invite/$token'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/collections'
@@ -337,6 +361,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/preview'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/'
+    | '/api/public/cron/expire-temp-owners'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -354,6 +379,8 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   ApiChatRoute: typeof ApiChatRoute
+  InviteTokenRoute: typeof InviteTokenRoute
+  ApiPublicCronExpireTempOwnersRoute: typeof ApiPublicCronExpireTempOwnersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -449,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -540,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/cron/expire-temp-owners': {
+      id: '/api/public/cron/expire-temp-owners'
+      path: '/api/public/cron/expire-temp-owners'
+      fullPath: '/api/public/cron/expire-temp-owners'
+      preLoaderRoute: typeof ApiPublicCronExpireTempOwnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -602,6 +643,8 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   ApiChatRoute: ApiChatRoute,
+  InviteTokenRoute: InviteTokenRoute,
+  ApiPublicCronExpireTempOwnersRoute: ApiPublicCronExpireTempOwnersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

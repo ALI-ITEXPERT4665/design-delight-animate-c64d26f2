@@ -1,7 +1,30 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+
+function useTempOwnerCountdown(expiresAt?: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!expiresAt) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [expiresAt]);
+  const msLeft = expiresAt ? new Date(expiresAt).getTime() - now : 0;
+  useEffect(() => {
+    if (!expiresAt) return;
+    if (msLeft <= 0) {
+      supabase.auth.signOut().finally(() => { window.location.href = "/auth?temp_expired=1"; });
+    }
+  }, [msLeft, expiresAt]);
+  return msLeft;
+}
+function fmt(ms: number) {
+  if (ms <= 0) return "0:00";
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`;
+}
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: "◆" },
