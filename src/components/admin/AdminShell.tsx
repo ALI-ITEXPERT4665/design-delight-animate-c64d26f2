@@ -1,7 +1,30 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+
+function useTempOwnerCountdown(expiresAt?: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!expiresAt) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [expiresAt]);
+  const msLeft = expiresAt ? new Date(expiresAt).getTime() - now : 0;
+  useEffect(() => {
+    if (!expiresAt) return;
+    if (msLeft <= 0) {
+      supabase.auth.signOut().finally(() => { window.location.href = "/auth?temp_expired=1"; });
+    }
+  }, [msLeft, expiresAt]);
+  return msLeft;
+}
+function fmt(ms: number) {
+  if (ms <= 0) return "0:00";
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`;
+}
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: "◆" },
@@ -32,7 +55,16 @@ export function AdminShell({
 
   const isOwner = me.roles.includes("owner");
   const isAdmin = isOwner || me.roles.includes("admin");
+  const isTemp = !!me.profile?.is_temp;
+  const tempExpiresAt = useMemo(() => {
+    if (me.profile?.temp_expires_at) return me.profile.temp_expires_at as string;
+    if (typeof window !== "undefined") return sessionStorage.getItem("temp_owner_expires_at") || null;
+    return null;
+  }, [me.profile?.temp_expires_at]);
+  const msLeft = useTempOwnerCountdown(isTemp ? tempExpiresAt : null);
   const visible = NAV.filter((n) => {
+    // Temp owner has full owner UI, but cannot manage invites (would let them mint more owners)
+    if (n.to === "/admin/invites" && isTemp) return false;
     if ((n as any).ownerOnly) return isOwner;
     if (n.to === "/admin/users" || n.to === "/admin/invites" || n.to === "/admin/logs") return isAdmin;
     return true;
@@ -134,6 +166,14 @@ export function AdminShell({
         transition={{ duration: 0.25 }}
         className="flex-1 min-w-0 p-4 sm:p-6 lg:p-10 pt-[4.5rem] lg:pt-10"
       >
+        {isTemp && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-rose-300 bg-rose-50 px-4 py-2.5 text-sm text-rose-800">
+            <span>
+              <strong>Temporary Owner session</strong> — full owner access to explore. Account will be auto-deleted when the timer hits 0.
+            </span>
+            <span className="font-mono text-base font-semibold">{fmt(msLeft)}</span>
+          </div>
+        )}
         {children}
       </motion.main>
     </div>
