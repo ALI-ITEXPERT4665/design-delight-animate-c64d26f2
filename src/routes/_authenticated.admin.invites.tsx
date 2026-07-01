@@ -1,90 +1,149 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/admin/AdminShell";
-import { inviteUser, listInvitations, revokeInvitation } from "@/lib/admin/invites.functions";
+import { listInviteSlots, rotateInviteSlot } from "@/lib/admin/invite-links.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/invites")({
   component: InvitesPage,
 });
 
+type SlotKey = "admin" | "editor" | "temp_owner";
+
+const SLOT_META: Record<SlotKey, { title: string; role: string; blurb: string; accent: string; ownerOnly?: boolean }> = {
+  admin: {
+    title: "Admin invite",
+    role: "Admin",
+    blurb: "Full CMS access — publish content directly, manage editors, manage media.",
+    accent: "from-amber-500/15 to-transparent border-amber-200",
+  },
+  editor: {
+    title: "Editor invite",
+    role: "Editor",
+    blurb: "Can draft content changes; edits go to Content Approvals for owner/admin sign-off.",
+    accent: "from-sky-500/15 to-transparent border-sky-200",
+  },
+  temp_owner: {
+    title: "Temp Owner (2 hours)",
+    role: "Owner · 2h",
+    blurb: "Full owner-level exploration for 2 hours. Auto sign-out + account deletion after expiry. Cannot touch protected accounts. Owner only.",
+    accent: "from-rose-500/15 to-transparent border-rose-200",
+    ownerOnly: true,
+  },
+};
+
 function InvitesPage() {
   const qc = useQueryClient();
-  const list = useQuery({ queryKey: ["invites"], queryFn: () => listInvitations() });
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"admin" | "editor">("editor");
+  const q = useQuery({ queryKey: ["invite-slots"], queryFn: () => listInviteSlots() });
 
-  const invite = useMutation({
-    mutationFn: () => inviteUser({ data: { email, role } }),
-    onSuccess: () => { setEmail(""); qc.invalidateQueries({ queryKey: ["invites"] }); },
-  });
-  const revoke = useMutation({
-    mutationFn: (id: string) => revokeInvitation({ data: { id } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["invites"] }),
+  const rotate = useMutation({
+    mutationFn: (slot: SlotKey) => rotateInviteSlot({ data: { slot } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["invite-slots"] }),
   });
 
-  function inviteLink(token: string) {
-    const base = typeof window !== "undefined" ? window.location.origin : "";
-    return `${base}/auth?invite=${token}`;
-  }
+  const slots: SlotKey[] = useMemo(
+    () => (q.data?.isOwner ? ["admin", "editor", "temp_owner"] : ["admin", "editor"]),
+    [q.data?.isOwner]
+  );
 
   return (
     <>
-      <PageHeader title="Invitations" subtitle="Share the generated link with the invitee. They must sign up using the invited email." />
-      <div className="rounded-xl border border-neutral-200 bg-white p-4">
-        <h3 className="text-sm font-semibold">Create invite</h3>
-        <div className="mt-3 grid md:grid-cols-[1fr_180px_auto] gap-2">
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="person@email.com"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm" />
-          <select value={role} onChange={(e) => setRole(e.target.value as any)}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm">
-            <option value="editor">Editor (changes need approval)</option>
-            <option value="admin">Admin (publish directly)</option>
-          </select>
-          <button onClick={() => invite.mutate()} disabled={!email || invite.isPending}
-            className="rounded-md bg-amber-500 text-white px-4 py-2 text-sm disabled:opacity-50">Generate invite</button>
-        </div>
-      </div>
+      <PageHeader
+        title="Invite Links"
+        subtitle="One always-fresh link per role. Copy it and share. When someone uses it, the link auto-rotates so it can never be reused."
+      />
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-neutral-200 bg-white">
-        <table className="w-full text-sm min-w-[640px]">
-          <thead className="bg-neutral-50 text-neutral-500 uppercase text-xs tracking-wider">
-            <tr>
-              <th className="text-left p-3">Email</th><th className="text-left p-3">Role</th>
-              <th className="text-left p-3">Status</th><th className="text-left p-3">Link</th><th className="p-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {(list.data?.items ?? []).map((i: any) => {
-              const used = !!i.accepted_at;
-              const expired = !used && new Date(i.expires_at).getTime() < Date.now();
-              return (
-                <tr key={i.id} className="border-t border-neutral-100">
-                  <td className="p-3">{i.email}</td>
-                  <td className="p-3 uppercase text-xs tracking-wider">{i.role}</td>
-                  <td className="p-3">
-                    <span className={`text-xs ${used ? "text-emerald-700" : expired ? "text-rose-700" : "text-amber-700"}`}>
-                      {used ? "Accepted" : expired ? "Expired" : "Pending"}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    {!used && !expired ? (
-                      <button onClick={() => navigator.clipboard.writeText(inviteLink(i.token))}
-                        className="text-amber-700 hover:underline text-xs">Copy invite link</button>
-                    ) : <span className="text-xs text-neutral-400">—</span>}
-                  </td>
-                  <td className="p-3 text-right">
-                    {!used && (
-                      <button onClick={() => revoke.mutate(i.id)} className="text-xs text-rose-600 hover:underline">Revoke</button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-            {!list.data?.items.length && <tr><td colSpan={5} className="p-6 text-center text-neutral-500">No invitations.</td></tr>}
-          </tbody>
-        </table>
-      </div>
+      {q.isLoading && <div className="text-sm text-neutral-500">Loading…</div>}
+      {q.isError && <div className="text-sm text-rose-600">{(q.error as Error).message}</div>}
+
+      {q.data && (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {slots.map((slot) => {
+            const meta = SLOT_META[slot];
+            const active = q.data.active?.[slot];
+            const url = active
+              ? `${typeof window !== "undefined" ? window.location.origin : ""}/invite/${active.token}`
+              : "";
+            return (
+              <div key={slot} className={`rounded-xl border bg-gradient-to-b ${meta.accent} p-5 shadow-sm`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-neutral-900">{meta.title}</h3>
+                    <p className="mt-1 text-xs text-neutral-600 leading-relaxed">{meta.blurb}</p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-neutral-900 text-white text-[10px] uppercase tracking-widest px-2 py-1">
+                    {meta.role}
+                  </span>
+                </div>
+
+                <div className="mt-4 rounded-lg border border-white/60 bg-white/80 backdrop-blur px-3 py-2">
+                  <div className="text-[10px] uppercase tracking-wider text-neutral-500">Invite URL</div>
+                  <div className="mt-1 flex items-center gap-2">
+                    <input
+                      readOnly
+                      value={url}
+                      className="flex-1 min-w-0 bg-transparent text-xs text-neutral-800 outline-none"
+                      onFocus={(e) => e.currentTarget.select()}
+                    />
+                    <CopyButton value={url} />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between text-xs text-neutral-500">
+                  <span>{active ? `Active since ${new Date(active.created_at).toLocaleString()}` : "No active link"}</span>
+                  <button
+                    onClick={() => rotate.mutate(slot)}
+                    disabled={rotate.isPending}
+                    className="rounded-md border border-neutral-300 bg-white px-2.5 py-1 text-[11px] hover:bg-neutral-50 disabled:opacity-50"
+                  >
+                    Rotate now
+                  </button>
+                </div>
+
+                {q.data.history?.[slot]?.length > 0 && (
+                  <details className="mt-3 group">
+                    <summary className="cursor-pointer text-[11px] text-neutral-500 hover:text-neutral-800">
+                      Recent redemptions ({q.data.history[slot].length})
+                    </summary>
+                    <ul className="mt-2 space-y-1 text-[11px] text-neutral-600">
+                      {q.data.history[slot].slice(0, 8).map((h: any) => (
+                        <li key={h.id} className="flex justify-between gap-3">
+                          <span className="truncate">{h.redeemed_email ?? "—"}</span>
+                          <span className="shrink-0 text-neutral-400">{new Date(h.redeemed_at).toLocaleString()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <p className="mt-6 text-xs text-neutral-500">
+        Message to paste: <em>Check out the admin panel — create your account using this link:</em> then paste the URL above.
+      </p>
     </>
+  );
+}
+
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={async () => {
+        if (!value) return;
+        try {
+          await navigator.clipboard.writeText(value);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        } catch { /* ignore */ }
+      }}
+      disabled={!value}
+      className="rounded-md bg-neutral-900 px-2.5 py-1 text-[11px] text-white hover:bg-neutral-800 disabled:opacity-50"
+    >
+      {copied ? "Copied" : "Copy"}
+    </button>
   );
 }
