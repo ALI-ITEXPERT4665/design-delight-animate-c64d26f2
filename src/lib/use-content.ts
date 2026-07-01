@@ -4,17 +4,13 @@ import { getAllSiteContent } from "@/lib/admin/content.functions";
 export const siteContentQuery = queryOptions({
   queryKey: ["site", "content"],
   queryFn: () => getAllSiteContent(),
-  staleTime: 0,
+  staleTime: 5 * 60_000,
+  gcTime: 30 * 60_000,
 });
 
 /** Read a published site_content value, falling back to a hard-coded default. */
 export function useContent<T>(key: string, fallback: T): T {
-  const { data } = useQuery({
-    ...siteContentQuery,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
-    refetchInterval: 5_000,
-  });
+  const { data } = useQuery(siteContentQuery);
   const row = data?.items?.find((i) => i.key === key);
   if (row == null || row.value == null) return fallback;
   return row.value as T;
