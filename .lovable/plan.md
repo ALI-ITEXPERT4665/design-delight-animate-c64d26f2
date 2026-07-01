@@ -1,67 +1,59 @@
-## Goal
-Make ~100% of the public site editable from /admin without changing any visual design. Today the public pages read from hardcoded `src/lib/site-data.ts`, so the admin "content editor" doesn't actually drive the site. This plan wires every page section into `site_content` and adds full collection editors for every list (projects, blog, services, FAQs, testimonials, team, process steps, stats, values, nav, footer, settings).
+## Auth Overhaul Plan
 
-## Approach
+### 1. Fix core auth errors
 
-### 1. Single source of truth: `site_content`
-- Seed `site_content` (via migration) with one row per editable key, defaulting to the current values from `site-data.ts`. Nothing visual changes on day one.
-- Keys are namespaced: `settings.*`, `nav.items`, `home.hero.*`, `home.stats`, `home.intro.*`, `about.*`, `services.*`, `process.steps`, `projects.items`, `projects.hero.*`, `blog.items`, `blog.hero.*`, `contact.*`, `footer.*`, `faqs.items`, `testimonials.items`, `team.leads`, `team.members`, plus per-section media (`*.video`, `*.image`).
+- **"Failed to fetch"**: caused by Lovable Preview's fetch proxy on Supabase POST. Add clear messaging that sign-in must be tested on published URL; add retry + better error surfacing in `src/routes/auth.tsx`.
+- **"Email not confirmed"**: turn ON email confirmation properly (currently half-configured). Signups will send verification mail; sign-in blocks until confirmed with a clear "Resend verification" button.
+- **Race condition**: wrap session hydration with `getSession()` → `onAuthStateChange` pattern in `useSession` so RLS queries don't fire before auth is ready.
 
-### 2. Public site reads from `site_content`
-- Root loader calls `getAllSiteContent()` once and seeds React Query cache (`["site","content"]`).
-- New hook `useContent(key, fallback)` reads from that cache; every section in `site-shell.tsx` swaps hardcoded `site-data` imports for `useContent("…", fallbackFromSiteData)`.
-- `site-data.ts` becomes the fallback/seed only — visuals identical if DB is empty.
+### 2. Persistent 24h login (cookies)
 
-### 3. Admin editor coverage (every section, every page)
-Rebuild `/admin/content` as a page-tree editor instead of a flat key list:
+- Configure Supabase client with `persistSession: true`, `autoRefreshToken: true`, `storage: localStorage` (already default) + set session cookie mirror so refresh keeps user logged in ≥ 24h.
+- Verify no aggressive `signOut()` calls on route changes.
 
-```text
-Pages
-├── Global
-│   ├── Site settings (name, tagline, email, phone, address)
-│   ├── Navigation (label, href, order)
-│   └── Footer (columns, links, brand tagline, video)
-├── Home (hero text/video/cta, intro, stats, featured projects ref)
-├── About (hero, story, mission, values, founder, metrics)
-├── Services (hero, items, why-choose-us, cta)
-├── Process (hero, 5 steps, principles, value grid, faqs)
-├── Projects (hero, list, categories)
-├── Project detail template (specs, gallery captions)
-├── Blog (hero, featured, list, topics)
-├── Contact (hero, address, email, phone, map, faqs)
-└── Collections
-    ├── Projects   ├── Blog posts   ├── Services
-    ├── FAQs       ├── Testimonials ├── Team leads / members
-    ├── Process steps             └── Stats / Values
-```
+### 3. Signup → Owner approval workflow
 
-Each section card: inline text inputs, textareas, image/video pickers (Media Library), Publish (staff) / Submit for approval (editor), draft status badge.
+- New `signup_requests` table: `email`, `password_hash` (temp), `requested_role`, `status` (pending/approved/rejected), `created_at`.
+- Signup form no longer creates auth user directly. Instead inserts a pending request + emails owner (`m.alinadeem4665@gmail.com`) with approve/reject links.
+- New `/admin/approvals` tab lists pending requests. On approve: server fn creates the auth user via `supabaseAdmin.auth.admin.createUser` (email_confirm: true), assigns role, deletes request, emails user "you're approved, sign in".
+- On reject: delete request + email user.
+- Duplicate check: if email already exists in `auth.users` or `signup_requests`, return **"Account already created — use your password or Forgot Password"**.
 
-### 4. Collections — full CRUD for every list
-Extend `SCHEMAS` in `/admin/collections` to include:
-- projects (+ gallery array, highlights, challenge/solution)
-- blog (+ content/body)
-- services, faqs, testimonials (new), team-leads (new), team-members (new), process-steps (new), stats (new), values (new)
-Each supports add/remove/reorder, media preview, Publish/Submit-for-approval.
+### 4. Forgot password flow
 
-### 5. Live Preview already shows the changes
-Because the public site now reads from `site_content`, the existing `/admin/preview` iframe will reflect published edits without further work.
+- Add "Forgot password?" link on `/auth`.
+- Calls `supabase.auth.resetPasswordForEmail(email, { redirectTo: origin + '/reset-password' })`.
+- New public `/reset-password` route: reads recovery token from hash, calls `supabase.auth.updateUser({ password })`.
 
-### 6. QA pass (the "test 206 times" ask)
-- Script a checklist that opens every page, lists every editable key it touched, and confirms the rendered text/image/video matches the DB row.
-- Build + run a Playwright sweep against `/`, `/about`, `/services`, `/process`, `/projects`, `/blog`, `/contact`, `/project-detail`, `/team` after seeding to confirm no visual regressions.
+### 5. Email verification (one-time)
 
-## Technical Notes
-- Migration only seeds rows that don't already exist (`ON CONFLICT DO NOTHING`).
-- No schema changes — `site_content` already exists with `key`/`value JSONB`.
-- Public reads use the existing publishable-key server fn `getAllSiteContent` (already public).
-- No design tokens or layout changes — only data wiring.
-- The chatbot, header, and footer are global so they're edited under "Global".
+- Enable email confirmations in Supabase auth config.
+- Custom branded auth email templates via `scaffold_auth_email_templates` (signup confirm + recovery only).
+- After first confirm, user never sees verification again.
 
-## Out of Scope
-- No new pages, no design changes, no copy rewrites.
-- No multi-locale / versioning beyond existing drafts+approvals flow.
-- No per-field permissioning beyond current owner/admin/editor roles.
+### 6. Second admin account
 
-## Deliverable
-After this, opening `/admin` lets you edit literally every visible string, image, and video on every page (Home, About, Services, Process, Projects, Project Detail, Blog, Contact, Team, Footer, Header, Chatbot greeting) and manage every list (projects, blog, services, FAQs, testimonials, team, process steps, stats, values).
+- Seed `pitbwebdev@gmail.com` with password `talha@123`, role `admin`, `email_confirm: true`, marked non-protected.
+- Extend `ensureOwnerSeed` server fn to also create this admin idempotently.
+
+### 7. Admin UI additions
+
+- `/admin/approvals` page: pending signup requests table with Approve / Reject buttons + role selector.
+- Owner-only guard.
+
+---
+
+### Technical bits (for reference)
+
+- Migration: `signup_requests` table + GRANTs + RLS (only owner/admin can read/update; anon can INSERT own request).
+- Server fns in `src/lib/admin/signup-requests.functions.ts`: `submitSignupRequest`, `listSignupRequests`, `approveSignupRequest`, `rejectSignupRequest`.
+- Email: use existing Lovable email infra + `scaffold_auth_email_templates`; approval notifications via `enqueue_email` into `transactional_emails`.
+- `src/routes/auth.tsx`: refactor to 3 modes (signin / request-access / forgot), better error handling, "Resend confirmation" action.
+- Add `src/routes/reset-password.tsx` (public, ssr:false).
+- `AdminShell.tsx`: add "Approvals" nav item with pending-count badge.
+
+### Confirmation before I build
+
+1. Should signup requests store the user's chosen password (encrypted) so they log in immediately after approval, OR should approval trigger an invite email where they set their own password? **Ans :invite email —then they choose their password again so flow will be after owner approval =email confirmation= pass choose link and save that pass and etc**
+2. `pitbwebdev@gmail.com` — confirm role should be **temporary owner main owner will not be replaced but the temporary owner can be r|moved suspend etc but temporary also have all owners rights like ai chatbot page and etc**
+3. OK to enable email confirmation site-wide now  but existing unconfirmed users not need to confirm on next login
