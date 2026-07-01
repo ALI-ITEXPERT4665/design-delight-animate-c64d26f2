@@ -59,11 +59,36 @@ export const Route = createFileRoute("/api/chat")({
         const gateway = createLovableAiGatewayProvider(key);
         const model = gateway("google/gemini-3-flash-preview");
 
+        const uiMessages = messages as UIMessage[];
+        const sessionId = (uiMessages[0]?.id as string | undefined) ?? null;
+        const userMsgCount = uiMessages.filter((m) => m.role === "user").length;
+
         const result = streamText({
           model,
           system: SYSTEM_PROMPT,
-          messages: await convertToModelMessages(messages as UIMessage[]),
-          stopWhen: stepCountIs(50),
+          messages: await convertToModelMessages(uiMessages),
+          onFinish: async ({ usage }) => {
+            try {
+              const prompt = Number(usage?.inputTokens ?? 0);
+              const completion = Number(usage?.outputTokens ?? 0);
+              const total = Number(usage?.totalTokens ?? prompt + completion);
+              // Gemini Flash approx: 0.001 credits / 1K input, 0.004 credits / 1K output.
+              const credits = (prompt / 1000) * 0.001 + (completion / 1000) * 0.004;
+              const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+              await supabaseAdmin.from("chatbot_events").insert({
+                session_id: sessionId,
+                model: "google/gemini-3-flash-preview",
+                prompt_tokens: prompt,
+                completion_tokens: completion,
+                total_tokens: total,
+                credits,
+                message_count: userMsgCount || 1,
+              });
+            } catch (e) {
+              console.error("chatbot_events insert failed", e);
+            }
+          },
+
           tools: {
             get_contact_info: tool({
               description:
