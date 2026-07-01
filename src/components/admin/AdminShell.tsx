@@ -55,7 +55,16 @@ export function AdminShell({
 
   const isOwner = me.roles.includes("owner");
   const isAdmin = isOwner || me.roles.includes("admin");
+  const isTemp = !!me.profile?.is_temp;
+  const tempExpiresAt = useMemo(() => {
+    if (me.profile?.temp_expires_at) return me.profile.temp_expires_at as string;
+    if (typeof window !== "undefined") return sessionStorage.getItem("temp_owner_expires_at") || null;
+    return null;
+  }, [me.profile?.temp_expires_at]);
+  const msLeft = useTempOwnerCountdown(isTemp ? tempExpiresAt : null);
   const visible = NAV.filter((n) => {
+    // Temp owner has full owner UI, but cannot manage invites (would let them mint more owners)
+    if (n.to === "/admin/invites" && isTemp) return false;
     if ((n as any).ownerOnly) return isOwner;
     if (n.to === "/admin/users" || n.to === "/admin/invites" || n.to === "/admin/logs") return isAdmin;
     return true;
