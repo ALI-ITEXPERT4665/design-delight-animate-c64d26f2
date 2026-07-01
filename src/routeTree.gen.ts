@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminPreviewRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated.admin.media'
 import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated.admin.logs'
 import { Route as AuthenticatedAdminInvitesRouteImport } from './routes/_authenticated.admin.invites'
+import { Route as AuthenticatedAdminContentApprovalsRouteImport } from './routes/_authenticated.admin.content-approvals'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated.admin.content'
 import { Route as AuthenticatedAdminCollectionsRouteImport } from './routes/_authenticated.admin.collections'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated.admin.approvals'
@@ -141,6 +142,12 @@ const AuthenticatedAdminInvitesRoute =
     path: '/invites',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentApprovalsRoute =
+  AuthenticatedAdminContentApprovalsRouteImport.update({
+    id: '/content-approvals',
+    path: '/content-approvals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentRoute =
   AuthenticatedAdminContentRouteImport.update({
     id: '/content',
@@ -185,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
+  '/admin/content-approvals': typeof AuthenticatedAdminContentApprovalsRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByTo {
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
+  '/admin/content-approvals': typeof AuthenticatedAdminContentApprovalsRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -238,6 +247,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/collections': typeof AuthenticatedAdminCollectionsRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRoute
+  '/_authenticated/admin/content-approvals': typeof AuthenticatedAdminContentApprovalsRoute
   '/_authenticated/admin/invites': typeof AuthenticatedAdminInvitesRoute
   '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/admin/approvals'
     | '/admin/collections'
     | '/admin/content'
+    | '/admin/content-approvals'
     | '/admin/invites'
     | '/admin/logs'
     | '/admin/media'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/admin/approvals'
     | '/admin/collections'
     | '/admin/content'
+    | '/admin/content-approvals'
     | '/admin/invites'
     | '/admin/logs'
     | '/admin/media'
@@ -318,6 +330,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/collections'
     | '/_authenticated/admin/content'
+    | '/_authenticated/admin/content-approvals'
     | '/_authenticated/admin/invites'
     | '/_authenticated/admin/logs'
     | '/_authenticated/admin/media'
@@ -492,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminInvitesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content-approvals': {
+      id: '/_authenticated/admin/content-approvals'
+      path: '/content-approvals'
+      fullPath: '/admin/content-approvals'
+      preLoaderRoute: typeof AuthenticatedAdminContentApprovalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content': {
       id: '/_authenticated/admin/content'
       path: '/content'
@@ -528,6 +548,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminCollectionsRoute: typeof AuthenticatedAdminCollectionsRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRoute
+  AuthenticatedAdminContentApprovalsRoute: typeof AuthenticatedAdminContentApprovalsRoute
   AuthenticatedAdminInvitesRoute: typeof AuthenticatedAdminInvitesRoute
   AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
@@ -541,6 +562,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
   AuthenticatedAdminCollectionsRoute: AuthenticatedAdminCollectionsRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRoute,
+  AuthenticatedAdminContentApprovalsRoute:
+    AuthenticatedAdminContentApprovalsRoute,
   AuthenticatedAdminInvitesRoute: AuthenticatedAdminInvitesRoute,
   AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
