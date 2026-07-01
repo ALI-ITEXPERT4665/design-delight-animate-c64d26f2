@@ -230,6 +230,48 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_requests: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          message: string | null
+          requested_role: Database["public"]["Enums"]["app_role"]
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["signup_request_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          message?: string | null
+          requested_role?: Database["public"]["Enums"]["app_role"]
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["signup_request_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          message?: string | null
+          requested_role?: Database["public"]["Enums"]["app_role"]
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["signup_request_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_content: {
         Row: {
           key: string
@@ -300,6 +342,7 @@ export type Database = {
       app_role: "owner" | "admin" | "editor"
       draft_status: "pending" | "approved" | "rejected"
       media_kind: "image" | "video"
+      signup_request_status: "pending" | "approved" | "rejected"
       user_status: "active" | "suspended"
     }
     CompositeTypes: {
@@ -431,6 +474,7 @@ export const Constants = {
       app_role: ["owner", "admin", "editor"],
       draft_status: ["pending", "approved", "rejected"],
       media_kind: ["image", "video"],
+      signup_request_status: ["pending", "approved", "rejected"],
       user_status: ["active", "suspended"],
     },
   },
